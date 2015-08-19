@@ -19,39 +19,39 @@
 %  \section{Travail effectué}
 %  Le travail effectué a donné lieu à deux implémentations de la sonde. Une première écrite uniquement en Python servant essentiellement de preuve de faisabilité et ayant certains problèmes de performance. Et une seconde reprenant le travail effectué sur la première implémentation mais avec les parties critiques, d'un point de vue performances, écrites directement en \C.
   
-La sonde est découpée en 3 grandes parties, 3 modules, correspondants aux 3 rôles principaux de la sonde, à savoir :
+La sonde est découpée en trois grandes parties : trois modules correspondant aux trois rôles principaux de la sonde, à savoir :
 \begin{itemize}
-\item \textbf{Instrumentation}\emph{ automatique} le module \mintinline{python}{blackfire} définit l'interface publique qui sera exposée à l'utilisateur, à savoir les différents points d'entrée permettant de lancer l'analyse du code.
-\item \textbf{Intégration}\emph{ avec Blackfire} le module \mintinline{python}{blackfire.probe} définit la classe \\\mintinline{python}{BlackfireProbe} qui implémente le protocole utilisé pour communiquer avec l'agent \Blackfire. Cette classe est instancié par les différents points d'entrée en un objet qui représente ainsi la sonde actuellement utilisée. La classe \mintinline{python}{BlackfireProbe} définie aussi une interface qui permet au développeur, si l'objet est exposé, de contrôler plus finement les parties du code qui sont analysées.
-\item \textbf{Collecte}\emph{ des données} le module \mintinline{python}{blackfire.profiler} définit la classe \mintinline{python}{Profiler} qui est en charge de collecter les données qui formeront le profile (métriques et \gls{graphe d'appels}).
+\item \textbf{Instrumentation} \emph{automatique} : le module \mintinline{python}{blackfire} définit l'interface publique qui sera exposée à l'utilisateur, à savoir les différents points d'entrée permettant de lancer l'analyse du code.
+\item \textbf{Intégration} \emph{avec Blackfire} : le module \mintinline{python}{blackfire.probe} définit la classe \\\mintinline{python}{BlackfireProbe} qui implémente le protocole utilisé pour communiquer avec l'agent \Blackfire. Cette classe est instanciée par les différents points d'entrée en un objet qui représente ainsi la sonde actuellement utilisée. La classe \mintinline{python}{BlackfireProbe} définie aussi une interface qui permet au développeur, si l'objet est exposé, de contrôler plus finement les parties du code qui sont analysées.
+\item \textbf{Collecte} \emph{des données} : le module \mintinline{python}{blackfire.profiler} définit la classe \mintinline{python}{Profiler} qui est en charge de collecter les données qui formeront le profil (\gls{métriques} et \gls{graphe d'appels}).
 \end{itemize}
 
   \chapter[Instrumentation]{Instrumentation automatique}
-\Blackfire est un outil destiné à être utilisé aussi bien lors du développement que sur des sites en production. Cela implique que même si l'\gls{overhead} induit par la sonde est très faible celle-ci ne doit être activé que si un profile a été demandé afin d'éviter de générer des milliers (voir des millions) de profiles inutilement.
+\Blackfire est un outil destiné à être utilisé aussi bien lors du développement que sur des sites en production. Cela implique que, même si l'\gls{overhead} induit par la sonde est très faible, la sonde ne doit être activée que si un profil a été demandé afin d'éviter de générer des milliers (voir des millions) de profils inutilement.
 
-Cette partie a donc pour rôle de s'assurer qu'un profile a été demandé et ensuite de brancher dans le \gls{code utilisateur} la partie qui s'occupe de l'intégration avec le reste de l'outil. Néanmoins cette tâche doit être exécutée de manière automatique ou alors avec le minimum de modification dans le code utilisateur.
+Cette partie a donc pour rôle de s'assurer qu'un profil a été demandé et ensuite de brancher dans le \gls{code utilisateur} la partie qui s'occupe de l'intégration avec le reste de l'outil. Néanmoins cette tâche doit être exécutée de manière automatique ou alors avec le minimum de modification dans le code utilisateur.
 
-Et pour cela 3 principaux cas de figures sont à considérer :
+Pour cela trois principaux cas de figures sont à considérer :
 \begin{itemize}
 \item L'instrumentation automatique d'un programme en ligne de commande (\gls{CLI})
-\item L'instrumentation automatique d'une application \gls{WSGI}
+\item L'instrumentation automatique d'une application \gls{WSGI} (application web)
 \item L'instrumentation manuelle par le développeur
 \end{itemize}
 
 \section[Programme CLI]{Instrumentation automatique d'un programme CLI}
 \label{sec:instru-pythonpath}
-On considère ici un programme analysé via l'utilisation de l'outil en ligne de commande. Dans ce cas il est possible d'utiliser le module \verb|site|\footnote{\url{https://docs.python.org/2/library/site.html}} de \Python afin d'instrumenter le programme automatiquement et ceci sans aucune modification.
+On considère ici un programme analysé via l'utilisation de l'outil en ligne de commande. Dans ce cas il est possible d'utiliser le module \verb|site|\footnote{\url{https://docs.python.org/2/library/site.html}} de \Python afin d'instrumenter le programme automatiquement, et ceci sans aucune modification.
 
-Cela est possible grâce au comportement particulier du module \verb|site|. En effet il s'agit d'un module qui est importé (et donc exécuté) automatiquement lors du lancement d'un programme \Python et l'un des rôles de ce module est de chercher un module nommé \verb|sitecustomize| dans les différents dossiers référencés dans la variable d'environnement \verb|PYTHONPATH|\footnote{La variable d'environnement \verb?PYTHONPATH? est vide par défaut} et de l'exécuter.
+Cela est possible grâce au comportement particulier du module \verb|site|. En effet, il s'agit d'un module qui est importé (et donc exécuté) automatiquement lors du lancement d'un programme \Python, et l'un des rôles de ce module est de rechercher un module nommé \verb|sitecustomize| dans les différents dossiers référencés dans la variable d'environnement \verb|PYTHONPATH|\footnote{La variable d'environnement \verb?PYTHONPATH? est vide par défaut} et de l'exécuter.
 
 \begin{listing}[H]
 \caption{Exemple d'analyse d'un programme en ligne de commande}
 \begin{bashcode}
- $ PYTHONPATH='/chemin/vers/blackfire/bootstrap/sitecustomize.py' blackfire run python mon-programme.py
+ $ $ PYTHONPATH='/chemin/vers/blackfire/bootstrap/sitecustomize.py' blackfire run python mon-programme.py
 \end{bashcode}
 \end{listing}
 
-Le module \verb|sitecustomize| lui même est très simple : il regarde si la variable d'environnement \verb|BLACKFIRE_QUERY| est présente (cette variable d'environnement est définie lors de l'utilisation de la commande \verb|blackfire run|, son contenu sera précisé plus tard - voir section \vref{subsec:BlackfireQuery}) et si c'est le cas branche \Blackfire en passant la main à la sonde à proprement parler (voir chapitre \vref{chap:integration}).
+Le module \verb|sitecustomize| est très simple : il regarde si la variable d'environnement \verb|BLACKFIRE_QUERY| est présente\footnote{La variable d'environnement est définie lors de l'utilisation de la commande \verb|blackfire run|, son contenu sera précisé plus tard - voir section \vref{subsec:BlackfireQuery}} et, si c'est le cas, branche \Blackfire en passant la main à la sonde à proprement parler \footnote{Voir chapitre \vref{chap:integration}}.
 
 \begin{listing}[H]
 \caption{Instrumentation automatique d'un programme en ligne de commande}
@@ -59,32 +59,32 @@ Le module \verb|sitecustomize| lui même est très simple : il regarde si la var
 \end{listing}
 
 \begin{note}
-A l'avenir on peut imaginer que l'outil en ligne de commande \Blackfire va configurer automatiquement la variable d'environnement \verb|PYTHONPATH| de l'utilisateur ce qui permettrait de simplifier la commande précédente.
+À l'avenir, on peut imaginer que l'outil en ligne de commande \Blackfire va configurer automatiquement la variable d'environnement \verb|PYTHONPATH| de l'utilisateur, ce qui permettrait de simplifier la commande précédente.
 \end{note}
 
 \section[Application WSGI]{Instrumentation automatique d'une application WSGI}
-On considère ici une application web utilisant la spécification WSGI\footnote{\url{https://docs.python.org/2/library/wsgiref.html}}. Dans ce cas il est nécessaire de décorer le point d'entrée\footnote{Il s'agit de l'objet (function ou variable) qui a le nom \verb|application| dans le contexte du module renseigné auprès du serveur WSGI} de l'application par un middleware WSGI qui vas se charger de vérifier la présence de l'en-tête \verb|X-Blackfire-Query| (défini lorsque le \gls{companion} ou la commande \verb|blackfire curl| est utilisé - voir section \vref{subsec:BlackfireQuery}) et d'activer \Blackfire le cas échéant. Ce middleware a aussi la charge de récupérer le code HTTP de la réponse (requis par le protocole) et de définir la \emph{Response Line} qui est envoyé au companion.
-305
-Ce middleware a été implémenté dans la classe \verb|blackfire.WSGI_wrapper| et le décorateur \verb|blackfire.wsgi_application| permet d'en simplifier l'utilisation lorsque que le point d'entrée est une function. \footnote{Voir Annexe \vref{app:decorateurwsgi} pour le code du décorateur}
+On considère ici une application web utilisant la spécification WSGI\footnote{\url{https://docs.python.org/2/library/wsgiref.html}}. Dans ce cas il est nécessaire de décorer le point d'entrée\footnote{Il s'agit de l'objet (function ou variable) qui a le nom \verb|application| dans le contexte du module renseigné auprès du serveur WSGI} de l'application par un middleware WSGI qui va se charger de vérifier la présence de l'en-tête \verb|X-Blackfire-Query|\footnoe{Cet en-tête est défini lorsque le compagnon ou la commande \verb|blackfire curl| est utilisé - voir section \vref{subsec:BlackfireQuery})} et d'activer \Blackfire le cas échéant. Ce middleware a aussi la charge de récupérer le code HTTP de la réponse (requis par le protocole) et de définir la \emph{Response Line} qui est envoyée au compagnon.
+
+Ce middleware a été implémenté dans la classe \verb|blackfire.WSGI_wrapper|, et le décorateur \verb|blackfire.wsgi_application| permet d'en simplifier l'utilisation lorsque que le point d'entrée est une fonction\footnote{Voir Annexe \vref{app:decorateurwsgi} pour le code du décorateur}.
 
 \begin{listing}[H]
 \caption{Exemple d'utilisation du décorateur WSGI}
 \pythonfile{codes/probe/test_wsgi.py}
 \end{listing}
 
-\section{Instrumentation manuelle}
+%\section{Instrumentation manuelle}
 
 % TODO Conserver cette section ? si oui la rédiger
 
-\begin{listing}[H]
-\caption{Instrumentation effective du code}
-\pythonfile[firstline=9]{codes/probe/blackfire/config.py}
-\end{listing}
+%\begin{listing}[H]
+%\caption{Instrumentation effective du code}
+%\pythonfile[firstline=9]{codes/probe/blackfire/config.py}
+%\end{listing}
 
   \chapter[Intégration]{Intégration avec Blackfire}
   \label{chap:integration}
 % Schéma pour montrer où on se situe dans l'archi/workflow ?
-La sonde travaille en tandem avec l'agent, quand la première collecte les données le second les traite et les envoie à l'API. Ce qui implique qu'ils doivent communiquer l'un avec l'autre et c'est fait au travers d'un protocole dédié\footnote{Voir section \vref{sec:BlackfireProtocol}}.
+La sonde travaille en tandem avec l'agent, : quand la première collecte les données, le second les traite et les envoie à l'API. Ce ci implique qu'ils communiquer l'un avec l'autre, ce qu'ils font au travers d'un protocole dédié\footnote{Voir section \vref{sec:BlackfireProtocol}}.
 
 
 %	\section{Protocole}
@@ -93,26 +93,26 @@ La sonde travaille en tandem avec l'agent, quand la première collecte les donn�
 %    \label{subsec:BlackfireQuery}
   
   \chapter[Collecte]{Collecte des données}
-Le rôle principal de la sonde, avant de s'intégrer avec le reste de \Blackfire est de collecter des données, des métriques sur le code.
+Le rôle principal de la sonde, avant de s'intégrer avec le reste de \Blackfire, est de collecter des données, des métriques sur le code.
 
-Étant exécuté en même que le code utilisateur les performances de cette partie du code son cruciales. Il est important de minimiser son impact aussi bien sur les performances (les temps) que sur la consommation mémoire et pour cette raison il a été décidé de l'implémenter en \C\footnote{Une première version a été effectué en \Python afin de servir de preuve de faisabilité et l'impact était très important; dans la majorité des cas le temps d'exécution était doublé et par moment il était même multiplié par 10.}.
+La sonde étant exécutée en même temps que le code utilisateur ses performances sont cruciales. Il est donc important de minimiser son impact, aussi bien sur les performances (les temps) que sur la consommation mémoire. Pour cette raison il a été décidé de l'implémenter en \C\footnote{Une première version a été implémentée en \Python afin de servir de preuve de faisabilité, et l'impact était très important ; le temps d'exécution était souvent doublé, parfois même décuplé.}.
 
   \section{Fonctionnement général}
-La méthode utilisé pour instrumenter le code \Python est la même que celle utilisé par \emph{Pycallgraph}\footnote{Voir section \vref{subsec:pycallgraph}}, \emph{Pyinstrument}\footnote{Voir section \vref{subsec:pyinstrument}} ou encore \emph{Yappi}\footnote{Voir section \vref{subsec:yappi}} dont sont issus ou inspirés certains des éléments de l'implémentation actuelle. A savoir l'utilisation de la méthode \verb|sys.setprofiler()|\footnote{\url{https://docs.python.org/2/library/sys.html#sys.setprofile}} qui permet de définir une fonction de rappel qui est appelé à chaque fois que l'interpréteur entre ou sort d'une fonction.
+La méthode utilisée pour instrumenter le code \Python est la même que celle utilisée par \emph{Yappi}\footnote{Voir section \vref{subsec:yappi}}, dont sont issus ou inspirés certains éléments de l'implémentation actuelle. À savoir l'utilisation de la méthode \verb|sys.setprofiler()| qui permet de définir une fonction de rappel appelée à chaque fois que l'interpréteur entre ou sort d'une fonction.
 
-Dans l'implémentation actuelle la fonction \C \verb|_blackfire_callback| est enregistré en temps que fonction de rappel et est donc appelé à chaque fois que l'un des événements\footnote{Les événements sont toujours déclenché avant l'exécution du code par l'interpréteur} suivants intervient :
+Dans l'implémentation actuelle, la fonction \C \verb|_blackfire_callback| est enregistrée en tant que fonction de rappel et est donc appelée à chaque fois que l'un des événements\footnote{Les événements sont toujours déclenchés avant l'exécution du code par l'interpréteur} suivants intervient :
 \begin{itemize}
-\item \verb|PyTrace_CALL| Exécution d'une fonction écrite en \Python
-\item \verb|PyTrace_RETURN| Fin d'une fonction \Python
-\item \verb|PyTrace_EXCEPTION| Fin d'une fonction \Python avec exception
-\item \verb|PyTrace_C_CALL| Exécution d'une fonction écrite en \C
-\item \verb|PyTrace_C_RETURN| Fin d'une fonction \C
-\item \verb|PyTrace_C_EXCEPTION| Fin d'une fonction \C avec exception
+\item \verb|PyTrace_CALL| : exécution d'une fonction écrite en \Python
+\item \verb|PyTrace_RETURN| : fin d'une fonction \Python
+\item \verb|PyTrace_EXCEPTION| : fin d'une fonction \Python avec exception
+\item \verb|PyTrace_C_CALL| : exécution d'une fonction écrite en \C
+\item \verb|PyTrace_C_RETURN| : fin d'une fonction \C
+\item \verb|PyTrace_C_EXCEPTION| : fin d'une fonction \C avec exception
 \end{itemize}
 
-Le rôle de cette fonction de rappel est double : d'un côté c'est elle qui vas lancer l'analyse des différents événements et c'est donc à partir d'elle que tout le travail de collecte de données vas être effectué et de l'autre elle s'assure que les exceptions lancées par le code utilisateur sont conservées et ne sont pas écrasées si des problèmes surviennent pendant le traitement de l'événement en question\footnote{L'action de \Blackfire doit impacter aussi peu que possible le code utilisateur et cela concerne aussi la gestion des erreurs : la sonde doit être capable, autant que possible de traiter ses propres erreurs}.
+Le rôle de cette fonction de rappel est double. D'un côté c'est elle qui va lancer l'analyse des différents événements, et c'est donc à partir d'elle que tout le travail de collecte de données va être effectué. De l'autre elle s'assure que les exceptions lancées par le code utilisateur sont conservées et ne sont pas écrasées si des problèmes surviennent pendant le traitement de l'événement en question\footnote{L'action de \Blackfire doit impacter aussi peu que possible le code utilisateur et cela concerne aussi la gestion des erreurs : la sonde doit être capable, autant que possible, de traiter ses propres erreurs}.
 
-Il y a quelques différences de traitement entre les appels \C et les appels \Python car certaines données ne sont pas collectées de la manière mais sinon le fonctionnement général est identique. De même aucune différence n'est faite entre sec:instru-pythonpathles fin de fonctions avec et sans exception. Ainsi les 6 événements précédents sont répartis en 2 groupes : \emph{Début} et \emph{Fin} de fonction.
+Il y a quelques différences de traitement entre les appels \C et les appels \Python car certaines données ne sont pas collectées de la même manière mais sinon le fonctionnement général est identique. De même, aucune différence n'est faite entre les fins de fonction avec et sans exception. Ainsi les six événements précédents sont répartis en deux groupes : \emph{Début} et \emph{Fin} de fonction.
 
 L'idée est donc d'utiliser ces événements pour maintenir la \gls{pile d'appels} du programme et remplir le \gls{graphe d'appels} au fur et à mesure avec les métriques correspondantes.
 
@@ -120,29 +120,29 @@ L'idée est donc d'utiliser ces événements pour maintenir la \gls{pile d'appel
   \label{sec:gestion-graph-appels}
 La \gls{pile d'appels} du programme est construite à l'aide de l'objet \verb|frame|\footnote{Cet objet représente le contexte d'exécution de la fonction et contient donc toutes les informations sur le code exécuté. Pour plus de détails : \url{https://docs.python.org/2/library/inspect.html}} envoyé à la fonction de rappel. À chaque événement de type \emph{entrée de fonction} on identifie l'appel de fonction et on l'ajoute dans la pile.
   
-Cet appel est identifié\footnote{Voir annexe \vref{app:pile_struct} pour les structures de données} par ses arguments si ceux-ci sont collecté\footnote{Voir section \vref{sec:fnargs}} et par la méthode qui est appelé, elle même identifié par son module, sa classe et son nom. 
+Cet appel est identifié\footnote{Voir annexe \vref{app:pile_struct} pour les structures de données} par ses arguments si ceux-ci sont collectés\footnote{Voir section \vref{sec:fnargs}} et par la méthode qui est appelée, elle-même identifiée par son module, sa classe et son nom. 
 
-À cet appel de fonction on associe ensuite une série de métriques qui reflètent l'état du système au moment où la fonction est appelé. Ainsi sont mesurés à ce moment la date en microsecondes, le temps système écoulé ou encore le nombre d'opcodes exécutés depuis le début du programme.
+À cet appel de fonction on associe ensuite une série de métriques qui reflètent l'état du système au moment où la fonction est appelée. Ainsi sont mesurés à ce moment la date en microsecondes, le temps système écoulé ou encore le nombre d'opcodes exécutés depuis le début du programme.
 
 \begin{note}[Importation de la pile courante]
-Lors de l'appel à \verb|start| la pile d'exécution courante est importée afin de tout le temps avoir des couple appelant/appelée corrects et d'éviter de se retrouver avec des appels de fonctions orphelins (sans appelant). Pour cela on parcoure la pile courante en sens inverse (donc en partant du contexte le plus ancien) et on simule une entrée de fonction pour chaque contexte.
+Lors de l'appel à \verb|start|, la pile d'exécution courante est importée afin de tout le temps avoir des couples appelant/appelé corrects et d'éviter de se retrouver avec des appels de fonctions orphelins (sans appelant). Pour cela on parcourt la pile courante en sens inverse (donc en partant du contexte le plus ancien) et on simule une entrée de fonction pour chaque contexte.
 \end{note}
 
 \begin{note}[Gestion des appels récursifs]
-Afin d'éviter de générer des graphs cyclique\footnote{C'est à dire un graphe où les appels récursifs génèrent des cycles}, un appel de fonction est aussi identifié par son niveau de récursivité, celui-ci correspondant au nombre de fois où la fonction appelé est déjà présente dans la pile. Il sera ajouté au nom de la fonction dans le graphe sous la forme \verb|@<niv. rec.>| si il est différent de 1.
+Afin d'éviter de générer des graphes cycliques\footnote{C'est à dire un graphe où les appels récursifs génèrent des cycles}, un appel de fonction est aussi identifié par son niveau de récursivité. Celui-ci correspond au nombre de fois où la fonction appelée est déjà présente dans la pile. S'il est différent de 1 il sera ajouté au nom de la fonction dans le graphe sous la forme \verb|@<niv. rec.>|.
 \end{note}
 
 \begin{note}[Performances]
-Afin de contrôler l'utilisation de la mémoire\footnote{Voir section \vref{sec:performances} pour plus de détails sur la gestion des performances}, éviter que celle-ci n'augmente indéfiniment lors de l'analyse de l'analyse d'un gros programme et épargner quelque calculs, les méthodes ne sont identifiées qu'une seule fois puis mis en cache dans une table de hachage afin d'être réutilisée.
+Afin de contrôler l'utilisation de la mémoire\footnote{Voir section \vref{sec:performances} pour plus de détails sur la gestion des performances}, éviter que celle-ci augmente indéfiniment lors de l'analyse d'un gros programme et épargner quelques calculs, les méthodes ne sont identifiées qu'une seule fois puis mises en cache dans une table de hachage afin d'être réutilisées.
 \end{note}
 
 \subsection{Identification de la méthode appelée - Appel Python}
 \label{ident-python}
-Lors d'un appel \Python (appel d'une fonction écrite en \Python) le \emph{\gls{contexte d'exécution}} envoyé à la fonction de rappel correspond à celui de la fonction qui va être exécuté, à savoir quelle contient l’environnement d'exécution de la fonction appelée.
+Lors d'un appel \Python (appel d'une fonction écrite en \Python) le \emph{\gls{contexte d'exécution}} envoyé à la fonction de rappel correspond à celui de la fonction qui va être exécutée.
 
-\paragraph*{Le module} Lors d'un appel \Python le nom du module n'est pas transmis. En revanche  via la variable \verb|frame->f_code->co_filename| on dispose du nom du fichier contenant le code exécuté à partir duquel on peut retrouver le nom du module. Par contre il s'agit d'une opération couteuse car elle peut impliquer de nombreux calculs et appels au système de fichiers. Mais lors d'une définition en \Python il y a une relation forte entre le module et le fichier qui le définit\footnote{Un fichier correspond toujours à un seul et unique module qui est lui même entièrement définit dans le-dis fichier} et on peut donc s'en servir à la place du nom du module (quitte à résoudre son nom plus tard si nécessaire).
+\paragraph*{Le module} Lors d'un appel \Python, le nom du module n'est pas transmis. En revanche,  via la variable \verb|frame->f_code->co_filename|, on dispose du nom du fichier contenant le code exécuté à partir duquel on peut retrouver le nom du module. Par contre il s'agit d'une opération coûteuse car elle peut impliquer de nombreux calculs et appels au système de fichiers. Mais lors d'une définition en \Python il y a une relation forte entre le module et le fichier qui le définit\footnote{Un fichier correspond toujours à un seul et unique module qui est lui même entièrement défini dans le-dit fichier} et on peut donc s'en servir à la place du nom du module (quitte à résoudre son nom plus tard si nécessaire).
 
-\paragraph*{La classe} L'un des éléments qui différencie une fonction d'une méthode est que cette dernière prends explicitement une instance de la classe en premier argument et que par convention elle s'appelle \verb|self|. Pour récupérer le nom de la classe on peut donc vérifier si le premier élément s'appel self et si il est une instance d'une classe\footnote{Du côté C, en \Python 3 il s'agit d'un \verb|PyType| et en \Python 2 d'un \verb|PyClass|}. Auquel cas l'objet dispose d'un attribut \verb|__class__| contenant un objet décrivant la classe, lui même disposant d'un attribt \verb|__name__| indiquant son nom.
+\paragraph*{La classe} L'un des éléments qui différencient une fonction d'une méthode est que une méthode prend explicitement une instance de la classe en premier argument et que par convention elle s'appelle \verb|self|. Pour récupérer le nom de la classe on peut donc vérifier si le premier élément s'appelle \verb|self| et s'il est une instance d'une classe, auquel cas l'objet dispose d'un attribut \verb|__class__| contenant un objet décrivant la classe, lui même disposant d'un attribut \verb|__name__| indiquant son nom.
 
 \paragraph*{La méthode} Le nom de la méthode est indiqué via la variable \verb|frame->f_code->co_name|.
 
@@ -311,7 +311,7 @@ Pour cela plusieurs techniques sont utilisées :
 Afin d'éviter d'avoir à allouer de la mémoire trop souvent, \emph{Yappi} utilise ce qu'il appelle des \emph{freelist}, à savoir des listes de structures pré-allouées et pouvant être utilisées. Ainsi, par exemple, lorsque qu'une nouvelle méthode est rencontré, au lieu d'allouer la mémoire correspondant à la structure \verb|_method| on demande à la \emph{freelist} un élément disponible. Et lorsque l'élément n'est plus utilisé (par exemple avec les entrées de la pile), l'élément est retourné à sa liste. De cette manière il n'y a que rarement besoins d'allouer ou de désallouer de la mémoire\footnote{Si jamais la \emph{freelist} ne dispose d'aucun élément de disponible elle s'agrandit toute seule et double sa taille}.
 \end{note}
 
-\subsection{Résolution du nom des module}
+\subsection{Résolution du nom des modules}
 Résoudre le nom des modules est une opération coûteuse impliquant entre autre des appels au système de fichier. Pour cette raison la fonction de rappel ne le résout mais préfère travailler avec le nom des fichiers. En revanche il n'est pas très commode d'avoir les noms des fichiers dans le graphe et il est donc nécessaire de résoudre ces noms au dernier moment, juste avant d'envoyer les données à l'agent.
 
 \subsection{Agrégation du graphe}

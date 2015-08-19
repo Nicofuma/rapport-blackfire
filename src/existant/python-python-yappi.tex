@@ -1,14 +1,14 @@
-\emph{Yappi}\footnote{\url{https://bitbucket.org/sumerc/yappi}}, pour \emph{Yet Another Python Profiler}, est un logiciel open source\footnote{Sous licence \emph{MIT}} créé en 2009 par \emph{Sümer Cip} et permettant d'analyser les performances d'un programme.
+\emph{Yappi}\footnote{\url{https://bitbucket.org/sumerc/yappi}}, pour \emph{Yet Another Python Profiler}, est un logiciel open source\footnote{Sous licence \emph{MIT}} créé en 2009 par \emph{Sümer Cip} et permettant d'analyser les performances d'un programme \Python.
 
-Il s'agit d'un module écrit en \C et utilisant le même fonctionnement que le \emph{C-Profiler} dont il est inspiré, à savoir l'utilisation d'une fonction de rappel qui est appelée à chaque fois que l'on entre et sort d'une fonction.
+Il s'agit d'un module écrit en \C utilisant le même fonctionnement que le \emph{C-Profiler}, dont il est inspiré (à savoir l'utilisation d'une fonction de rappel qui est appelée à chaque fois que l'on entre et sort d'une fonction).
 
-D'un point de vue fonctionnel, \emph{Yappi} a été conçut de manière à avoir un impact sur les performances de l'application mesuré le plus faible possible et dispose de quelques fonctionnalités qui ne sont pas présentes dans le \emph{C-Profiler} :
+D'un point de vue fonctionnel, \emph{Yappi} a été conçu de manière à avoir un impact sur les performances de l'application mesurée le plus faible possible, et dispose de quelques fonctionnalités qui ne sont pas présentes dans le \emph{C-Profiler} :
 \begin{itemize}
 \item Possibilité d'avoir des temps CPU à la place des temps utilisateur
 \item Gestion du multi threading
 \begin{itemize}
 \item Les threads sont automatiquement analysés
 \item Les appels de fonction des différents threads ne sont pas différenciés (on ne peut pas savoir quel thread a effectué un appel de fonction donné) 
-\item Un résumé par thread est disponible (uniquement le temps total)
+\item Le temps total passé dans chaque thread est disponible
 \end{itemize}
 \end{itemize}
