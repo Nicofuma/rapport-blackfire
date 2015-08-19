@@ -1,0 +1,59 @@
+Contexte
+    Entreprise
+    Blackfire
+    Python (parler de CLI/WSGI)
+Objectifs
+    Enjeux
+Analyse de l'existant
+    Blackfire - Stack existante
+        - Architecture générale
+            - Schéma
+            - Agent / Sonde / API / Companion
+        - Détail du protocol
+            - Requete
+                \label{subsec:BlackfireQuery}
+            - Communication avec l'agent
+            - Communication avec le companion
+    Analyse de performance en Python
+        New Relic
+        Opbeat
+        PyCallgraph
+        PyInstrument
+        C-Profiler
+        Yappi
+        ...
+Implémentation
+    Architecture Générale
+    API publique, communication avec l'API
+        API
+        Instrumentation (initialize, décorateurs)
+        Récupération des metadata
+    Collecte de données
+        Première implémentation en Python
+            - Rapide à prototyper
+            - Principe
+            - Fonctionel
+            - WT/CPU + poc mémoire
+            - problème de performance majeur
+        Seconde implémentation en C
+            - Partir de Yappi
+                - Architecture générale
+                - Compat python 2/3
+                - Structures de données
+                    - Free listes
+                    - Hashmap
+                    - Callstack ?
+                    - timing
+                - Fortement divergé (certains helpers conservés, la logique est complètement différente)
+            - Architecture finale détaillé
+            - Expliquer/présenter les algos (nécessite l'introduction de la problématique résolue à chaque fois)
+                - Importation de la callstack actuelle
+                - Gestion de la Callstack
+                - Gestion de la liste des profiles
+                - Cache des méthodes
+                - Résolution du nom des profiles
+            - Problème du sitecustomize.py
+            - Arguments de fonction
+Evolutions futures
+Conclusion
+Annexes

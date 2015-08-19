@@ -1,0 +1,3 @@
+#!/bin/sh
+
+exec latex -interaction errorstopmode --jobname example '\RequirePackage[extension=.dvi,'"$2"']{texdepends}\input'"{$1}"

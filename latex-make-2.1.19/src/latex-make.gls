@@ -1,0 +1,15 @@
+
+ \begin{theglossary} 
+
+    \makeatletter\scan@allowedfalse
+
+  \item v2.0.0\efill 
+ \subitem General:\ First autocommented version\pfill 1
+  \item v2.1.0\efill 
+ \subitem General:\ That's the question\pfill 1
+  \item v2.1.1\efill 
+ \subitem General:\ Improve error message\pfill 1
+  \item v2.1.2\efill 
+ \subitem General:\ Switch from perl to python\pfill 1
+
+ \end{theglossary}

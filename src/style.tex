@@ -1,0 +1,209 @@
+% ---------- Various ---------- %
+\newcommand{\Python}{\emph{Python} }
+\newcommand{\PHP}{\emph{PHP} }
+\newcommand{\C}{\emph{C} }
+\newcommand{\Blackfire}{\emph{Blackfire} }
+\newcommand{\SensioLabs}{\emph{SensioLabs} }
+
+\setlength{\parskip}{1em}
+
+% ---------- Logos ---------- %
+\newcommand{\logo}[2][height=1cm]
+{
+	\includegraphics[#1]{images/logo/#2}
+}
+
+\newcommand{\logoBF}[1][height=1cm]{\logo[#1]{blackfire_secondary_square_transparent}}
+\newcommand{\logoSL}[1][height=1cm]{\logo[#1]{sensiolabs}}
+\newcommand{\logoIMAG}[1][height=1cm]{\logo[#1]{logo_ensimag}}
+
+% ---------- Bloc 'Note' ---------- %
+\colorlet{shadecolor}{gray!35}   % you may try 'blue' here
+\renewenvironment{note}[1][Note]{%
+  \def\FrameCommand{\textcolor{shadecolor}{\vrule width 5pt} \hspace{6pt}}%
+  \MakeFramed {\advance\hsize-\width \FrameRestore}\noindent\textbf{#1}\;\;~}%
+{\endMakeFramed}
+
+% ---------- Header/Footer ---------- %
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0.5pt}
+  
+\fancypagestyle{plain}{%
+  %\fancyhf{}
+  \renewcommand{\headrulewidth}{0.5pt}
+  \renewcommand{\footrulewidth}{0.5pt}
+  \fancyfoot[L]{
+    \logoBF[height=0.5cm]
+    \logoSL[height=0.5cm]
+    \logoIMAG[height=0.5cm]
+  }
+  \fancyfoot[R]{Page \thepage}
+  \fancyfoot[C]{Rapport de projet de fin d'études}
+}
+  
+\fancypagestyle{front}{%
+  %\fancyhf{}
+  \renewcommand{\headrulewidth}{0.5pt}
+  \renewcommand{\footrulewidth}{0.5pt}
+  \fancyfoot[L]{
+    \logoBF[height=0.5cm]
+    \logoSL[height=0.5cm]
+    \logoIMAG[height=0.5cm]
+  }
+  \fancyfoot[R]{Page \thepage}
+  \fancyfoot[C]{Rapport de projet de fin d'études}
+}
+
+\fancypagestyle{main}{%
+  %\fancyhf{}
+  \renewcommand{\headrulewidth}{0.5pt}
+  \renewcommand{\footrulewidth}{0.5pt}
+  \fancyfoot[L]{
+    \logoBF[height=0.5cm]
+    \logoSL[height=0.5cm]
+    \logoIMAG[height=0.5cm]
+  }
+  \fancyfoot[R]{Page \thepage\ sur \pageref{LastPage}}
+  \fancyfoot[C]{Rapport de projet de fin d'études}
+}
+
+\fancypagestyle{part}{%
+  \fancyhf{}
+  \renewcommand{\headrulewidth}{0.0pt}
+  \renewcommand{\footrulewidth}{0.5pt}
+  \fancyfoot[L]{
+    \logoBF[height=0.5cm]
+    \logoSL[height=0.5cm]
+    \logoIMAG[height=0.5cm]
+  }
+  \fancyfoot[R]{Page \thepage\ sur \pageref{LastPage}}
+  \fancyfoot[C]{Rapport de projet de fin d'études}
+}
+
+\pagestyle{fancy}
+
+% ---------- Sommaire ---------- %
+\newcommand{\sommaire}{
+  { % Groupe pour isoler le sommaire
+    \renewcommand*{\contentsname}{Sommaire}
+    \makeatletter
+      \renewcommand{\cftpartformatpnum}[1]{\hfil}
+      % adapted from section 9.2.2 of memoir manual 
+    \makeatother
+
+    % On affiche les points mais sans le gras
+    \renewcommand{\cftchapterleader}{\cftdotfill{\cftchapterdotsep}}
+    
+     % Espacement entre les . par défaut pour les sections
+    \renewcommand{\cftchapterdotsep}{4.5}
+
+    % On réduit l'espacement autour des chapitres et des parties
+    \setlength{\cftbeforepartskip}{1.5em} 
+    \setlength{\cftbeforechapterskip}{0.3em}
+    
+    % On indente les chapitres par rapport aux partie
+    \setlength{\cftchapterindent}{15px}
+    
+    % On affiche la table des matières mais avec uniquement les chapitres et le sniveaux supérieurs
+    \setcounter{tocdepth}{0}
+    \tableofcontents*
+    \setcounter{tocdepth}{4}
+  } % end of local group
+}
+
+% ---------- Coloration Syntaxique ---------- %
+\definecolor{codebg}{rgb}{0.96,0.96,0.96}
+\usemintedstyle{manni}
+
+% ---- PHP ----
+\newcommand{\phpfile}[2][startinline]
+{
+  \inputminted[fontsize=\footnotesize, autogobble,bgcolor=codebg,frame=lines,linenos,funcnamehighlighting,startinline,breaklines,#1]{php}{#2}
+}
+\newcommand{\phpfilelong}[2][startinline]
+{
+  \begin{mdframed}[linecolor=black, topline=true, bottomline=true,
+  leftline=false, rightline=false, backgroundcolor=codebg,userdefinedwidth=\textwidth]
+  \inputminted[fontsize=\footnotesize,autogobble,linenos,funcnamehighlighting,startinline,breaklines,#1]{php}{#2}
+  \end{mdframed}
+}
+\newminted{php}{linenos,frame=lines,autogobble,breaklines,funcnamehighlighting,bgcolor=codebg,startinline}
+
+% ---- Python ----
+\newcommand{\pythonfile}[2][startinline]
+{
+  \inputminted[fontsize=\footnotesize, autogobble,bgcolor=codebg,frame=lines,linenos,funcnamehighlighting,startinline,breaklines,#1]{python}{#2}
+}
+\newcommand{\pythonfilelong}[2][startinline]
+{
+  \begin{mdframed}[linecolor=black, topline=true, bottomline=true,
+  leftline=false, rightline=false, backgroundcolor=codebg,userdefinedwidth=\textwidth]
+  \inputminted[fontsize=\footnotesize,autogobble,linenos,funcnamehighlighting,startinline,breaklines,#1]{python}{#2}
+  \end{mdframed}
+}
+\newminted{python}{linenos,frame=lines,autogobble,breaklines,funcnamehighlighting,bgcolor=codebg,startinline}
+
+
+% ---- C ----
+\newcommand{\cfile}[2][startinline]
+{
+  \inputminted[fontsize=\footnotesize, autogobble,bgcolor=codebg,frame=lines,linenos,funcnamehighlighting,startinline,breaklines,#1]{c}{#2}
+}
+\newcommand{\cfilelong}[2][startinline]
+{
+  \begin{mdframed}[linecolor=black, topline=true, bottomline=true,
+  leftline=false, rightline=false, backgroundcolor=codebg,userdefinedwidth=\textwidth]
+  \inputminted[fontsize=\footnotesize,autogobble,linenos,funcnamehighlighting,startinline,breaklines,#1]{c}{#2}
+  \end{mdframed}
+}
+\newminted{c}{linenos,frame=lines,autogobble,breaklines,funcnamehighlighting,bgcolor=codebg,startinline}
+
+\newminted{bash}{frame=lines,autogobble,breaklines,funcnamehighlighting,bgcolor=codebg,startinline}
+\newminted{yaml}{frame=lines,autogobble,breaklines,funcnamehighlighting,bgcolor=codebg,startinline}
+
+\newcommand{\textfile}[2][startinline]
+{
+  \inputminted[fontsize=\footnotesize,autogobble,bgcolor=codebg,frame=lines,linenos,funcnamehighlighting,startinline,breaklines,#1]{text}{#2}
+}
+\newcommand{\textfilelong}[2][startinline]
+{
+  \begin{mdframed}[linecolor=black, topline=true, bottomline=true,
+  leftline=false, rightline=false, backgroundcolor=codebg,userdefinedwidth=\textwidth]
+  \inputminted[fontsize=\footnotesize,autogobble,linenos,funcnamehighlighting,startinline,breaklines,#1]{text}{#2}
+  \end{mdframed}
+}
+\newminted{text}{linenos,frame=lines,autogobble,breaklines,funcnamehighlighting,bgcolor=codebg,startinline}
+
+% ------------ Do not wrap paragraph
+\widowpenalties 1 10000
+\raggedbottom
+
+% ------------ Vertial align in list of listings === list of figures
+\renewcommand{\memappchapinfo}[4]{%
+  \addtocontents{lol}{\protect\addvspace{10pt}}}
+
+\renewcommand{\memchapinfo}[4]{%
+  \addtocontents{lol}{\protect\addvspace{10pt}}}
+
+% ------------ Linstings wording and numbering
+\renewcommand\listoflistingscaption{Liste des codes}
+\renewcommand\listingscaption{\textsc{Code}}
+\counterwithin{listing}{section}
+\renewcommand*{\thelisting}{\thepart.\thesection-\arabic{listing}}
+
+% -------- Dans la liste des code la taille de la première colonne d'adapte à la taille du contenu
+\makeatletter
+\renewcommand{\numberline}[1]{%
+  \@cftbsnum #1\@cftasnum~\@cftasnumb%
+}
+\makeatother
+
+\makeatletter
+  \@addtoreset{chapter}{part}
+\makeatother
+
+% ------------ Part toc
+% http://web.mit.edu/texsrc/source/latex/minitoc/minitoc.sum
+\renewcommand{\ptctitle}{Plan} 
+\renewcommand{\thispageparttocstyle}{\thispagestyle{part}} 
+%\noptcrule

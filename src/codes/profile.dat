@@ -1,0 +1,84 @@
+file-format: BlackfireProbe
+graph-root-id: __main__
+cost-dimensions: ct wt cpu opcode
+probed-os: linux2
+probed-language: python
+probed-runtime: 2.7.6-final-0
+probe-version: 0.2.0
+request-mu: 0
+request-pmu: 0
+request-start: 1439302271
+sys-load-avg: 1.08 1.09 1.07
+_SERVER: argv%5B%5D=exemple.py&_=%2Fhome%2Ftristan.darricau%2FEnvs%2Fpython2%2Fbin%2Fpython
+request-end: 1439302271
+
+logging.Formatter::format==>logging.Formatter::formatTime//4 96 0 108
+logging.RootLogger::findCaller==>logging.<lambda>//4 24 0 28
+threading._RLock::release==>__builtin__.thread.lock::release//4 2 0 0
+__main__==>logging.RootLogger::error?1=Message1//1 163 0 945
+logging.<lambda>==>sys._getframe//4 4 0 0
+logging.LogRecord::__init__==>logging.getLevelName//4 23 0 40
+genericpath._splitext==>__builtin__.str::rfind//8 2 0 0
+logging.StreamHandler::emit==>logging.StreamHandler::format//4 208 0 424
+logging.StreamHandler::handle==>logging.StreamHandler::acquire//4 56 0 216
+threading._RLock::acquire==>thread.get_ident//8 1 0 0
+logging.StreamHandler::release==>threading._RLock::release//8 49 0 284
+threading.currentThread==>thread.get_ident//4 1 0 0
+logging.RootLogger::makeRecord==>logging.LogRecord::__init__//4 232 0 1052
+logging.LogRecord::getMessage==>__builtin__.isinstance//4 4 0 0
+logging.StreamHandler::flush==>__builtin__.file::flush//4 3 0 0
+threading._RLock::acquire==>__builtin__.thread.lock::acquire//4 2 0 0
+__main__//1 2721 0 3830
+logging.LogRecord::__init__==>posixpath.basename//4 12 0 52
+logging.StreamHandler::emit==>__builtin__.file::write//4 27 0 0
+logging.RootLogger::error?1=Message2==>logging.RootLogger::_log//1 174 0 900
+logging.Formatter::formatTime==>time.localtime//4 34 0 0
+logging.Formatter::format==>logging.LogRecord::getMessage//4 16 0 68
+logging.RootLogger::callHandlers==>logging.StreamHandler::handle//4 506 0 1696
+logging.RootLogger::error?1=Message3==>logging.RootLogger::_log//1 235 0 900
+logging.RootLogger::error?1=logger.error==>logging.RootLogger::isEnabledFor//1 11 0 25
+__main__==>logging.RootLogger::error?1=Message3//1 253 0 945
+logging.RootLogger::handle==>logging.RootLogger::filter//4 7 0 40
+logging.LogRecord::__init__==>posixpath.splitext//4 54 0 212
+logging.Formatter::usesTime==>__builtin__.str::find//4 4 0 0
+logging.Formatter::formatTime==>time.strftime//4 19 0 0
+logging.StreamHandler::emit==>logging.StreamHandler::flush//4 101 0 496
+logging.StreamHandler::handle==>logging.StreamHandler::emit//4 385 0 1088
+logging.StreamHandler::handle==>logging.StreamHandler::release//4 32 0 212
+logging.StreamHandler::flush==>__builtin__.hasattr//4 3 0 0
+logging.LogRecord::__init__==>__builtin__.dict::get//4 0 0 0
+logging.StreamHandler::emit==>__builtin__.isinstance//4 6 0 0
+logging.RootLogger::_log==>logging.RootLogger::handle//4 556 0 2064
+posixpath.splitext==>genericpath._splitext//4 31 0 172
+logging.RootLogger::error?1=logger.error==>logging.RootLogger::_log//1 317 0 900
+logging.LogRecord::__init__==>threading.currentThread//4 9 0 40
+logging.RootLogger::error?1=Message1==>logging.RootLogger::isEnabledFor//1 2 0 25
+logging.LogRecord::__init__==>thread.get_ident//4 1 0 0
+posixpath.basename==>__builtin__.str::rfind//4 3 0 0
+threading._RLock::acquire==>threading._RLock::_note//8 5 0 24
+__main__==>logging.getLogger//1 3 0 6
+logging.StreamHandler::format==>logging.Formatter::format//4 192 0 368
+logging.RootLogger::handle==>logging.RootLogger::callHandlers//4 532 0 1940
+logging.LogRecord::__init__==>threading._MainThread::name//4 3 0 56
+logging.RootLogger::error?1=Message3==>logging.RootLogger::isEnabledFor//1 6 0 25
+logging.RootLogger::findCaller==>posixpath.normcase//4 1 0 8
+logging.StreamHandler::acquire==>threading._RLock::acquire//8 75 0 284
+logging.RootLogger::isEnabledFor==>logging.RootLogger::getEffectiveLevel//4 8 0 44
+logging.LogRecord::__init__==>posix.getpid//4 0 0 0
+threading._RLock::release==>threading._RLock::_note//8 4 0 24
+logging.getLevelName==>__builtin__.dict::get//4 0 0 0
+logging.LogRecord::__init__==>__builtin__.hasattr//4 1 0 0
+__main__==>logging.RootLogger::error?1=Message2//1 202 0 945
+logging.RootLogger::_log==>logging.RootLogger::makeRecord//4 244 0 1128
+logging.StreamHandler::flush==>logging.StreamHandler::acquire//4 34 0 172
+logging.RootLogger::error?1=Message2==>logging.RootLogger::isEnabledFor//1 5 0 25
+logging.RootLogger::findCaller==>__builtin__.hasattr//4 0 0 0
+logging.StreamHandler::handle==>logging.RootLogger::filter//4 3 0 40
+logging.Formatter::format==>logging.Formatter::usesTime//4 13 0 40
+__main__==>logging.RootLogger::error?1=logger.error//1 343 0 945
+logging.StreamHandler::flush==>logging.StreamHandler::release//4 32 0 176
+logging.LogRecord::__init__==>time.time//4 0 0 0
+logging.RootLogger::error?1=Message1==>logging.RootLogger::_log//1 155 0 900
+logging.RootLogger::_log==>logging.RootLogger::findCaller//4 51 0 244
+threading._RLock::release==>thread.get_ident//8 0 0 0
+

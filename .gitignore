@@ -1,3 +1,7 @@
+build/
+back/
+sc.back/
+
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof

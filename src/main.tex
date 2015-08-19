@@ -1,0 +1,276 @@
+\documentclass[12pt,a4paper,oneside,oldfontcommands,xindy]{memoir}
+
+\usepackage[utf8]{inputenc}
+\usepackage[francais,french]{babel}
+\usepackage[T1]{fontenc}
+
+\let\footruleskip\undefined
+\usepackage{fancyhdr}
+
+\usepackage[pdftex]{graphicx}
+\usepackage{setspace}
+\usepackage[tight]{shorttoc} 
+\usepackage[french]{varioref}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+\usepackage{calc}
+\usepackage{blindtext}
+\usepackage{eso-pic}
+\usepackage{lastpage}
+\usepackage{datetime}
+%\usepackage{caption}
+%\usepackage{subcaption}
+\usepackage{fancybox}
+\usepackage[]{minted}
+\usepackage{mdframed}
+%\usepackage{tikz} 
+\usepackage{color}
+\usepackage{a4wide} 
+\usepackage{amsmath}
+\usepackage{amssymb} 
+\usepackage{moreverb}
+\usepackage{bookmark}
+\usepackage{keyval,xparse}
+\usepackage{wrapfig}
+\usepackage{indentfirst}
+%\usepackage[toc,page]{appendix}
+\usepackage{minitoc}
+\usepackage{fancyref}
+\usepackage{chngcntr}
+\usepackage{tocloft}
+\usepackage{etoolbox}
+\usepackage{hyperref}
+ 
+\author{Tristan Darricau}
+\title{Rapport de projet de fin d'études}
+\date{\protect\today}
+
+\usepackage[toc,nonumberlist,xindy,nomain,acronym]{glossaries}
+\makeindex
+
+\input{style}
+
+\makeglossaries
+\input{glossaire}
+\loadglsentries[main]{glossaire}
+
+\doparttoc
+ 
+\pagestyle{front}
+\begin{document}
+  \frontmatter
+  \input{title}
+
+
+  \sommaire
+   
+  %\chapter{Introduction}
+  %\Blindtext
+
+  % Resumé  
+
+  \input{contexte}
+  
+  \mainmatter
+  
+\fancypagestyle{plain}{%
+  %\fancyhf{}
+  \renewcommand{\headrulewidth}{0.5pt}
+  \renewcommand{\footrulewidth}{0.5pt}
+  \fancyfoot[L]{
+    \logoBF[height=0.5cm]
+    \logoSL[height=0.5cm]
+    \logoIMAG[height=0.5cm]
+  }
+  \fancyfoot[R]{Page \thepage\ sur \pageref{LastPage}}
+  \fancyfoot[C]{Rapport de projet de fin d'études}
+}
+  \pagestyle{main}
+
+\renewcommand{\thefigure}{\thepart.\thesection-\arabic{figure}}
+\renewcommand{\thesubfigure}{\thepart.\thesection-\arabic{figure}}
+
+  %\pagestyle{fancy}
+
+  
+  % Problématique, objectifs
+  % entreprise (1 page)
+  % enjeu de votre PFE pour l'entreprise, position de votre équipe au sein de l'entreprise, qui vous encadre (une personne, une équipe, ...), suivi de votre travail (journée typique, ...).  
+  % Faire comprendre de manière concise et intelligible par une personne non spécialiste du domaine la problématique de votre projet (~5 pages)
+  %		le contexte du projet (vue d'ensemble à travers par ex. un workflow simplifié)
+  %		le travail à réaliser ou le problème à résoudre
+  %		les objectifs précis attendus  
+  % Présentation des solutions techniques étudiées ou mises en oeuvre  (~10 pages)
+  % 		synthèse de l'existant (couverture fonctionnelle existante (architecture logicielle par ex.), contraintes inhérentes au projet (outils, librairies, ...), s'appuyant sur une bibliographie précise
+  % 		description de la (ou des) solution(s) envisagée(s) et des outils qui seront utilisés
+  % 		protocole d'évaluation envisagé pour valider votre solution ou mesurer son efficacité
+  % Votre avancement (~2 pages)
+ % 		planning prévisionnel montrant ce qui a déjà été fait et ce qu’il reste à faire (présenté sous la forme d’un diagramme de Gantt)
+ 
+  %\part{Analyse de l'existant}
+    \input{existant} 
+    %\chapter{Blackfire}
+      %\input{existant/blackfire}
+      %\section{Sonde}
+       % \input{existant/blackfire-sonde}
+      %\section{Agent}
+        %\input{existant/blackfire-agent}
+      %\section{API}
+        %\input{existant/blackfire-api}
+    %\chapter{Analyse de performance en Python}
+      %\input{existant/python}
+      %\section{Outils tiers existants}
+       % \input{existant/python-tiers}
+        %\subsection{New Relic}
+         % \input{existant/python-tiers-new_relic}
+          %\subsubsection{Présentation}
+          %\subsubsection{Fonctionnalités}
+          %\subsubsection{Fonctionnement}
+        %\subsection{Optbeat}
+        %  \input{existant/python-tiers-optbeat}
+          %\subsubsection{Présentation}
+          %\subsubsection{Fonctionnalités}
+          %\subsubsection{Fonctionnement}
+      %\section{Python}
+      %  \input{existant/python-python}
+        %\subsection{Pycallgraph}
+       %   \input{existant/python-python-pycallgraph}
+        %\subsection{Pyinstrument}
+       %   \input{existant/python-python-pyinstrument}
+        %\subsection{Python C-Profiler/_lsprof}
+       %   \input{existant/python-python-c_profiler}
+        %\subsection{Yappi}
+      %    \input{existant/python-python-yappi}
+        %\subsection{WSGI middle-ware}
+       %   \input{existant/python-python-wsgi}
+  %\part{Implémentation}
+    \input{impl}
+    % Rappel des objectifs (call graph, temps, low overhead, instumentation automatique)
+    %\chapter{Première implémentation - Python}
+      %\input{impl/python}
+    %\chapter{Seconde implémentation - Python/C}
+      %\input{impl/c}
+    
+  %\part{Problématiques et Solutions}
+    %\input{probl}
+    %\chapter{Expérience utilisateur}  
+      %\input{probl/ux}
+      %\section{Analyse à la demande}
+      %  \input{probl/ux-on_demand}
+        % Rappel du contexte
+        %\subsubsection{Variable d'environnement}
+        %\subsubsection{En-têtes HTTP}
+    %\chapter{Mesure des données}
+    %  \input{probl/mesure}
+      %\section{Instrumentation du code}
+    %    \input{probl/mesure-intrumentation}
+      %\section{Temps utilisateur/Temps CPU}
+    %    \input{probl/mesure-temps}
+      %\section{Utilisation de la mémoire}
+    %    \input{probl/mesure-memoire}
+      %\section{Arguments de fonction}
+    %    \input{probl/mesure-fonc_args}
+      %\section{Volumes d'Entrées/Sorties}
+    %   \input{probl/mesure-io}
+    %\chapter{Intégration de l'API}
+   %   \input{probl/api}
+      %\section{Communication avec l'agent}
+     %   \input{probl/api-comm_agent}
+      
+  %\chapter{Main}
+  %\section{Section}
+  
+  %\begin{listing}[H]
+  %  \begin{phpcode*}
+  %   int main() {
+  %      printf("hello, world");
+  %      return 0;
+  %    }
+  %  \end{phpcode*}
+  %  \caption{php main}
+  %\end{listing}
+  
+  %\begin{listing}[H]
+  %  \begin{pythoncode}
+  %   int main() {
+  %      printf("hello, world");
+  %      return 0;
+  %    }
+  %  \end{pythoncode}
+  %  \caption{python main}
+  %\end{listing}
+  
+  %\begin{listing}[H]
+  %\pythonfile[firstline=0,lastline=3]{main.tex}
+  %\caption{python main.tex}
+  %\end{listing}
+  
+  %\begin{listing}[H]
+  %\caption{python main.tex}
+  %\pythonfilelong[firstline=0,lastline=3]{main.tex}
+  %\end{listing}
+  
+  %\begin{pythoncode*}
+  %  int main() {
+  %    printf("hello, world");
+  %    return 0;
+  %  }
+  %\end{pythoncode*}
+  %\phpfile[firstline=0,lastline=30]{main}
+  %\phpfile[firstline=31,lastline=60,numberline=last]{main}
+  
+  %\phpfile{main.tex}
+  %\pythonfile{main.tex}
+  %\Blindtext
+  %\begin{appendices}
+  %\part*{Annexes}
+  \renewcommand{\appendixtocname}{Annexes}
+  \renewcommand{\appendixname}{Annexe}
+  \renewcommand{\appendixpagename}{Annexes}
+  
+  \appendix
+  \phantomsection
+  \addcontentsline{toc}{part}{Annexes}
+  \part*{Annexes}
+  \thispagestyle{part}
+  
+  \numberwithin{listing}{part}
+  \numberwithin{listing}{chapter}
+  \numberwithout{listing}{section}
+  
+  \renewcommand\thefigure{\thechapter.\arabic{figure}}    
+  \renewcommand\thelisting{\thechapter.\arabic{listing}}  
+  \renewcommand\thetablr{\thechapter.\arabic{table}}    
+ 
+  \input{annexes}
+  
+% -----------------------------------  
+  
+  \backmatter
+  \setcounter{tocdepth}{4}
+  \tableofcontents
+  \clearpage
+  
+  \listoftables
+  \clearpage
+  
+  \listoffigures
+  \clearpage
+  
+  \phantomsection
+  \addcontentsline{toc}{chapter}{Liste des codes}
+  \listoflistings
+  \clearpage
+  
+  %\glsaddall
+  %\addcontentsline{toc}{chapter}{Glossaire}
+  \printglossary[title=Glossaire,toctitle=Glossaire]
+  \clearpage
+  
+  %\printindex
+  %\clearpage
+  
+  \bibliographystyle{plain-fr}
+  \bibliography{rapport.bib}
+  \clearpage
+  
+\end{document}

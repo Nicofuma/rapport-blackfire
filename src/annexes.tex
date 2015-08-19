@@ -1,0 +1,68 @@
+\input{annexe/new-relic_decoration-methodes}
+
+\chapter{Compatibilité Python 2 / Python 3}
+
+\chapter{Décorateur WSGI}
+  \label{app:decorateurwsgi}
+  \pythonfilelong{codes/probe/blackfire/wsgi_wrapper.py}
+  \begin{listing}[H]
+    \caption{Décorateur wsgi - blackfire/wsgi\_wrapper.py}
+  \end{listing}
+ 
+\chapter{Profil complet}
+  \label{app:fullProfile}
+  \textfilelong{codes/profile.dat}
+  \begin{listing}[H]
+    \caption{Exemple de profile généré par \Blackfire}
+  \end{listing}
+ 
+\chapter{Structures de données}
+  \section{La pile d'appels}
+    \label{app:pile_struct}
+    \begin{listing}[H]
+      \caption{Structures de données permettant de gérer la pile d'appels}
+      \cfile{codes/pile_struct.c}
+    \end{listing}
+  \section{Le graphe d'appels}
+    \label{app:graph_struct}
+    \begin{listing}[H]
+      \caption{Structures de données permettant de gérer le graphe d'appels}
+      \cfile{codes/graph_struct.c}
+    \end{listing}
+ 
+\chapter{Définition d'un PyCFunctionObject}
+  \label{app:PyCFunctionObject}
+  \begin{listing}[H]
+    \caption{Structures de données représentant une fonction \C en \Python}
+    \cfile{codes/PyCFunctionObject.c}
+  \end{listing}
+ 
+\chapter{Arguments de fonctions}
+  \section[Instrumentation]{Instrumentation d'une liste de fonction}
+  \label{app:do_instrument}
+    \vspace{10px}
+    \cfilelong{codes/do_instrument.c}
+    \begin{listing}[H]
+      \caption{Instrumentation d'une liste de fonction définie dynamiquement}
+    \end{listing}
+  \section[Fonction C]{Récupération des arguments d'une fonction C}
+  \label{app:get_arg_from_cfunction}
+    \begin{listing}[H]
+      \caption{Récupération des arguments d'une fonction définie en \C}
+      \cfile{codes/get_arg_from_cfunction.c}
+    \end{listing}
+  \clearpage
+  \section[Fonction Python]{Récupération des arguments d'une fonction Python}
+  \label{app:get_arg_from_python}
+    \vspace{10px}
+    \cfilelong{codes/get_arg_from_python.c}
+    \begin{listing}[H]
+      \caption{Récupération des arguments d'une fonction définie en \Python}
+    \end{listing}
+    
+\chapter{Dimension opcodes}
+  \label{app:count_bytecode}
+  \cfilelong{codes/count_bytecode.c}
+  \begin{listing}[H]
+    \caption{Calcul du nombre d'opcodes dans la ligne courante}
+  \end{listing}

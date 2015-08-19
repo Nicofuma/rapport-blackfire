@@ -1,0 +1,238 @@
+
+ \begin{theindex} 
+ \makeatletter\scan@allowedfalse
+{\bfseries\hfil Symbols\hfil}\nopagebreak
+
+  \item \verb*+\@Ginclude@figtex+\pfill 401
+  \item \verb*+\@Ginclude@rawtex+\pfill 378
+  \item \verb*+\@Ginclude@svgtex+\pfill 419
+  \item \verb*+\@Gread@figtex+\pfill 439
+  \item \verb*+\@Gread@svgtex+\pfill 454
+  \item \verb*+\@clsextension+\pfill 196
+  \item \verb*+\@for+\pfill 164, 208, 278, 284
+  \item \verb*+\@ifnextchar+\pfill 262, 524
+  \item \verb*+\@tempboxa+\pfill 349, 351, 352, 362, 364, 365, 447, 
+		449, 450, 462, 464, 465
+  \item \verb*+\@twoclasseserror+\pfill 175
+  \item \verb*+\@unknownoptionerror+\pfill 19
+
+  \indexspace
+{\bfseries\hfil A\hfil}\nopagebreak
+
+  \item \verb*+\AtBeginDocument+\pfill 162
+  \item \verb*+\AtEndDocument+\pfill 192
+
+  \indexspace
+{\bfseries\hfil B\hfil}\nopagebreak
+
+  \item \verb*+\boolean+\pfill 56, 63
+
+  \indexspace
+{\bfseries\hfil C\hfil}\nopagebreak
+
+  \item \verb*+\CurrentOption+\pfill 31, 32
+
+  \indexspace
+{\bfseries\hfil D\hfil}\nopagebreak
+
+  \item {\ttfamily debug} (option)\pfill \main{3}
+  \item \verb*+\documentclass+\pfill 175, 177, 180
+
+  \indexspace
+{\bfseries\hfil E\hfil}\nopagebreak
+
+  \item {\ttfamily extension} (option)\pfill \main{8}
+
+  \indexspace
+{\bfseries\hfil F\hfil}\nopagebreak
+
+  \item \verb*+\FL@subfig@check+\pfill 468
+  \item \verb*+\FL@subfig@mainfigname+\pfill 407, 412, 425, 430
+
+  \indexspace
+{\bfseries\hfil G\hfil}\nopagebreak
+
+  \item \verb*+\Gin@base+\pfill 315
+  \item \verb*+\Gin@defaultbp+\pfill 351, 352, 364, 365, 449, 450, 
+		464, 465
+  \item \verb*+\Gin@ext+\pfill 313, 315
+  \item \verb*+\Gin@llx+\pfill 350, 363, 448, 463
+  \item \verb*+\Gin@lly+\pfill 350, 363, 448, 463
+  \item \verb*+\Gin@urx+\pfill 351, 364, 449, 464
+  \item \verb*+\Gin@ury+\pfill 352, 365, 450, 465
+
+  \indexspace
+{\bfseries\hfil I\hfil}\nopagebreak
+
+  \item \verb*+\ifxetex+\pfill 38
+  \item \verb*+\isundefined+\pfill 35, 209, 407, 425
+
+  \indexspace
+{\bfseries\hfil N\hfil}\nopagebreak
+
+  \item \verb*+\newboolean+\pfill 3
+
+  \indexspace
+{\bfseries\hfil O\hfil}\nopagebreak
+
+  \item options:\efill 
+ \subitem { \ttfamily debug}\pfill \main{3}
+    \subitem { \ttfamily extension}\pfill \main{8}
+  \item \verb*+\OR+\pfill 214
+
+  \indexspace
+{\bfseries\hfil P\hfil}\nopagebreak
+
+  \item \verb*+\PackageError+\pfill 176
+  \item \verb*+\PackageInfo+\pfill 59
+
+  \indexspace
+{\bfseries\hfil R\hfil}\nopagebreak
+
+  \item \verb*+\RequireFile+\pfill \main{92}
+
+  \indexspace
+{\bfseries\hfil S\hfil}\nopagebreak
+
+  \item \verb*+\setboolean+\pfill 6
+
+  \indexspace
+{\bfseries\hfil T\hfil}\nopagebreak
+
+  \item \verb*+\TD@@@fileswith@pti@ns+\pfill \main{195}
+  \item \verb*+\TD@@bt@write@auxfile+\pfill 533
+  \item \verb*+\TD@@fileswith@pti@ns+\pfill \main{195}
+  \item \verb*+\TD@@iinput+\pfill \main{245}
+  \item \verb*+\TD@@input@+\pfill \main{245}
+  \item \verb*+\TD@@onefilewithoptions+\pfill \main{204}
+  \item \verb*+\TD@bibfile+\pfill 278, 279
+  \item \verb*+\TD@bibli@bbl+\pfill 272, 274, 277, 283, 538
+  \item \verb*+\TD@bibli@files+\pfill 276, 290, 526, 530
+  \item \verb*+\TD@bibli@style+\pfill 282, 294, 527
+  \item \verb*+\TD@biblio@rules@package+\pfill 539
+  \item \verb*+\TD@biblio@rules@package@bibtopic+\pfill 539
+  \item \verb*+\TD@bibliography+\pfill 289
+  \item \verb*+\TD@bibliographystyle+\pfill 293
+  \item \verb*+\TD@bibstyle+\pfill 284, 285
+  \item \verb*+\TD@btSect+\pfill 523
+  \item \verb*+\TD@btSect@noopt+\pfill 524, 529
+  \item \verb*+\TD@btSect@opt+\pfill 524, 525
+  \item \verb*+\TD@cmd+\pfill 164, 165
+  \item \verb*+\TD@debug+\pfill \main{62}, 207, 228, 237
+  \item \verb*+\TD@def@index+\pfill 497
+  \item \verb*+\TD@depends+\pfill \main{184}
+  \item \verb*+\TD@dependsWarning+\pfill \main{184}
+  \item \verb*+\TD@divert+\pfill 225, 227, 231, 234, 236, 240
+  \item \verb*+\TD@docswitch+\pfill \main{153}, 297, 370--374, 475--481, 
+		494, 495, 511, 518, 543
+  \item \verb*+\TD@docswitchlist+\pfill 153, 156, 157, 159, 164
+  \item \verb*+\TD@extention+\pfill 10, 35, 40, 43, 46, 69, 70, 75, 78, 
+		81, 84, 87, 90, 94, 97, 100, 103, 106, 109, 112, 113, 
+		116, 119, 122, 125, 126, 129, 132, 135
+  \item \verb*+\TD@FL@includerawtexgraphics+\pfill 379
+  \item \verb*+\TD@FL@subfig@check+\pfill 469
+  \item \verb*+\TD@Gin@getbase+\pfill 311
+  \item \verb*+\TD@Ginclude@eps+\pfill 318
+  \item \verb*+\TD@Ginclude@figtex+\pfill 402
+  \item \verb*+\TD@Ginclude@pdf+\pfill 328
+  \item \verb*+\TD@Ginclude@rawtex+\pfill 390
+  \item \verb*+\TD@Ginclude@svgtex+\pfill 420
+  \item \verb*+\TD@graphicspath+\pfill 338
+  \item \verb*+\TD@Gread@eps+\pfill 342
+  \item \verb*+\TD@Gread@figtex+\pfill 440
+  \item \verb*+\TD@Gread@pdf+\pfill 355
+  \item \verb*+\TD@Gread@svgtex+\pfill 455
+  \item \verb*+\TD@info+\pfill \main{55}, 69, 147, 155, 163, 167, 230, 
+		239
+  \item \verb*+\TD@local@new+\pfill 139, 140, 150
+  \item \verb*+\TD@local@old+\pfill 138, 140, 143, 149
+  \item \verb*+\TD@makeglossary+\pfill 304
+  \item \verb*+\TD@makeindex+\pfill 299
+  \item \verb*+\TD@missingDepends+\pfill \main{184}, 324, 334, 385, 396, 
+		415, 433
+  \item \verb*+\TD@openout+\pfill \main{260}
+  \item \verb*+\TD@openout@eq+\pfill 262, 263
+  \item \verb*+\TD@openout@noeq+\pfill 262, 267
+  \item \verb*+\TD@option@cmd+\pfill 15, 18, 22, 25
+  \item \verb*+\TD@option@debug+\pfill 4
+  \item \verb*+\TD@option@extension+\pfill 8
+  \item \verb*+\TD@option@name+\pfill 13, 14, 16
+  \item \verb*+\TD@option@split+\pfill 12, 32
+  \item \verb*+\TD@option@value+\pfill 24, 25
+  \item \verb*+\TD@orig@@bt@write@auxfile+\pfill 535
+  \item \verb*+\TD@orig@@fileswith@pti@ns+\pfill 199
+  \item \verb*+\TD@orig@@iinput+\pfill 247
+  \item \verb*+\TD@orig@@input@+\pfill 252
+  \item \verb*+\TD@orig@@onefilewithoptions+\pfill 233
+  \item \verb*+\TD@orig@bibliography+\pfill 291
+  \item \verb*+\TD@orig@bibliographystyle+\pfill 295
+  \item \verb*+\TD@orig@btSect+\pfill 528, 531
+  \item \verb*+\TD@orig@def@index+\pfill 501
+  \item \verb*+\TD@orig@FL@includerawtexgraphics+\pfill 381
+  \item \verb*+\TD@orig@Gin@getbase+\pfill 312
+  \item \verb*+\TD@orig@Ginclude@eps+\pfill 320
+  \item \verb*+\TD@orig@Ginclude@figtex+\pfill 405
+  \item \verb*+\TD@orig@Ginclude@pdf+\pfill 330
+  \item \verb*+\TD@orig@Ginclude@rawtex+\pfill 392
+  \item \verb*+\TD@orig@Ginclude@svgtex+\pfill 423
+  \item \verb*+\TD@orig@graphicspath+\pfill 340
+  \item \verb*+\TD@orig@Gread@eps+\pfill 345
+  \item \verb*+\TD@orig@Gread@figtex+\pfill 443
+  \item \verb*+\TD@orig@Gread@pdf+\pfill 358
+  \item \verb*+\TD@orig@Gread@svgtex+\pfill 458
+  \item \verb*+\TD@orig@makeglossary+\pfill 307
+  \item \verb*+\TD@orig@makeindex+\pfill 302
+  \item \verb*+\TD@orig@openout+\pfill 260, 265, 269
+  \item \verb*+\TD@orig@PrintChanges+\pfill 491
+  \item \verb*+\TD@orig@printglossary+\pfill 515
+  \item \verb*+\TD@orig@PrintIndex+\pfill 486
+  \item \verb*+\TD@orig@printindex+\pfill 508
+  \item \verb*+\TD@orig@verbatiminput+\pfill 257
+  \item \verb*+\TD@package@option+\pfill 208--210, 213, 214, 216, 218
+  \item \verb*+\TD@PackagePostDivert+\pfill \main{169}, 258, 368, 474, 
+		493, 503, 510, 517, 537
+  \item \verb*+\TD@PackagePreDivert+\pfill \main{169}
+  \item \verb*+\TD@poenout@eq+\pfill \main{260}
+  \item \verb*+\TD@poenout@noeq+\pfill \main{260}
+  \item \verb*+\TD@print+\pfill \main{71}, 75, 78, 81, 84, 87, 90, 94, 
+		97, 100, 103, 106, 109, 112, 113, 116, 119, 122, 
+		125, 126, 129, 132, 135
+  \item \verb*+\TD@printBblfile+\pfill \main{105}, 273, 534
+  \item \verb*+\TD@printBibfile+\pfill \main{99}, 279
+  \item \verb*+\TD@printBibstyle+\pfill \main{102}, 285, 287
+  \item \verb*+\TD@PrintChanges+\pfill 488
+  \item \verb*+\TD@printClass+\pfill \main{74}, 197
+  \item \verb*+\TD@printFig+\pfill \main{83}, 315
+  \item \verb*+\TD@printGlossary+\pfill \main{124}, 305
+  \item \verb*+\TD@printglossary+\pfill 513
+  \item \verb*+\TD@printGlossarySource+\pfill \main{128}, 306
+  \item \verb*+\TD@printGlossaryStyle+\pfill \main{134}, 489, 520
+  \item \verb*+\TD@printGlossaryTarget+\pfill \main{131}, 490, 514
+  \item \verb*+\TD@printGraphicspath+\pfill \main{96}, 183, 339
+  \item \verb*+\TD@PrintIndex+\pfill 483
+  \item \verb*+\TD@printIndex+\pfill \main{111}, 300, 498
+  \item \verb*+\TD@printindex+\pfill 506
+  \item \verb*+\TD@printIndexSource+\pfill \main{115}, 301, 499
+  \item \verb*+\TD@printIndexStyle+\pfill \main{121}, 484
+  \item \verb*+\TD@printIndexTarget+\pfill \main{118}, 485, 500, 507
+  \item \verb*+\TD@printInput+\pfill \main{80}, 246, 250, 256
+  \item \verb*+\TD@printOut+\pfill \main{93}, 264, 268, 541
+  \item \verb*+\TD@printPackage+\pfill \main{77}, 182, 205
+  \item \verb*+\TD@printRebuildRule+\pfill \main{108}, 542
+  \item \verb*+\TD@printRequiredFile+\pfill \main{89}, 92, 325, 335, 
+		386, 397, 416, 434, 470
+  \item \verb*+\TD@printSubfig+\pfill \main{86}, 471
+  \item \verb*+\TD@switch+\pfill \main{137}, 165, 202, 203, 244, 
+		253, 254, 259, 271, 298, 309, 310, 369, 504, 519, 540
+  \item \verb*+\TD@verbatiminput+\pfill 255
+  \item \verb*+\TD@warning+\pfill \main{49}, 144
+  \item \verb*+\TD@warningLine+\pfill \main{52}, 210, 218
+  \item \verb*+\TD@write+\pfill 68, 70, 72
+  \item \verb*+\thebtauxfile+\pfill 534
+
+  \indexspace
+{\bfseries\hfil U\hfil}\nopagebreak
+
+  \item \verb*+\usepackage+\pfill 178
+
+ \end{theindex}

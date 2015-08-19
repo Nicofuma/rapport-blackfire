@@ -1,0 +1,12 @@
+window_sizes 1301 744 304 991 571 120
+cleanlooks_style
+diagrams
+  active  componentdiagram_ref 128002 // diagram
+    991 571 100 4 0 0
+end
+show_stereotypes
+selected componentdiagram_ref 128002 // diagram
+open
+  componentview_ref 128002 // component
+end
+end

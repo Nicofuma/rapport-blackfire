@@ -1,0 +1,40 @@
+\contentsline {section}{\numberline {1}Introduction}{2}{section.2}
+\contentsline {section}{\numberline {2}Quick start}{2}{section.4}
+\contentsline {subsection}{\numberline {2.1}First (and often last) step}{2}{subsection.5}
+\contentsline {paragraph}{Tip:}{2}{section*.6}
+\contentsline {subsection}{\numberline {2.2}Customization}{2}{subsection.7}
+\contentsline {subsubsection}{Which \LaTeX {} documents to compile}{2}{section*.8}
+\contentsline {subsubsection}{Which \LaTeX {} main source for a document}{2}{section*.9}
+\contentsline {subsubsection}{Which flavors must be compiled}{3}{section*.10}
+\contentsline {subsubsection}{Which programs are called and with which options}{3}{section*.12}
+\contentsline {subsubsection}{Per target programs and options}{3}{section*.13}
+\contentsline {subsubsection}{Global and per target dependencies}{3}{section*.14}
+\contentsline {section}{\numberline {3}Reference manual}{4}{section.15}
+\contentsline {subsection}{\numberline {3.1}Flavors}{4}{subsection.16}
+\contentsline {subsubsection}{\numberline {3.1.1}What is a flavor ?}{4}{subsubsection.17}
+\contentsline {subsubsection}{\numberline {3.1.2}Defining a new flavor}{4}{subsubsection.18}
+\contentsline {paragraph}{DVI flavor}{5}{section*.19}
+\contentsline {subparagraph}{Tip:}{5}{section*.20}
+\contentsline {paragraph}{PDF flavor}{5}{section*.21}
+\contentsline {paragraph}{PS flavor}{5}{section*.22}
+\contentsline {subparagraph}{Tip:}{5}{section*.23}
+\contentsline {paragraph}{DVIPDF flavor}{5}{section*.24}
+\contentsline {subsection}{\numberline {3.2}Variables}{5}{subsection.25}
+\contentsline {subsubsection}{\numberline {3.2.1}Two kind of variables}{5}{subsubsection.26}
+\contentsline {paragraph}{SET-variable.}{6}{section*.27}
+\contentsline {subparagraph}{Tip:}{6}{section*.28}
+\contentsline {subparagraph}{Tip2:}{6}{section*.29}
+\contentsline {paragraph}{ADD-variable.}{6}{section*.30}
+\contentsline {subparagraph}{Tip:}{6}{section*.31}
+\contentsline {subparagraph}{Example:}{6}{section*.32}
+\contentsline {subsubsection}{\numberline {3.2.2}List of used variables}{7}{subsubsection.33}
+\contentsline {section}{\numberline {4}FAQ}{9}{section.34}
+\contentsline {subsection}{\numberline {4.1}No rule to make target `LU\_WATCH\_FILES\_SAVE'}{9}{subsection.35}
+\contentsline {section}{\numberline {5}Implementation}{10}{section.36}
+\contentsline {subsection}{\numberline {5.1}LaTeX.mk}{10}{subsection.37}
+\contentsline {subsection}{\numberline {5.2}LaTeX.mk.conf}{26}{subsection.38}
+\contentsline {subsection}{\numberline {5.3}figdepth}{26}{subsection.39}
+\contentsline {subsection}{\numberline {5.4}gensubfig}{27}{subsection.40}
+\contentsline {subsection}{\numberline {5.5}svg2dev}{28}{subsection.41}
+\contentsline {subsection}{\numberline {5.6}latexfilter}{29}{subsection.42}
+\contentsline {subsection}{\numberline {5.7}svgdepth}{30}{subsection.43}

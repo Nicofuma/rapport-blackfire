@@ -1,0 +1,24 @@
+\select@language {english}
+\contentsline {section}{\numberline {1}Introduction}{2}{section.2}
+\contentsline {section}{\numberline {2}Implementation of texdepends}{2}{section.3}
+\contentsline {subsection}{\numberline {2.1}Options}{2}{subsection.4}
+\contentsline {subsection}{\numberline {2.2}Tools}{3}{subsection.5}
+\contentsline {subsubsection}{\numberline {2.2.1}Debug/info wrapper}{3}{subsubsection.6}
+\contentsline {subsubsection}{\numberline {2.2.2}Writing dependencies}{4}{subsubsection.7}
+\contentsline {subsubsection}{\numberline {2.2.3}Diverting a macro}{6}{subsubsection.8}
+\contentsline {subsubsection}{\numberline {2.2.4}Initialisation}{7}{subsubsection.9}
+\contentsline {subsubsection}{\numberline {2.2.5}Warning upon missing figures}{8}{subsubsection.10}
+\contentsline {subsection}{\numberline {2.3}Diversion of \textlatin {\LaTeX }{} macros}{8}{subsection.11}
+\contentsline {subsubsection}{\numberline {2.3.1}Class and package loading}{8}{subsubsection.12}
+\contentsline {subsubsection}{\numberline {2.3.2}Tracking input files}{9}{subsubsection.13}
+\contentsline {subsubsection}{\numberline {2.3.3}Tracking output files}{10}{subsubsection.14}
+\contentsline {subsubsection}{\numberline {2.3.4}Tracking bibliography files}{10}{subsubsection.15}
+\contentsline {subsubsection}{\numberline {2.3.5}Glossary and index files}{11}{subsubsection.16}
+\contentsline {subsection}{\numberline {2.4}Diversion of package's macros}{11}{subsection.17}
+\contentsline {subsubsection}{\numberline {2.4.1}Package graphics}{11}{subsubsection.18}
+\contentsline {subsubsection}{\numberline {2.4.2}Package figlatex}{12}{subsubsection.19}
+\contentsline {subsubsection}{\numberline {2.4.3}Package doc}{14}{subsubsection.20}
+\contentsline {subsubsection}{\numberline {2.4.4}Package index}{15}{subsubsection.21}
+\contentsline {subsubsection}{\numberline {2.4.5}Package makeidx}{15}{subsubsection.22}
+\contentsline {subsubsection}{\numberline {2.4.6}Package nomencl}{15}{subsubsection.23}
+\contentsline {subsubsection}{\numberline {2.4.7}Package bibtopic}{15}{subsubsection.24}

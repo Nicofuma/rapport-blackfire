@@ -1,0 +1,108 @@
+#!/bin/bash
+
+print-TDS() { # 1:starttoken
+	declare -a loc
+	declare -a home
+	declare -a mid
+	declare -a end
+	declare -a all
+	
+	while read dir; do
+		dir="$dir/"
+		motif="//"
+		rep="/"
+		dir2="${dir/$motif/$rep}"
+		while test "$dir2" != "$dir"; do
+			dir="$dir2"
+			dir2=${dir/$motif/$rep}
+		done
+		motif="/./"
+		rep="/"
+		dir2="${dir/$motif/$rep}"
+		while test "$dir2" != "$dir"; do
+			dir="$dir2"
+			dir2=${dir/$motif/$rep}
+		done
+		dir2="$(echo "$dir" | sed -e 's,[^/]\+/\.\./,,')"
+		while test "$dir2" != "$dir"; do
+			dir="$dir2"
+			dir2="$(echo "$dir" | sed -e 's,[^/]\+/\.\./,,')"
+		done
+		dir="${dir%/}"
+		case "$dir" in
+		"") ;;
+		*"/."*) end=("${end[@]}" "$dir");;
+		*"/local/"*) loc=("${loc[@]}" "$dir");;
+		*"/etc/"*) end=("${end[@]}" "$dir");;
+		*"/var/"*) end=("${end[@]}" "$dir");;
+		"${HOME}"*) home=("${home[@]}" "$dir");;
+		*) mid=("${mid[@]}" "$dir");;
+		esac
+	done < <(kpsepath tex \
+		| tr ':' '\n' \
+		| sed -e 's/^!!//' -e 's,/*$,,' \
+		| sed -e 's,/tex$,,p;d')
+	
+	trie() {
+		local -a var
+		eval 'var=( "${'"$1"'[@]}" )'
+		for d in "${var[@]}"; do
+			echo $d
+		done | sort
+	}
+	
+	OLD_IFS="$IFS"
+	IFS="
+	"
+	all=( $(trie loc) $(trie mid) $(trie home) $(trie end) )
+	IFS="$OLD_IFS"
+	
+	for dir in "${all[@]}"; do
+		flags="    "
+		if [ -e "$dir" ]; then
+			if [ ! -w "$dir" ]; then
+				flags="[R] "
+			fi
+		else
+			flags="[U] "
+		fi
+		echo "$1$flags$dir"
+	done 
+}
+
+cat <<EOF
+When installing LaTeX-Make, two paths must be chosen:
+* prefix:
+  The 'LaTeX.mk' file will be installed into \${prefix}/include. If you use a
+  directory where your GNU-Make look for included files, you will be able to
+  just put 'include LaTeX.mk' into your Makfiles.
+    By default, LaTeX-Make use the '/usr/local' prefix, so 'LaTeX.mk' will
+  be installed into '/usr/local/include'.
+
+* texmf_prefix:
+  This is the base TeX tree (TeX Directory Structure) in which all LaTeX files
+  will be installed. By default, this is '\${prefix}/share/texmf' but a list
+  of such directories configurated on this system is provided below.
+  One of them should probably be used.
+
+Valid texmf_prefix values on this system:
+=========================================
+EOF
+print-TDS "  "
+cat <<EOF
+
+Flags meaning:
+  [U]: unexistant but configurated TDS, will be created if choosen
+  [R]: read-only TDS. Use 'sudo' for 'make install' is choosen
+
+You can now run:
+================
+    make
+    make check #optional
+    [sudo] make install prefix=PREFIX texmf_prefix=TDS
+
+with PREFIX and TDS correctly choosen
+
+EOF
+
+

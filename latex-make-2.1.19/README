@@ -1,0 +1,15 @@
+
+To install LaTeX-Make system-wide or on an user account, please refer to
+the INSTALL file.
+
+
+The LaTeX-Make software can also be installed within the directory of a
+LaTeX document. This is usefull if your document is under CVS and if not
+all users have installed LaTeX-Make.
+
+So, if you LaTeX document is in the $DIR directory, you need to copy, at
+least:
+* LaTeX.mk in $DIR
+* texdepends.sty and figlatex.sty in $DIR
+* gensubfig.py, svg2dev.py, svgdepth.py, figdepth.pl, gensubfig.sh, and latexfilter.pl in $DIR/bin or $DIR
+

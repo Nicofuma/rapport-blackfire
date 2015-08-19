@@ -1,0 +1,171 @@
+\part{Analyse de l'existant}
+\thispagestyle{part}
+\parttoc
+
+	\chapter{Blackfire}
+	\label{chap:Blackfire}
+		\section{Architecture générale}
+			% Schéma :  https://d2vqbs7xgyce6n.cloudfront.net/assets/v44abae9bcb/bundles/blackfire/img/general-workflow.png
+			% Pour chaque composant : rôle/objectifs/problématiques... (Agent / Sonde / API / Companion)
+			% En commentaire du schéma montrant comment ils s'organisent entre eux
+	
+\begin{figure}[!h]
+\begin{center}
+  \includegraphics[width=0.8\textwidth]{images/schemas/workflow/general-workflow}
+  \caption{Fonctionnement générale de \Blackfire}
+\end{center}
+\end{figure}
+
+Ce graphique montre comment les 4 composants de \Blackfire interagissent entre eux lors de l'établissement d'un profile.
+ 
+Ainsi, on commence par le \textbf{Compagnon}, son rôle est de générer la requête\footnote{Voir section \vref{subsec:BlackfireQuery}} en communiquant avec le site blackfire.io puis de l'envoyer à la sonde. Puis d'afficher un retour à l'utilisateur sur le statut de son profil : y a-t-il eu une erreur ? et sinon, quels sont les coûts principaux\footnote{On parle ici des temps du nœud racine, main, ou encore des coûts d'enveloppe.} ?
+
+Ensuite, une fois que la \textbf{Sonde} a reçut la requête, celle-ci va la vérifier, instrumenter le code de l'application et analyser cette dernière. A la suite de quoi le profil est envoyé à l'agent\footnote{Voir section \vref{subsec:comm-agent}} qui retourne un statut que la sonde retransmet au compagnon\footnote{Voir section \vref{subsec:comm-compagnon}}. Le rôle de la sonde et donc d'instrumenter le code, de générer le profile puis de l'envoyer à l'agent.
+
+Une fois que l'\textbf{Agent} à reçut le profile, il va le vérifier et le pré-traiter afin d'agréger les arcs qui ne l'ont pas été\footnote{Si jamais le profile a été généré en plusieurs exemplaires via l'option \verb?--samples=<nb>? il vas aussi les agréger afin qu'un seul profil unique soit envoyé à l'API} et aussi d'anonymiser certains arguments de fonction comme les requêtes SQL qui sont susceptibles de contenir des informations sensibles. Puis il va envoyer ce profile au site blackfire.io.
+
+Enfin, le site \textbf{blackfire.io}, son rôle est de stocker et d'afficher les profiles aux utilisateurs.
+
+		\section{Protocole}
+			\label{sec:BlackfireProtocol}
+			% Retour sur certains éléments du protocole
+Pour faire communiquer les différents composants entre eux, \Blackfire utilise un protocole textuel répondant à 4 objectifs principaux :
+\begin{itemize}
+\item Authentifier une demande de profile
+\item Fournir les informations nécessaires pour générer le profile
+\item Transmettre le profile générer
+\item Fournir un retour à l'utilisateur
+\end{itemize}
+			\subsection{La Requête}
+			\label{subsec:BlackfireQuery}
+				% émise par le companion ou l'outil CLI via run/curl
+				% pas de détail sur la signature ou le contenu précis de la requête. On se contente de ce que l'on va utiliser plus tard
+La requête, émise par le client (le compagnon ou l'outil en ligne de commande par exemple) permet à la fois d'authentifier une demande de profile et de fournir à la sonde un certain nombre d'options de configuration relatives au profile à générer.
+
+Pour cela la requête est composé de deux parties:
+\begin{itemize}
+\item Une série d'arguments accompagné d'une signature cryptographique qui permet d'authentifier la demande et d'en vérifier la validité
+\item Une série d'options de configuration permettant d'activer ou de désactiver certaines parties de la sonde (par exemple l'option \verb|flag_cpu| permet de désactiver la collecte des temps CPU).
+\end{itemize}
+
+			\subsection{Communication avec le Compagnon}
+			\label{subsec:comm-compagnon}
+				% Y a-t-il autre chose que le Blackfire-Response: continue ici ? Expliquer l'enjeu et l'importance de cet en-tête
+L'un des usages de \Blackfire est de profiler, à l'aide du compagnon, une page web servie par un serveur distant. Dans ce cas tout se déroule sur un serveur distant et l'utilisateur n'a aucun moyen de consulter ce qui est produit durant l'analyse. Par conséquent il est important de fournir au compagnon un retour indiquant si le profile été généré. Cette réponse est générée par l'agent et est ensuite retransmise par la sonde au compagnon en définissant l'en-tête \verb|X-Blackfire-Response| dans la réponse \emph{HTTP}.
+
+			\subsection{Communication avec l'agent}
+			\label{subsec:comm-agent}
+				% Format du hello prolog
+				% La réponse de l'agent (avec les fn args)
+L'analyse est déclenchée par le compagnon mais elle est réellement gérée par l'agent. Pour cela il existe un protocole en 2 étapes\footnote{NB: Le protocole a évolué dans un version récente de \Blackfire avec l'introduction du fichier \verb|.blackfire.yml|} entre la sonde et l'agent.
+
+La première étape consiste à faire authentifier la requête par l'agent\footnote{En réalité l'agent n'authentifie pas la requête mais demande à l'API de le faire} et à récupérer les dernières informations requises pour effectuer l'analyse\footnote{Les arguments de fonction si supporté}.
+
+Pour cela la sonde commence par envoyer deux en-tête à l'agent. Le premier, \verb|Blackfire-Query| contient la partie signée de la requête (et la signature) afin que l'agent la valide. Le second, \verb|Blackfire-Probe| permet d'identifier la technologie instrumentée.
+
+\begin{listing}[H]
+\caption{En-têtes envoyés à l'agent par la sonde}
+\begin{textcode}
+Blackfire-Query: <requête>
+Blackfire-Probe: python-20706f0
+\end{textcode}
+\end{listing}
+Ici l'en-tête  \verb|Blackfire-Probe| indique que l'on analyse du python en version 34014960 (tel que défini par \mintinline{python}{hex(sys.hexversion)}).
+
+L'agent va répondre à cet en-tête par une ligne de statut. En cas d'erreur elle est de la forme \verb|Blackfire-Error: <code> <raison>| et est destiné à être journalisé par la sonde. Sinon elle est de la forme \verb|Blackfire-Response: <message|
+et est destiné à être retransmise telle quelle au compagnon. En plus du statut l'agent peu aussi renvoyer des informations identifiants les fonctions à instrumenter afin d'en récupérer certains arguments. Ces informations se trouvent sous la forme d'une série de ligne ayant le format suivant: \verb|Blackfire-Fn-Args: <nœud> <argument>|.
+\verb|<nœud>| étant le nom du nœud à instrumenter (tel qu'affiché dans le graph) et \verb|<argument>| le nombre d'arguments à récupérer.
+
+Par exemple les lignes suivantes indiquent de récupérer le premier argument de la fonction \verb|logging.error| et les deux premiers arguments de la méthode \verb|log| de la classe \verb|logging.error|
+\begin{listing}[H]
+\caption{En-têtes définissant les arguments de fonction à récupérer}
+\begin{textcode}
+Blackfire-Fn-Args: logging.error 1
+Blackfire-Fn-Args: logging.Logger::log 2
+\end{textcode}
+\end{listing}
+
+				\subsubsection{Format des profile}
+					% cf: http://blog.blackfire.io/blackfire-file-format.html
+\Blackfire utilise un format textuel\footnote{Voir Annexe \vref{app:fullProfile} pour un exemple complet de profile} pour décrire les profiles générés après l'analyse d'un programme.
+
+Les profiles sont composés de deux sections séparée par une ligne vide. La première définit un certain nombre d'en-tête décrivant le contexte du profile. Ainsi les principaux en-tête sont:
+\begin{itemize}
+\item \verb|file-format: BlackfireProbe| définit le format utilisé celui-ci ayant évolué au cours du temps. La sonde actuel (et la sonde \Python) utilise le format \emph{BlackfireProbe}
+\item \verb|graph-root-id: <nom>| définit le nom du nœud racine du graph
+\item \verb|cost-dimensions: <liste>| définit la liste des dimensions envoyées par la sonde (temps \emph{wall-time}, cpu, consommation mémoire... Les dimensions sont séparées par des espaces
+\item \verb|probed-os: <os>|, \verb|probed-language: <laguage>|, \verb|probed-version: <language version>| permet de définir l'environnement d'exécution du programme.
+\end{itemize}
+
+La seconde section définit le graphe à proprement parlé, chaque ligne correspondant à un lien entre deux nœuds avec les différents coûts et éventuels arguments de fonction associés.
+
+\begin{listing}[H]
+\caption{Ligne de profile simple (par d'argument de fonction)}
+\begin{textcode}
+<appelant>==><appelé>//<coûts>
+\end{textcode}
+\end{listing}
+
+\begin{itemize}
+\item \verb|<appelant>| étant le nom du nœud appelant
+\item \verb|<appelé>| étant le nom du nœud appelé
+\item \verb|<coûts>| étant la liste des coûts pour le liens. Les coûts sont séparés par des espaces et correspondent aux dimensions définis précédemment.
+\end{itemize}
+
+	\chapter[Analyse en \Python]{Analyse de performance en \Python}
+Il existe différents outils et API permettant d'analyser les performances ou le comportement d'un code python et on peut regrouper ses outils en 2 catégories : ceux qui fonctionnent en mode \gls{SaaS} (comme \Blackfire) et ceux qui fonctionnent de manière indépendante où sont directement intégré dans \Python.
+
+		\section{Outils tiers existants}
+Il existe plusieurs outils tiers permettant de s'intéresser au fonctionnent d'une application \Python et parmi ceux là deux vont nous occuper : \emph{New Relic\footnote{\url{https://www.newrelic.com}}} et \emph{Opbeat\footnote{\url{https://www.opbeat.com}}}.
+
+			%\subsection{New Relic}
+          	%	\input{existant/python-tiers-new_relic}
+			%\subsection{Optbeat}
+			%	\input{existant/python-tiers-optbeat}
+			
+		\section{Python}
+			%\subsection{Pycallgraph}
+			%\label{subsec:pycallgraph}
+			%	\input{existant/python-python-pycallgraph} 
+			%\subsection{Pyinstrument}
+			%\label{subsec:pyinstrument}
+			%	\input{existant/python-python-pyinstrument}
+			\subsection{Python C-Profiler / \textunderscore lsprof} 
+			\label{subsec:cprofiler}
+				\input{existant/python-python-c_profiler}
+			\subsection{Yappi}
+			\label{subsec:yappi}
+				\input{existant/python-python-yappi}
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				

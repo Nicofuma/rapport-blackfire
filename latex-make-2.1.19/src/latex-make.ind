@@ -1,0 +1,8 @@
+
+ \begin{theindex} 
+ \makeatletter\scan@allowedfalse
+{\bfseries\hfil Symbols\hfil}\nopagebreak
+
+  \item \verb*+\"+\pfill 1202, 1204
+
+ \end{theindex}

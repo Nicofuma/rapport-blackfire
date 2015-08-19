@@ -1,0 +1,25 @@
+\begin{picture}(0,0)%
+\includegraphics{fig/subrep/nab-b_3.pdftex}%
+\end{picture}%
+\setlength{\unitlength}{2072sp}%
+%
+\begingroup\makeatletter\ifx\SetFigFont\undefined%
+\gdef\SetFigFont#1#2#3#4#5{%
+  \reset@font\fontsize{#1}{#2pt}%
+  \fontfamily{#3}\fontseries{#4}\fontshape{#5}%
+  \selectfont}%
+\fi\endgroup%
+\begin{picture}(3174,5737)(1564,-7361)
+\put(2701,-2086){\makebox(0,0)[b]{\smash{{\SetFigFont{8}{9.6}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}1}%
+}}}}
+\put(4501,-2086){\makebox(0,0)[b]{\smash{{\SetFigFont{8}{9.6}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}3}%
+}}}}
+\put(3376,-4831){\makebox(0,0)[b]{\smash{{\SetFigFont{8}{9.6}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}B}%
+}}}}
+\put(2476,-4876){\makebox(0,0)[b]{\smash{{\SetFigFont{8}{9.6}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}A}%
+}}}}
+\put(3376,-2086){\makebox(0,0)[b]{\smash{{\SetFigFont{8}{9.6}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}2}%
+}}}}
+\put(2521,-5551){\makebox(0,0)[b]{\smash{{\SetFigFont{29}{34.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}B}%
+}}}}
+\end{picture}%

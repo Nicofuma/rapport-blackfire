@@ -1,0 +1,74 @@
+% ---- Macro pour définir facillement des entrées avec une abréviation ----
+\usepackage{xparse}
+\DeclareDocumentCommand{\newdualentry}{ O{} O{} m m m m } {
+  \newglossaryentry{gls-#3}{name={#5},text={#5\glsadd{#3}},
+    description={#6},#1
+  }
+  \newacronym[see={[Glossary:]{gls-#3}},#2]{#3}{#4}{#5\glsadd{gls-#3}}
+}
+
+% ---- Définitions du glossaire ----
+\newdualentry{SaaS} % label
+  {SaaS}            % abbreviation
+  {Software as a Service}  % long form
+  {Modèle commercial o\`u un logiciel est installé sur des serveurs distants et mis à disposition à travers un réseau. Les clients n'achètent pas le logiciel mais payent un abonnement} % description
+
+\newglossaryentry{production}
+{
+  name=production,
+  description=Se rapporte à une application disponible et utilisée par les utilisateurs et clients finaux; en opposition au serveur de pré-production utilisées par l'équipe de développement à des fins de test
+}
+ 
+\newglossaryentry{PyPI}
+{
+  name=PyPI,
+  description=Le \emph{Python Package Index} est un dépôt de programme écrits pour le langage de programmation \Python
+}
+ 
+\newglossaryentry{pile d'appels}
+{
+  name=Pile d'appels,
+  description={\emph{stacktrace} en anglais, représente la pile d'exécution du programme à un instant donné}
+}
+ 
+\newglossaryentry{graphe d'appels}
+{
+  name=graphe d'appels,
+  description={\emph{callgraph} en anglais, est un graphe orienté qui représente les relations entre les différents sous-programmes d'un logiciel. Chaque nœud représente un sous-programme et chaque arc un appel (un appel de fonction ou de procédure par exemple)}
+}
+ 
+\newglossaryentry{hook}
+{
+  name=hook,
+  description=Point d'entrée permettant à un utilisateur de venir accrocher des bouts de programme afin de personnaliser un logiciel
+}
+ 
+\newglossaryentry{overhead}
+{
+  name=overhead,
+  description={Il s'agit du temps d'exécution du programme qui est directement lié à l'utilisation de la sonde et qui altère donc les mesures effectuées. Dans le cas de \Blackfire on ne vas considérer que les calculs effectués pendant l'analyse des performances, ainsi tout calcul effectué avant ou après le programme analysé ne participent pas à l'overhead de la sonde (car seuls les calculs altérants les mesures effectuées sont importants)}
+}
+ 
+\newglossaryentry{chargeur de module}
+{
+  name=chargeur de module,
+  description={En \Python il s'agit classe qui est chargée de trouver et de charger les modules importés par l'utilisateur}
+}
+ 
+\newglossaryentry{CLI}
+{
+  name=CLI,
+  description=Se dit d'un programme s'exécutant en ligne de commande
+}
+ 
+\newglossaryentry{WSGI}
+{
+  name=WSGI,
+  description=Spécification qui définit une interface entre des serveurs et des applications web \Python
+}
+ 
+\newglossaryentry{API}
+{
+  name=API,
+  description=API
+}

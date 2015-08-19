@@ -1,0 +1,66 @@
+
+ \begin{theindex} 
+ \makeatletter\scan@allowedfalse
+{\bfseries\hfil Symbols\hfil}\nopagebreak
+
+  \item \verb*+\@namedef+\pfill 164
+
+  \indexspace
+{\bfseries\hfil C\hfil}\nopagebreak
+
+  \item \verb*+\compatibility+\pfill \usage{1}, \main{12}, 169
+  \item {\ttfamily compatibility} (option)\pfill \usage{1}, \main{2}
+
+  \indexspace
+{\bfseries\hfil D\hfil}\nopagebreak
+
+  \item \verb*+\debug+\pfill \usage{1}, \main{15}, 170
+  \item {\ttfamily debug} (option)\pfill \usage{1}, \main{7}
+  \item \verb*+\DeclareGraphicsRule+\pfill 82, 87--89, 91--93, 99--102
+
+  \indexspace
+{\bfseries\hfil F\hfil}\nopagebreak
+
+  \item {\ttfamily figlatex.cfg} (option)\pfill \usage{1}
+  \item \verb*+\FL@compatibilitytrue+\pfill 5
+  \item \verb*+\FL@debugtrue+\pfill 9
+  \item \verb*+\FL@dmessage+\pfill \main{31}, 37, 49, 58, 71
+  \item \verb*+\FL@exclamation+\pfill 107, 108, 116
+  \item \verb*+\FL@figext+\pfill 57, 79, 96
+  \item \verb*+\FL@filename+\pfill 55--59, 68--72
+  \item \verb*+\FL@Gin@getbase+\pfill 115, 162
+  \item \verb*+\FL@includerawtexgraphics+\pfill 59, 72, 104
+  \item \verb*+\FL@orig@Gin@getbase+\pfill 159, 161
+  \item \verb*+\FL@sepdefault+\pfill 112, 135, 155
+  \item \verb*+\FL@subfig@check+\pfill 113, 127, 147
+  \item \verb*+\FL@subfig@name+\pfill 108, 110, 116, 135, 155
+  \item \verb*+\FL@svgext+\pfill 70, 80, 97
+
+  \indexspace
+{\bfseries\hfil G\hfil}\nopagebreak
+
+  \item \verb*+\Ginclude@figtex+\pfill \main{52}
+  \item \verb*+\Ginclude@rawtex+\pfill \main{36}
+  \item \verb*+\Ginclude@svgtex+\pfill \main{65}
+  \item \verb*+\Gread@figtex+\pfill \main{61}
+  \item \verb*+\Gread@rawtex+\pfill 63, 76, 81, 98
+  \item \verb*+\Gread@svgtex+\pfill \main{74}
+
+  \indexspace
+{\bfseries\hfil I\hfil}\nopagebreak
+
+  \item \verb*+\ifFL@compatibility+\pfill 2, 83
+  \item \verb*+\ifFL@debug+\pfill 7, 32
+  \item \verb*+\includegraphics+\pfill \usage{1}, 105
+
+  \indexspace
+{\bfseries\hfil O\hfil}\nopagebreak
+
+  \item options:\efill 
+ \subitem { \ttfamily compatibility}\pfill \main{2}
+    \subitem { \ttfamily debug}\pfill \main{7}
+    \subitem {\ttfamily compatibility}\pfill \usage{1}
+    \subitem {\ttfamily debug}\pfill \usage{1}
+    \subitem {\ttfamily figlatex.cfg}\pfill \usage{1}
+
+ \end{theindex}

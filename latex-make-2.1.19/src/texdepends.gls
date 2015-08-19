@@ -1,0 +1,18 @@
+
+ \begin{theglossary} 
+
+    \makeatletter\scan@allowedfalse
+
+  \item v1.0.1\efill 
+ \subitem General:\ Version 1.0.1 at last\pfill 1
+  \item v1.0.2\efill 
+ \subitem General:\ Add support for package index.sty\pfill 1
+  \item v1.1.0\efill 
+ \subitem General:\ Manage index/glossary\pfill 1
+      \subsubitem Rewrite of the package\pfill 1
+  \item v1.2.0\efill 
+ \subitem General:\ Better management of subfig files\pfill 1
+  \item v1.3.0\efill 
+ \subitem General:\ Management of svg files\pfill 1
+
+ \end{theglossary}

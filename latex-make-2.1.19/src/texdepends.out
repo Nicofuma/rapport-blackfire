@@ -1,0 +1,23 @@
+\BOOKMARK [1][-]{section.2}{1 Introduction}{}% 1
+\BOOKMARK [1][-]{section.3}{2 Implementation of texdepends}{}% 2
+\BOOKMARK [2][-]{subsection.4}{2.1 Options}{section.3}% 3
+\BOOKMARK [2][-]{subsection.5}{2.2 Tools}{section.3}% 4
+\BOOKMARK [3][-]{subsubsection.6}{2.2.1 Debug/info wrapper}{subsection.5}% 5
+\BOOKMARK [3][-]{subsubsection.7}{2.2.2 Writing dependencies}{subsection.5}% 6
+\BOOKMARK [3][-]{subsubsection.8}{2.2.3 Diverting a macro}{subsection.5}% 7
+\BOOKMARK [3][-]{subsubsection.9}{2.2.4 Initialisation}{subsection.5}% 8
+\BOOKMARK [3][-]{subsubsection.10}{2.2.5 Warning upon missing figures}{subsection.5}% 9
+\BOOKMARK [2][-]{subsection.11}{2.3 Diversion of LaTeX macros}{section.3}% 10
+\BOOKMARK [3][-]{subsubsection.12}{2.3.1 Class and package loading}{subsection.11}% 11
+\BOOKMARK [3][-]{subsubsection.13}{2.3.2 Tracking input files}{subsection.11}% 12
+\BOOKMARK [3][-]{subsubsection.14}{2.3.3 Tracking output files}{subsection.11}% 13
+\BOOKMARK [3][-]{subsubsection.15}{2.3.4 Tracking bibliography files}{subsection.11}% 14
+\BOOKMARK [3][-]{subsubsection.16}{2.3.5 Glossary and index files}{subsection.11}% 15
+\BOOKMARK [2][-]{subsection.17}{2.4 Diversion of package's macros}{section.3}% 16
+\BOOKMARK [3][-]{subsubsection.18}{2.4.1 Package graphics}{subsection.17}% 17
+\BOOKMARK [3][-]{subsubsection.19}{2.4.2 Package figlatex}{subsection.17}% 18
+\BOOKMARK [3][-]{subsubsection.20}{2.4.3 Package doc}{subsection.17}% 19
+\BOOKMARK [3][-]{subsubsection.21}{2.4.4 Package index}{subsection.17}% 20
+\BOOKMARK [3][-]{subsubsection.22}{2.4.5 Package makeidx}{subsection.17}% 21
+\BOOKMARK [3][-]{subsubsection.23}{2.4.6 Package nomencl}{subsection.17}% 22
+\BOOKMARK [3][-]{subsubsection.24}{2.4.7 Package bibtopic}{subsection.17}% 23

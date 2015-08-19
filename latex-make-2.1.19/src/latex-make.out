@@ -1,0 +1,27 @@
+\BOOKMARK [1][-]{section.2}{1 Introduction}{}% 1
+\BOOKMARK [1][-]{section.4}{2 Quick start}{}% 2
+\BOOKMARK [2][-]{subsection.5}{2.1 First \(and often last\) step}{section.4}% 3
+\BOOKMARK [2][-]{subsection.7}{2.2 Customization}{section.4}% 4
+\BOOKMARK [3][-]{section*.8}{Which LaTeX documents to compile}{subsection.7}% 5
+\BOOKMARK [3][-]{section*.9}{Which LaTeX main source for a document}{subsection.7}% 6
+\BOOKMARK [3][-]{section*.10}{Which flavors must be compiled}{subsection.7}% 7
+\BOOKMARK [3][-]{section*.12}{Which programs are called and with which options}{subsection.7}% 8
+\BOOKMARK [3][-]{section*.13}{Per target programs and options}{subsection.7}% 9
+\BOOKMARK [3][-]{section*.14}{Global and per target dependencies}{subsection.7}% 10
+\BOOKMARK [1][-]{section.15}{3 Reference manual}{}% 11
+\BOOKMARK [2][-]{subsection.16}{3.1 Flavors}{section.15}% 12
+\BOOKMARK [3][-]{subsubsection.17}{3.1.1 What is a flavor ?}{subsection.16}% 13
+\BOOKMARK [3][-]{subsubsection.18}{3.1.2 Defining a new flavor}{subsection.16}% 14
+\BOOKMARK [2][-]{subsection.25}{3.2 Variables}{section.15}% 15
+\BOOKMARK [3][-]{subsubsection.26}{3.2.1 Two kind of variables}{subsection.25}% 16
+\BOOKMARK [3][-]{subsubsection.33}{3.2.2 List of used variables}{subsection.25}% 17
+\BOOKMARK [1][-]{section.34}{4 FAQ}{}% 18
+\BOOKMARK [2][-]{subsection.35}{4.1 No rule to make target `LU\137WATCH\137FILES\137SAVE'}{section.34}% 19
+\BOOKMARK [1][-]{section.36}{5 Implementation}{}% 20
+\BOOKMARK [2][-]{subsection.37}{5.1 LaTeX.mk}{section.36}% 21
+\BOOKMARK [2][-]{subsection.38}{5.2 LaTeX.mk.conf}{section.36}% 22
+\BOOKMARK [2][-]{subsection.39}{5.3 figdepth}{section.36}% 23
+\BOOKMARK [2][-]{subsection.40}{5.4 gensubfig}{section.36}% 24
+\BOOKMARK [2][-]{subsection.41}{5.5 svg2dev}{section.36}% 25
+\BOOKMARK [2][-]{subsection.42}{5.6 latexfilter}{section.36}% 26
+\BOOKMARK [2][-]{subsection.43}{5.7 svgdepth}{section.36}% 27
