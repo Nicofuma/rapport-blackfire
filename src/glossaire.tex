@@ -18,57 +18,89 @@
   name=production,
   description=Se rapporte à une application disponible et utilisée par les utilisateurs et clients finaux; en opposition au serveur de pré-production utilisées par l'équipe de développement à des fins de test
 }
- 
+
 \newglossaryentry{PyPI}
 {
   name=PyPI,
-  description=Le \emph{Python Package Index} est un dépôt de programme écrits pour le langage de programmation \Python
+  description=Le \emph{Python Package Index} est un dépôt de programme écrits pour le langage de programmation \emph{Python}
 }
- 
+
 \newglossaryentry{pile d'appels}
 {
   name=pile d'appels,
   description={\emph{stacktrace} en anglais, représente la pile d'exécution du programme à un instant donné}
 }
- 
+
 \newglossaryentry{graphe d'appels}
 {
   name=graphe d'appels,
   description={\emph{callgraph} en anglais, est un graphe orienté qui représente les relations entre les différents sous-programmes d'un logiciel. Chaque nœud représente un sous-programme et chaque arc un appel (un appel de fonction ou de procédure par exemple)}
 }
- 
+
 \newglossaryentry{hook}
 {
   name=hook,
   description=Point d'entrée permettant à un utilisateur de venir accrocher des bouts de programme afin de personnaliser un logiciel
 }
- 
+
 \newglossaryentry{overhead}
 {
   name=overhead,
   description={Il s'agit du temps et de la mémoire directement consommé par l'utilisation de la sonde. On peut notamment le voir en comparant les ressources utilisées par un programme tournant avec la sonde vis à vis du même programme tournant sans.. Dans le cas de \Blackfire on ne va considérer que les calculs effectués pendant l'analyse des performances, ainsi tout calcul effectué avant ou après le programme analysé ne participe pas à l'overhead de la sonde (car seuls les calculs altérant les mesures effectuées sont importants)}
 }
- 
+
 \newglossaryentry{chargeur de module}
 {
   name=chargeur de module,
-  description={En \Python il s'agit classe qui est chargée de trouver et de charger les modules importés par l'utilisateur}
+  description={En \Python il s'agit d'une classe qui est chargée de trouver et de charger les modules importés par l'utilisateur}
 }
- 
+
 \newglossaryentry{CLI}
 {
   name=CLI,
   description=Se dit d'un programme s'exécutant en ligne de commande
 }
- 
+
 \newglossaryentry{WSGI}
 {
   name=WSGI,
-  description=Spécification qui définit une interface entre des serveurs et des applications web \Python
+  description=Spécification qui définit une interface entre des serveurs et des applications web \emph{Python}
 }
- 
+
 \newglossaryentry{API}
 {
   name=API,
-  description=API
+  description=Ici API désigne le site web \url{https://blackfire.io} et les services qu'il fournit
+}
+
+\newglossaryentry{programme utilisateur}
+{
+  name=programme utilisateur,
+  description=Désigne le programme qui est analysé par \emph{Blackfire}
+}
+
+\newglossaryentry{metrique}
+{
+  name=métrique,
+  plural=métriques,
+  description=Représente une donnée sur le code. Par exemple le temps passé dans la fonction foo.bar
+}
+ 
+\newglossaryentry{contexte d'execution}
+{
+  name=contexte d'exécution,
+  description=Ensemble des données utilisées par l'interpréteur \Python pour exécuter une fonction ou une ligne de code donnée.
+}
+ 
+\newglossaryentry{bytecode}
+{
+  name=bytecode,
+  description=Code intermédiaire entre le code source et le code machine. Il n'est pas directement exécutable par le processeur mais est destiné à être interprété par une machine virtuelle. Il est composé d'opcodes
+}
+ 
+\newglossaryentry{opcode}
+{
+  name=opcode,
+  plural=opcodes,
+  description=Instruction élémentaire destiné à être exécuté par la machine virtuelle \emph{Python}
 }

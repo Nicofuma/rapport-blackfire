@@ -6,5 +6,5 @@ De plus ces trois modules collectent les mêmes données, à savoir les temps ex
 \begin{itemize}
 \item \textbf{cProfile} est le module recommandé dans la majorité des cas, il s'agit d'une extension \C ayant un impact sur les performances relativement limité.
 \item \textbf{profile} est un module écrit en pur \Python et ayant exactement la même interface que le \emph{cProfile}. Par contre son impact sur les performances est très important, mais étant écrit en \Python il est plus facile de le modifier et de l'étendre.
-\item \textbf{hotshot} est un autre module écrit en \C. A la différence du \emph{cProfile} son objectif est d'avoir un impact sur les performances le plus faible possible, quitte à devoir passer plus de temps dans une phase de post-traitement. En revanche il n'est plus maintenu aujourd'hui et a été supprimé dans \Python 3.
+\item \textbf{hotshot} est un autre module écrit en \emph{C}. A la différence du \emph{cProfile} son objectif est d'avoir un impact sur les performances le plus faible possible, quitte à devoir passer plus de temps dans une phase de post-traitement. En revanche il n'est plus maintenu aujourd'hui et a été supprimé dans \Python 3.
 \end{itemize}

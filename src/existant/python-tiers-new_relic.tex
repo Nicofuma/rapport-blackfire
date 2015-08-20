@@ -35,7 +35,7 @@ Cette instrumentation se fait en plusieurs étapes \footnote{Voir Annexe \vref{a
   \item Lors du chargement d'un module, le chargeur de module va exécuter tous les hooks se rapportant au module en question afin d'en décorer les méthodes.
 \end{enumerate}
 
-Cette instrumentation fonctionne à partir d'un fichier de configuration indiquant quelles méthodes doivent être instrumentées, elle est donc parfaitement générique. En outre le fait de n'instrumenter qu'une partie des appels de fonctions permet de l'imiter l'impact du profileur au point d'en être négligeable, surtout qu'il existe une librairie\footnote{\url{https://pypi.python.org/pypi/wrapt}} (écrite dans le langage C) permettant de décorer facilement et à moindre coup n'importe quelle fonction ou méthode \Python.
+Cette instrumentation fonctionne à partir d'un fichier de configuration indiquant quelles méthodes doivent être instrumentées, elle est donc parfaitement générique. En outre le fait de n'instrumenter qu'une partie des appels de fonctions permet de l'imiter l'impact du profileur au point d'en être négligeable, surtout qu'il existe une librairie\footnote{\url{https://pypi.python.org/pypi/wrapt}} (écrite dans le langage C) permettant de décorer facilement et à moindre coup n'importe quelle fonction ou méthode \emph{Python}.
 
 En revanche cette technique impose de connaître et d'indiquer à l'avance la liste exhaustive des fonctions intéressantes.
 

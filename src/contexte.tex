@@ -17,7 +17,7 @@
 \end{center}
 \end{figure}
 
-Dernier outil développé par l'équipe produit de \SensioLabs, \Blackfire\footnote{\url{https://blackfire.io}},
+Dernier outil développé par l'équipe produit de \emph{SensioLabs}, \Blackfire\footnote{\url{https://blackfire.io}},
 sorti commercialement le 27 juillet 2015 après une année de béta test publique, est un produit disponible en mode \gls{SaaS} permettant d'analyser les performances d'applications \PHP de manière simple, précise et juste.
 
 \Blackfire fourni un moyen pour instrumenter automatiquement un code \PHP existant afin d'en extraire des données telles que le \gls{graphe d'appels} du programme ou le temps passé dans chaque fonction et de les représenter sous une forme graphique intuitive permettant ainsi au développeur d'identifier les principaux problèmes de performance de son application.\footnote{Voir chapitre \vref{chap:Blackfire} pour plus de détails sur \Blackfire et son fonctionnement}
@@ -47,11 +47,11 @@ sorti commercialement le 27 juillet 2015 après une année de béta test publiqu
 
 Les trois premiers composants ont été conçus de manière à être génériques et devraient donc être capables de traiter avec des données issues de n'importe quelle technologie du moment que le protocole\footnote{Voir section \vref{sec:BlackfireProtocol}} est respecté. En pratique il est effectivement possible d'afficher via \textbf{blackfire.io} des profils générés via d'autres outils tel que Callgrind\footnote{\url{http://blog.blackfire.io/cli-upload.html}}, Google Chrome JavaScript CPU profiles\footnote{\url{http://blog.blackfire.io/chrome-cpu-profiles.htmll}} et bien d'autres\footnote{\url{http://blog.blackfire.io/profiling-web-page-loading-performance.html}}\footnote{\url{http://blog.blackfire.io/blackfire-file-format.html}}.
 
-Mais le principal problème d'utiliser ces outils c'est que l'on n'a pas la même expérience que lorsqu'on profil un code \PHP avec \Blackfire. En effet, n'utilisant pas \Blackfire pour collecter les données on ne peut pas utiliser le compagnon pour déclencher un profil en un clic, l'impact de la collecte des données sur les performances peut être important et surtout l'expérience utilisateur peut être compliquée : on peut être obligé d'instrumenter manuellement son code et une fois le profil généré il faut encore le convertir dans le format utilisé par \Blackfire et l'envoyer sur le site \emph{blackfire.io} à l'aide de la commande \verb|blackfire upload|.
+Mais le principal problème d'utiliser ces outils c'est que l'on n'a pas la même expérience que lorsqu'on profil un code \PHP avec \emph{Blackfire}. En effet, n'utilisant pas \Blackfire pour collecter les données on ne peut pas utiliser le compagnon pour déclencher un profil en un clic, l'impact de la collecte des données sur les performances peut être important et surtout l'expérience utilisateur peut être compliquée : on peut être obligé d'instrumenter manuellement son code et une fois le profil généré il faut encore le convertir dans le format utilisé par \Blackfire et l'envoyer sur le site \emph{blackfire.io} à l'aide de la commande \verb|blackfire upload|.
 
-L'enjeu est multiple, il s'agit d'une part de démontrer que la plate-forme \Blackfire est effectivement générique (et le cas échéant de corriger dans la plate-forme ou le protocole les différents problèmes qui empêchent ou gênent cette généricité) et d'autre part d'apporter le support du langage \Python.
+L'enjeu est multiple, il s'agit d'une part de démontrer que la plate-forme \Blackfire est effectivement générique (et le cas échéant de corriger dans la plate-forme ou le protocole les différents problèmes qui empêchent ou gênent cette généricité) et d'autre part d'apporter le support du langage \emph{Python}.
 
-L'objectif est donc de réaliser une nouvelle implémentation de la quatrième partie, la sonde. Celle-ci serait capable d'analyser des programmes \Python avec une expérience utilisateur la plus proche possible de celle que l'on a actuellement avec la sonde \PHP. Cela implique que la sonde doit :
+L'objectif est donc de réaliser une nouvelle implémentation de la quatrième partie, la sonde. Celle-ci serait capable d'analyser des programmes \Python avec une expérience utilisateur la plus proche possible de celle que l'on a actuellement avec la sonde \emph{PHP}. Cela implique que la sonde doit :
 \begin{itemize}
   \item permettre d'analyser du code \Python\footnote{Ce qui implique à minima de collecter le graphe d'appels du programme et le temps passé dans chaque fonction/méthode}
   \item communiquer avec l'agent en respectant le protocole

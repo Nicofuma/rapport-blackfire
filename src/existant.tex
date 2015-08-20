@@ -41,12 +41,12 @@ Pour faire communiquer les différents composants entre eux, \Blackfire utilise 
 			\label{subsec:BlackfireQuery}
 				% émise par le companion ou l'outil CLI via run/curl
 				% pas de détail sur la signature ou le contenu précis de la requête. On se contente de ce que l'on va utiliser plus tard
-La requête, émise par le client\footnote{Via l'utilisation du compagnon par exemple} permet à la fois d'authentifier une demande de profil et de fournir à la sonde un certain nombre d'options de configuration relatives au profil à générer.
+La requête, émise par le client\footnote{Via l'utilisation du compagnon par exemple}, permet à la fois d'authentifier une demande de profil et de fournir à la sonde un certain nombre d'options de configuration relatives au profil à générer.
 
 Pour cela la requête est composée de deux parties:
 \begin{itemize}
 \item Une série d'arguments, accompagnée d'une signature cryptographique qui permet d'authentifier la demande et d'en vérifier la validité
-\item Une série d'options de configuration permettant d'activer ou de désactiver certaines parties de la sonde\footnote{Par exemple l'option \verb|flag_cpu| permet de désactiver la collecte des temps CPU}.
+\item Une série d'options de configuration permettant d'activer ou de désactiver certaines parties de la sonde\footnote{Par exemple l'option \verb?flag_cpu? permet de désactiver la collecte des temps CPU}.
 \end{itemize}
 
 			\subsection{Communication avec le Compagnon}
@@ -58,7 +58,7 @@ L'un des usages de \Blackfire est de profiler, à l'aide du compagnon, une page 
 			\label{subsec:comm-agent}
 				% Format du hello prolog
 				% La réponse de l'agent (avec les fn args)
-L'analyse est déclenchée par le compagnon mais elle est réellement gérée par l'agent. Pour cela il existe un protocole en deux étapes\footnote{NB: Le protocole a évolué dans un version récente de \Blackfire avec l'introduction du fichier \verb|.blackfire.yml|} entre la sonde et l'agent.
+L'analyse est déclenchée par le compagnon mais elle est réellement gérée par l'agent. Pour cela il existe un protocole en deux étapes\footnote{NB: Le protocole a évolué dans un version récente de \Blackfire avec l'introduction du fichier \verb?.blackfire.yml?} entre la sonde et l'agent.
 
 La première étape consiste à faire authentifier la requête par l'agent\footnote{En réalité l'agent n'authentifie pas la requête mais demande à l'API de le faire} et à récupérer les dernières informations requises pour effectuer l'analyse\footnote{Les arguments de fonction si supporté}.
 
@@ -113,7 +113,7 @@ La seconde section définit le graphe à proprement parler. Celui-ci est constru
 \end{itemize}
 
 	\chapter[Analyse en \Python]{Analyse de performances en \Python}
-Il existe différents outils et API permettant d'analyser les performances ou le comportement d'un code \Python et on peut regrouper ces outils en deux catégories : ceux qui fonctionnent en mode \gls{SaaS} (comme \Blackfire) et ceux qui fonctionnent de manière indépendante ou sont directement intégrés dans \Python.
+Il existe différents outils et API permettant d'analyser les performances ou le comportement d'un code \Python et on peut regrouper ces outils en deux catégories : ceux qui fonctionnent en mode \gls{SaaS} (comme \emph{Blackfire}) et ceux qui fonctionnent de manière indépendante ou sont directement intégrés dans \emph{Python}.
 
 		\section{Outils tiers existants}
 Il existe plusieurs outils tiers permettant de s'intéresser au fonctionnent d'une application \Python et parmi ceux-là l'un d'entre eux va nous occuper : \emph{New Relic\footnote{\url{https://www.newrelic.com}}}. %et \emph{Opbeat\footnote{\url{https://www.opbeat.com}}}.

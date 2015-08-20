@@ -17,13 +17,13 @@
   %\end{itemize}
 
 %  \section{Travail effectué}
-%  Le travail effectué a donné lieu à deux implémentations de la sonde. Une première écrite uniquement en Python servant essentiellement de preuve de faisabilité et ayant certains problèmes de performance. Et une seconde reprenant le travail effectué sur la première implémentation mais avec les parties critiques, d'un point de vue performances, écrites directement en \C.
+%  Le travail effectué a donné lieu à deux implémentations de la sonde. Une première écrite uniquement en Python servant essentiellement de preuve de faisabilité et ayant certains problèmes de performance. Et une seconde reprenant le travail effectué sur la première implémentation mais avec les parties critiques, d'un point de vue performances, écrites directement en \C
   
 La sonde est découpée en trois grandes parties : trois modules correspondant aux trois rôles principaux de la sonde, à savoir :
 \begin{itemize}
 \item \textbf{Instrumentation} \emph{automatique} : le module \mintinline{python}{blackfire} définit l'interface publique qui sera exposée à l'utilisateur, à savoir les différents points d'entrée permettant de lancer l'analyse du code.
-\item \textbf{Intégration} \emph{avec Blackfire} : le module \mintinline{python}{blackfire.probe} définit la classe \\\mintinline{python}{BlackfireProbe} qui implémente le protocole utilisé pour communiquer avec l'agent \Blackfire. Cette classe est instanciée par les différents points d'entrée en un objet qui représente ainsi la sonde actuellement utilisée. La classe \mintinline{python}{BlackfireProbe} définie aussi une interface qui permet au développeur, si l'objet est exposé, de contrôler plus finement les parties du code qui sont analysées.
-\item \textbf{Collecte} \emph{des données} : le module \mintinline{python}{blackfire.profiler} définit la classe \mintinline{python}{Profiler} qui est en charge de collecter les données qui formeront le profil (\gls{métriques} et \gls{graphe d'appels}).
+\item \textbf{Intégration} \emph{avec Blackfire} : le module \mintinline{python}{blackfire.probe} définit la classe \\\mintinline{python}{BlackfireProbe} qui implémente le protocole utilisé pour communiquer avec l'agent \emph{Blackfire}. Cette classe est instanciée par les différents points d'entrée en un objet qui représente ainsi la sonde actuellement utilisée. La classe \mintinline{python}{BlackfireProbe} définie aussi une interface qui permet au développeur, si l'objet est exposé, de contrôler plus finement les parties du code qui sont analysées.
+\item \textbf{Collecte} \emph{des données} : le module \mintinline{python}{blackfire.profiler} définit la classe \mintinline{python}{Profiler} qui est en charge de collecter les données qui formeront le profil (\glspl{metrique} et \gls{graphe d'appels}).
 \end{itemize}
 
 \begin{note}[Python 3]
@@ -34,7 +34,7 @@ La sonde est découpée en trois grandes parties : trois modules correspondant a
   \chapter[Instrumentation]{Instrumentation automatique}
 \Blackfire est un outil destiné à être utilisé aussi bien lors du développement que sur des sites en production. Cela implique que, même si l'\gls{overhead} induit par la sonde est très faible, la sonde ne doit être activée que si un profil a été demandé afin d'éviter de générer des milliers (voir des millions) de profils inutilement.
 
-Cette partie a donc pour rôle de s'assurer qu'un profil a été demandé et ensuite de brancher dans le \gls{code utilisateur} la partie qui s'occupe de l'intégration avec le reste de l'outil. Néanmoins cette tâche doit être exécutée de manière automatique ou alors avec le minimum de modification dans le code utilisateur.
+Cette partie a donc pour rôle de s'assurer qu'un profil a été demandé et ensuite de brancher dans le \gls{programme utilisateur} la partie qui s'occupe de l'intégration avec le reste de l'outil. Néanmoins cette tâche doit être exécutée de manière automatique ou alors avec le minimum de modification dans le programme utilisateur.
 
 Pour cela trois principaux cas de figures sont à considérer :
 \begin{itemize}
@@ -47,7 +47,7 @@ Pour cela trois principaux cas de figures sont à considérer :
 \label{sec:instru-pythonpath}
 On considère ici un programme analysé via l'utilisation de l'outil en ligne de commande. Dans ce cas il est possible d'utiliser le module \verb|site|\footnote{\url{https://docs.python.org/2/library/site.html}} de \Python afin d'instrumenter le programme automatiquement, et ceci sans aucune modification.
 
-Cela est possible grâce au comportement particulier du module \verb|site|. En effet, il s'agit d'un module qui est importé (et donc exécuté) automatiquement lors du lancement d'un programme \Python. Ce module a pour rôle de rechercher un autre module nommé \verb|sitecustomize| dans les différents dossiers référencés par la variable d'environnement \verb|PYTHONPATH|\footnote{La variable d'environnement \verb?PYTHONPATH? est vide par défaut}, puis de le charger et de l'exécuter.
+Cela est possible grâce au comportement particulier du module \verb|site|. En effet, il s'agit d'un module qui est importé (et donc exécuté) automatiquement lors du lancement d'un programme \emph{Python}. Ce module a pour rôle de rechercher un autre module nommé \verb|sitecustomize| dans les différents dossiers référencés par la variable d'environnement \verb|PYTHONPATH|\footnote{La variable d'environnement \verb?PYTHONPATH? est vide par défaut}, puis de le charger et de l'exécuter.
 
 \begin{listing}[H]
 \caption{Exemple d'analyse d'un programme en ligne de commande}
@@ -56,7 +56,7 @@ Cela est possible grâce au comportement particulier du module \verb|site|. En e
 \end{bashcode}
 \end{listing}
 
-Le module \verb|sitecustomize| est très simple : il regarde si la variable d'environnement \verb|BLACKFIRE_QUERY| est présente\footnote{La variable d'environnement est définie lors de l'utilisation de la commande \verb|blackfire run|, son contenu sera précisé plus tard - voir section \vref{subsec:BlackfireQuery}} et, si c'est le cas, branche \Blackfire en passant la main à la sonde à proprement parler \footnote{Voir chapitre \vref{chap:integration}}.
+Le module \verb|sitecustomize| est très simple : il regarde si la variable d'environnement \verb|BLACKFIRE_QUERY| est présente\footnote{La variable d'environnement est définie lors de l'utilisation de la commande \verb?blackfire run?, son contenu sera précisé plus tard - voir section \vref{subsec:BlackfireQuery}} et, si c'est le cas, branche \Blackfire en passant la main à la sonde à proprement parler \footnote{Voir chapitre \vref{chap:integration}}.
 
 \begin{listing}[H]
 \caption{Instrumentation automatique d'un programme en ligne de commande}
@@ -68,7 +68,7 @@ Le module \verb|sitecustomize| est très simple : il regarde si la variable d'en
 \end{note}
 
 \section[Application WSGI]{Instrumentation automatique d'une application WSGI}
-On considère ici une application web utilisant la spécification WSGI\footnote{\url{https://docs.python.org/2/library/wsgiref.html}}. Dans ce cas il est nécessaire de décorer le point d'entrée\footnote{Il s'agit de l'objet (function ou variable) qui a le nom \verb|application| dans le contexte du module renseigné auprès du serveur WSGI} de l'application par un middleware WSGI qui va se charger de vérifier la présence de l'en-tête \verb|X-Blackfire-Query|\footnoe{Cet en-tête est défini lorsque le compagnon ou la commande \verb|blackfire curl| est utilisé - voir section \vref{subsec:BlackfireQuery})} et d'activer \Blackfire le cas échéant. Ce middleware a aussi la charge de récupérer le code HTTP de la réponse (requis par le protocole) et de définir la \emph{Response Line} qui est envoyée au compagnon.
+On considère ici une application web utilisant la spécification WSGI\footnote{\url{https://docs.python.org/2/library/wsgiref.html}}. Dans ce cas il est nécessaire de décorer le point d'entrée\footnote{Il s'agit de l'objet (function ou variable) qui a le nom \verb?application? dans le contexte du module renseigné auprès du serveur WSGI} de l'application par un middleware WSGI qui va se charger de vérifier la présence de l'en-tête \verb|X-Blackfire-Query|\footnote{Cet en-tête est défini lorsque le compagnon ou la commande \verb?blackfire curl? est utilisé - voir section \vref{subsec:BlackfireQuery})} et d'activer \Blackfire le cas échéant. Ce middleware a aussi la charge de récupérer le code HTTP de la réponse (requis par le protocole) et de définir la \emph{Response Line} qui est envoyée au compagnon.
 
 Ce middleware a été implémenté dans la classe \verb|blackfire.WSGI_wrapper|, et le décorateur \verb|blackfire.wsgi_application| permet d'en simplifier l'utilisation lorsque que le point d'entrée est une fonction\footnote{Voir Annexe \vref{app:decorateurwsgi} pour le code du décorateur}.
 
@@ -98,9 +98,9 @@ La sonde travaille en tandem avec l'agent, : quand la première collecte les don
 %    \label{subsec:BlackfireQuery}
   
   \chapter[Collecte]{Collecte des données}
-Le rôle principal de la sonde, avant de s'intégrer avec le reste de \Blackfire, est de collecter des données, des métriques sur le code.
+Le rôle principal de la sonde, avant de s'intégrer avec le reste de \emph{Blackfire}, est de collecter des données, des métriques sur le code.
 
-La sonde étant exécutée en même temps que le code utilisateur ses performances sont cruciales. Il est donc important de minimiser son impact, aussi bien sur les performances (les temps) que sur la consommation mémoire. Pour cette raison il a été décidé de l'implémenter en \C\footnote{Une première version a été implémentée en \Python afin de servir de preuve de faisabilité, et l'impact était très important ; le temps d'exécution était souvent doublé, parfois même décuplé.}.
+La sonde étant exécutée en même temps que le programme utilisateur ses performances sont cruciales. Il est donc important de minimiser son impact, aussi bien sur les performances (les temps) que sur la consommation mémoire. Pour cette raison il a été décidé de l'implémenter en \C\footnote{Une première version a été implémentée en \Python afin de servir de preuve de faisabilité, et l'impact était très important ; le temps d'exécution était souvent doublé, parfois même décuplé.}.
 
   \section{Fonctionnement général}
 La méthode utilisée pour instrumenter le code \Python est la même que celle utilisée par \emph{Yappi}\footnote{Voir section \vref{subsec:yappi}}, dont sont issus ou inspirés certains éléments de l'implémentation actuelle. À savoir l'utilisation de la méthode \verb|sys.setprofiler()| qui permet de définir une fonction de rappel appelée à chaque fois que l'interpréteur entre ou sort d'une fonction.
@@ -115,7 +115,7 @@ Dans l'implémentation actuelle, la fonction \C \verb|_blackfire_callback| est e
 \item \verb|PyTrace_C_EXCEPTION| : fin d'une fonction \C avec exception
 \end{itemize}
 
-Le rôle de cette fonction de rappel est double. D'un côté c'est elle qui va lancer l'analyse des différents événements, et c'est donc à partir d'elle que tout le travail de collecte de données va être effectué. De l'autre elle s'assure que les exceptions lancées par le code utilisateur sont conservées et ne sont pas écrasées si des problèmes surviennent pendant le traitement de l'événement en question\footnote{L'action de \Blackfire doit impacter aussi peu que possible le code utilisateur et cela concerne aussi la gestion des erreurs : la sonde doit être capable, autant que possible, de traiter ses propres erreurs}.
+Le rôle de cette fonction de rappel est double. D'un côté c'est elle qui va lancer l'analyse des différents événements, et c'est donc à partir d'elle que tout le travail de collecte de données va être effectué. De l'autre elle s'assure que les exceptions lancées par le programme utilisateur sont conservées et ne sont pas écrasées si des problèmes surviennent pendant le traitement de l'événement en question\footnote{L'action de \Blackfire doit impacter aussi peu que possible le programme utilisateur et cela concerne aussi la gestion des erreurs : la sonde doit être capable, autant que possible, de traiter ses propres erreurs}.
 
 Les appels \C et les appels \Python sont traités de manière identique. Néanmoins il y a quelques différences d'implémentation car certaines données ne sont pas collectées de la même manière. De même, aucune différence n'est faite entre les fins de fonction avec et sans exception. Ainsi les six événements précédents sont répartis en deux groupes : \emph{Début} et \emph{Fin} de fonction.
 
@@ -143,16 +143,16 @@ Il est important de contrôler l'utilisation de la mémoire\footnote{Voir sectio
 
 \subsection{Identification de la méthode appelée - Appel Python}
 \label{ident-python}
-Lors d'un appel \Python (appel d'une fonction écrite en \Python) le \emph{\gls{contexte d'exécution}} envoyé à la fonction de rappel correspond à celui de la fonction qui va être exécutée.
+Lors d'un appel \Python (appel d'une fonction écrite en \emph{Python}) le \emph{\gls{contexte d'execution}} envoyé à la fonction de rappel correspond à celui de la fonction qui va être exécutée.
 
-\paragraph*{Le module} Lors d'un appel \Python, le nom du module n'est pas transmis. En revanche,  via la variable \verb|frame->f_code->co_filename|, on dispose du nom du fichier contenant le code exécuté à partir duquel on peut retrouver le nom du module. Par contre il s'agit d'une opération coûteuse car elle peut impliquer de nombreux calculs et appels au système de fichiers. Mais lors d'une définition en \Python il y a une relation forte entre le module et le fichier qui le définit\footnote{Un fichier correspond toujours à un seul et unique module qui est lui même entièrement défini dans le-dit fichier} et on peut donc s'en servir à la place du nom du module (quitte à résoudre son nom plus tard si nécessaire).
+\paragraph*{Le module} Lors d'un appel \emph{Python}, le nom du module n'est pas transmis. En revanche,  via la variable \verb|frame->f_code->co_filename|, on dispose du nom du fichier contenant le code exécuté à partir duquel on peut retrouver le nom du module. Par contre il s'agit d'une opération coûteuse car elle peut impliquer de nombreux calculs et appels au système de fichiers. Mais lors d'une définition en \Python il y a une relation forte entre le module et le fichier qui le définit\footnote{Un fichier correspond toujours à un seul et unique module qui est lui même entièrement défini dans le-dit fichier} et on peut donc s'en servir à la place du nom du module (quitte à résoudre son nom plus tard si nécessaire).
 
 \paragraph*{La classe} L'un des éléments qui différencient une fonction d'une méthode est que une méthode prend explicitement une instance de la classe en premier argument et que par convention elle s'appelle \verb|self|. Pour récupérer le nom de la classe on peut donc vérifier si le premier élément s'appelle \verb|self| et s'il est une instance d'une classe, auquel cas l'objet dispose d'un attribut \verb|__class__| contenant un objet décrivant la classe, lui même disposant d'un attribut \verb|__name__| indiquant son nom.
 
 \paragraph*{La méthode} Le nom de la méthode est indiqué via la variable \verb|frame->f_code->co_name|.
 
 \subsection{Identification de la méthode appelée - Appel C}
-À la différence des appels \Python, lors d'un appel \C (appel d'une fonction écrite en \C depuis un code \Python) le \emph{\gls{contexte d'exécution}} envoyé à la fonction de rappel ne correspond pas à celui de la fonction qui va être exécuté mais à celui de la fonction qui vient d'être exécutée. En effet, s'agissant d'un appel \C la fonction n'est pas interprété par l'interpréteur et aucun contexte d'exécution n'est généré. En revanche un objet décrivant la fonction \C à exécuter\footnote{Il s'agit d'un \verb|PyCFunctionObject*|, voir annexe \vref{app:PyCFunctionObject}} est passé à la fonction de rappel en plus du contexte d'exécution de la fonction parente (l'objet \verb|frame|).
+À la différence des appels \emph{Python}, lors d'un appel \C (appel d'une fonction écrite en \C depuis un code \emph{Python}) le \emph{\gls{contexte d'execution}} envoyé à la fonction de rappel ne correspond pas à celui de la fonction qui va être exécuté mais à celui de la fonction qui vient d'être exécutée. En effet, s'agissant d'un appel \C la fonction n'est pas interprété par l'interpréteur et aucun contexte d'exécution n'est généré. En revanche un objet décrivant la fonction \C à exécuter\footnote{Il s'agit d'un \verb?PyCFunctionObject*?, voir annexe \vref{app:PyCFunctionObject}} est passé à la fonction de rappel en plus du contexte d'exécution de la fonction parente (l'objet \verb|frame|).
 
 \paragraph*{Le module} Lors d'un appel C le nom du module auquel la fonction est rattaché est passé via la variable \verb|function->m_module| mais deux cas de figures sont à considérer : 
 \begin{itemize}
@@ -160,7 +160,7 @@ Lors d'un appel \Python (appel d'une fonction écrite en \Python) le \emph{\gls{
 \item La fonction a été définie dans un module et la variable \verb|function->m_module| contient son nom.
 \end{itemize}
 
-\paragraph*{La classe} Si la fonction est en réalité une méthode d'une classe, alors la variable\\ \verb|function->m_self| contient l'objet sur lequel l'appel de fonction se porte, et on peut récupérer le nom de la classe comme lors d'un appel \Python.
+\paragraph*{La classe} Si la fonction est en réalité une méthode d'une classe, alors la variable\\ \verb|function->m_self| contient l'objet sur lequel l'appel de fonction se porte, et on peut récupérer le nom de la classe comme lors d'un appel \emph{Python}.
 
 \paragraph*{La méthode} Le nom de la méthode qui est utilisé dans le code \Python est accessible via la variable \verb|function->m_ml->ml_name|.
   
@@ -192,7 +192,7 @@ Instrumenter les fonctions implique d'être capable d'identifier dynamiquement s
 Cette technique est la plus simple à mettre en œuvre mais aussi la plus coûteuse. En effet elle implique, dans tous les cas, de devoir résoudre complètement le nom de la fonction courante, puis d'effectuer une recherche dans une table de hachage indexée par des chaînes de caractères. Et autant cette dernière opération est peu coûteuse autant ce n'est pas le cas pour la résolution du nom\footnote{Résoudre complètement le nom de la fonction implique de devoir résoudre le nom du module, voir section \vref{ident-python}}. Par conséquent cette technique a été rejetée.
 
 \subsubsection*{Utiliser un décorateur}
-L'objectif de cette technique est, lors de l'initialisation de \Blackfire, de charger les différentes fonctions instrumentées et de les remplacer par un décorateur, écrit en \C ou en \Python, qui se chargera d'en récupérer les arguments.
+L'objectif de cette technique est, lors de l'initialisation de \emph{Blackfire}, de charger les différentes fonctions instrumentées et de les remplacer par un décorateur, écrit en \C ou en \emph{Python}, qui se chargera d'en récupérer les arguments.
 
 Le principal avantage étant que c'est très efficace car, pour savoir si il est nécessaire de récupérer les arguments de la fonction, cela ne nécessite aucun calcul supplémentaire lors de l'analyse. En effet, même si cette technique a un coût non négligeable (il faut charger et instrumenter un nombre de modules possiblement grand) il est entièrement porté par l'initialisation et donc, à la différence de la technique précédente, ne transparaît pas dans le graphe généré.
 
@@ -213,14 +213,14 @@ Cette technique, tout comme la précédente, utilise le fait que \Python ne char
 \end{note}
 
 \begin{note}[Compatibilité Python 2/Python 3]
-L'un des problèmes rencontrés lors de la mise en place de cette technique a été d'être compatible à la fois avec \Python 2 et \Python 3. En effet, dans \Python 3 le modèle objet a été entièrement réécrit afin de ne plus traiter différemment les classes définies en \C de celles définies en \Python. Ainsi les classes définies en \Python deviennent des types à part entière\footnote{Voir annexe \vref{app:compat-23} pour plus de détails}.
+L'un des problèmes rencontrés lors de la mise en place de cette technique a été d'être compatible à la fois avec \Python 2 et \Python 3. En effet, dans \Python 3 le modèle objet a été entièrement réécrit afin de ne plus traiter différemment les classes définies en \C de celles définies en \emph{Python}. Ainsi les classes définies en \Python deviennent des types à part entière\footnote{Voir annexe \vref{app:compat-23} pour plus de détails}.
 \end{note}
 
 \subsection{Récupérer les arguments}
-Récupérer les arguments peut être une tâche compliquée voir coûteuse dans certains cas et, quoi qu'il arrive, diffère entre un appel \C et un appel \Python.
+Récupérer les arguments peut être une tâche compliquée voir coûteuse dans certains cas et, quoi qu'il arrive, diffère entre un appel \C et un appel \emph{Python}.
 
 \subsubsection*{Appel C}
-Dans le cadre d'un appel \C, on n'a pas accès au contexte de la fonction appelée\footnote{A vrai dire il n'est jamais créé} mais à celui de la fonction appelante. Par conséquent le seul moyen de récupérer les arguments est d'aller les lire directement dans la pile \Python\footnote{L'interpréteur \Python utilise une pile en interne pour gérer le contexte des fonctions - arguments, variables locales, valeur de retour etc... - tout comme le fait un programme \C compilé}.
+Dans le cadre d'un appel \emph{C}, on n'a pas accès au contexte de la fonction appelée\footnote{A vrai dire il n'est jamais créé} mais à celui de la fonction appelante. Par conséquent le seul moyen de récupérer les arguments est d'aller les lire directement dans la pile \Python\footnote{L'interpréteur \Python utilise une pile en interne pour gérer le contexte des fonctions - arguments, variables locales, valeur de retour etc... - tout comme le fait un programme \C compilé}.
 
 Dans ce cas, le contexte d'exécution donne accès à sa pile via plusieurs variables et notamment \verb|frame->f_valuestack| qui pointe juste après la dernière variable locale. Ainsi pour accéder aux différents arguments de la fonction \C appelée on peut utiliser\\ \verb|frame->f_valuestack + 0| pour le premier argument, \verb|frame->f_valuestack + 1| pour le second etc...
 
@@ -229,7 +229,7 @@ Lors d'un appel de fonction \Python empile les différents paramètres de la fon
 \end{note}
 
 \subsubsection*{Appel Python}
-Dans le cadre d'un appel \Python, on a accès au contexte d'exécution de la fonction appelée et via celui-ci aux variables locales de la fonction. Hors, lors d'un appel \Python les arguments de la fonction sont stockés dans les premières variables locales. Ainsi on peut récupérer le premier argument dans la première variable locale via \verb|frame->f_localsplus[0]|, le second argument dans la seconde variable locale via \verb|frame->f_localsplus[1]| etc...
+Dans le cadre d'un appel \emph{Python}, on a accès au contexte d'exécution de la fonction appelée et via celui-ci aux variables locales de la fonction. Hors, lors d'un appel \Python les arguments de la fonction sont stockés dans les premières variables locales. Ainsi on peut récupérer le premier argument dans la première variable locale via \verb|frame->f_localsplus[0]|, le second argument dans la seconde variable locale via \verb|frame->f_localsplus[1]| etc...
 
 Lors d'un appel Python il est aussi possible de récupérer un argument donné via son nom. Dans ce cas il est tout d'abord nécessaire de résoudre les variables locales en créant le dictionnaire qui associe les variables à leur nom, puis d'interroger ce dictionnaire pour récupérer l'argument voulu.
 
@@ -240,9 +240,9 @@ Par défaut le contexte d'exécution ne stocke pas le dictionnaire associant les
   \section{Détection des contours du programme}
       % problème du sitecustomize.py
 
-L'un des problèmes rencontré a été de détecter correctement les contours du \gls{programme utilisateur} afin de ne pas prendre en compte la phase d'initialisation de \Blackfire. En effet, lorsqu'on utilise la technique d'instrumentation à l'aide du fichier \verb|sitecustmize.py|\footnote{Voir section \vref{sec:instru-pythonpath}}, il y a une certaine quantité de code qui est exécutée avant même de compiler le programme utilisateur, afin de charger et d'initialiser \Blackfire mais aussi d'effectuer diverses autres actions d'initialisation.
+L'un des problèmes rencontré a été de détecter correctement les contours du \gls{programme utilisateur} afin de ne pas prendre en compte la phase d'initialisation de \emph{Blackfire}. En effet, lorsqu'on utilise la technique d'instrumentation à l'aide du fichier \verb|sitecustmize.py|\footnote{Voir section \vref{sec:instru-pythonpath}}, il y a une certaine quantité de code qui est exécutée avant même de compiler le programme utilisateur, afin de charger et d'initialiser \Blackfire mais aussi d'effectuer diverses autres actions d'initialisation.
 
-Pour cela, lorsque que la fonction \verb|start()| est appelée et que la \gls{pile d'appels} existante est importée, on regarde chaque entrée pour savoir si le module \verb|site| est utilisé\footnote{Si c'est le cas alors au moins l'un des contextes concerne une fonction du module \verb|site| ou, si les noms des modules ne sont pas résolus, dont le fichier est \verb|site.py|}. Auquel cas la fonction de rappel entre dans un mode particulier où les arguments de fonction sont ignorés et aucune entrée n'est créée dans la table de hachage des profils.
+Pour cela, lorsque que la fonction \verb|start()| est appelée et que la \gls{pile d'appels} existante est importée, on regarde chaque entrée pour savoir si le module \verb|site| est utilisé\footnote{Si c'est le cas alors au moins l'un des contextes concerne une fonction du module \verb?site? ou, si les noms des modules ne sont pas résolus, dont le fichier est \verb?site.py?}. Auquel cas la fonction de rappel entre dans un mode particulier où les arguments de fonction sont ignorés et aucune entrée n'est créée dans la table de hachage des profils.
 
 Dans ce mode, la sonde cherche à repérer l'appel de fonction correspondant au chargement du programme utilisateur. C'est à dire un appel dont la fonction appelée est \verb|<module>| et dont le nom du module, si résolu, est \verb|__main__| ou sinon dont le fichier correspond au fichier associé au module \verb|__main__|\footnote{Le fichier associé au module \verb?\_\_main\_\_? est renseigné au moment où ce dernier est chargé}.
 
@@ -251,7 +251,7 @@ Il n'est pas possible de se contenter de surveiller la pile d'exécution, et de 
 \end{note}
 
 \begin{note}
-Détecter correctement les contours du programme est d'autant plus important étant donné la manière dont le module \verb|site| est chargé puis exécuté, car certains modules peuvent être déchargés entre l'exécution du module \verb|site| et l'exécution du code utilisateur, ce qui invalide le cache des méthodes\footnote{Voir section \vref{sec:gestion-graph-appels}}.
+Détecter correctement les contours du programme est d'autant plus important étant donné la manière dont le module \verb|site| est chargé puis exécuté, car certains modules peuvent être déchargés entre l'exécution du module \verb|site| et l'exécution du programme utilisateur, ce qui invalide le cache des méthodes\footnote{Voir section \vref{sec:gestion-graph-appels}}.
 \end{note}
 
   \section{Dimension opcode}
@@ -261,11 +261,11 @@ Détecter correctement les contours du programme est d'autant plus important ét
     % on ne peut pas utiliser le code donné par setprofile car il serait encore moins précis (boucle, conditions etc...)
     % => impact sur les performances à mesurer
     
-Outre les dimensions traditionnelles (temps, temps cpu, mémoire consommée), une dimension donnant des informations sur la complexité du \gls{bytecode} exécuté est à l'étude et a été implémenté dans la sonde \Python.
+Outre les dimensions traditionnelles (temps, temps cpu, mémoire consommée), une dimension donnant des informations sur la complexité du \gls{bytecode} exécuté est à l'étude et a été implémenté dans la sonde \emph{Python}.
 
-En \Python, le contexte d'exécution contient le \gls{bytecode} de la fonction à exécuter ou en cours d'exécution, ainsi que les informations nécessaires pour retrouver dans cette liste les \glspl{opcode} précis qui doivent être interprétés. Mais il n'est pas possible d'utiliser les événements \emph{entrée de fonction} pour cela. En effet, même si il est possible de compter tout le bytecode de la fonction, cela manquerait en précision car les boucles et les conditions seraient ignorées.
+En \emph{Python}, le contexte d'exécution contient le \gls{bytecode} de la fonction à exécuter ou en cours d'exécution, ainsi que les informations nécessaires pour retrouver dans cette liste les \glspl{opcode} précis qui doivent être interprétés. Mais il n'est pas possible d'utiliser les événements \emph{entrée de fonction} pour cela. En effet, même si il est possible de compter tout le bytecode de la fonction, cela manquerait en précision car les boucles et les conditions seraient ignorées.
 
-La technique retenue a été d'utiliser une autre fonction de rappel dédiée à cet usage. Cette fonction, étant enregistré via la méthode \verb|sys.settrace()|\footnote{\url{https://docs.python.org/2/library/sys.html#sys.settrace}}, est appelée à chaque fois que l'interpréteur exécute une ligne \Python. ce qui est beaucoup plus précis. En revanche il reste une certaine imprévision liée à l'utilisation de conditions en ligne ,et autres cas où plusieurs opérations sont effectuées sur la même ligne.
+La technique retenue a été d'utiliser une autre fonction de rappel dédiée à cet usage. Cette fonction, étant enregistré via la méthode \verb|sys.settrace()|\footnote{\url{https://docs.python.org/2/library/sys.html#sys.settrace}}, est appelée à chaque fois que l'interpréteur exécute une ligne \emph{Python}. ce qui est beaucoup plus précis. En revanche il reste une certaine imprévision liée à l'utilisation de conditions en ligne ,et autres cas où plusieurs opérations sont effectuées sur la même ligne.
 
 Afin de récupérer le \gls{bytecode} de la ligne, la première étape consiste à décoder le champ du contexte d'exécution qui effectue l'association entre les lignes et le bytecode qui leur est associé\footnote{L'algorithme utilisé à été adapté à partir de celui implémenté dans le module dis, voir \url{https://github.com/python/cpython/blob/2.7/Lib/dis.py} pour la fonction d'origine et l'annexe \vref{app:count_bytecode} pour l'implémentation effectuée}. Ensuite il suffit d'itérer sur le tableau d'opcodes entre les index calculés précédemment.
 
@@ -333,7 +333,7 @@ La sonde \Python est actuellement en version alpha et est parfaitement fonctionn
 \begin{itemize}
 \item \textbf{La distribution}\;~ Actuellement la sonde de \Blackfire est \emph{\gls{closed source}}, il est donc nécessaire de distribuer une version binaire. En \Python cela peut être réalisé facilement en utilisant la plateforme \emph{PyPI}\footnote{https://pypi.python.org/} et le format \emph{wheel}\footnote{https://pypi.python.org/pypi/wheel/0.24.0}. Reste à générer ces paquets pour les différentes versions de \Python et les différents systèmes supportés.
 \item \textbf{Multi threading}\;~ Le multi threading est très présent en \Python et il serait intéressant de le supporter. Il est possible de s'inspirer de \emph{Yappi} pour l'instrumentation automatique des threads, mais il reste à définir comment représenter ceux-ci dans le graphe. Une solution pouvant être d'ajouter, à toutes les fonctions, un argument fictif\footnote{On pourrait aussi imaginer de préfixer ou de suffixer le nom de la méthode comme pour les appels récursifs} représentant le thread. Une autre pouvant être de faire comme \emph{Yappi} et de ne pas les différencier.
-\item \textbf{Fichier de configuration}\;~ La sonde \PHP utilise un fichier de configuration en plus des variables d'environnement. Il pourrait être utile de faire la même chose avec la probe \Python. Par contre il faut déterminer où positionner ce fichier car, contrairement à \PHP, \Python n'en utilise aucun.
+\item \textbf{Fichier de configuration}\;~ La sonde \PHP utilise un fichier de configuration en plus des variables d'environnement. Il pourrait être utile de faire la même chose avec la probe \emph{Python}. Par contre il faut déterminer où positionner ce fichier car, contrairement à \emph{PHP}, \Python n'en utilise aucun.
 \item \textbf{PYTHONPATH}\;~ Il est assez fastidieux de devoir renseigner le \verb|PYTHONPATH| à chaque fois que l'on veut analyser un programme depuis la ligne de commande. Il pourrait être intéressant que celui-ci soit automatiquement définit par la commande \verb|blackfire run| lorsqu'elle est utilisée.
 \end{itemize}
   	

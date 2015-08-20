@@ -1,22 +1,23 @@
 \chapter{Compatibilité Python 2 / Python 3}
   \label{app:compat-py3}
+  \label{app:compat-23}
 Actuellement deux versions majeures de \Python sont maintenus : \Python 2, en version 2.7, et de \Python 3, en version 3.4. \Python 3 a apporté de grands changements au langage avec, par exemple, un support par défaut de l'UTF-8, mais a au passage cassé la rétro-compatibilité avec \Python 2 ; particulièrement au niveau de l'API C.
 
 Parmi les changement importants qui ont impacté \Blackfire on peut noter :
 \begin{itemize}
 \item La gestion des chaînes de caractères a été complètement réécrit, celles-ci devenant toutes UTF-8
-\item La gestion des classes a été changé en profondeur afin de faire disparaître le type spécifique aux classes déclarée en \Python.
+\item La gestion des classes a été changé en profondeur afin de faire disparaître le type spécifique aux classes déclarée en \emph{Python}.
 \item Le type \verb|PyInt| a été supprimé au profit du type \verb|PyLong| déjà présent
 \end{itemize}
 
-Concrètement, au niveau de \Blackfire, un ensemble de macros a été définit afin de manipuler ces objets sans avoir besoins de se préoccuper de la version de \Python utilisée.
+Concrètement, au niveau de \emph{Blackfire}, un ensemble de macros a été définit afin de manipuler ces objets sans avoir besoins de se préoccuper de la version de \Python utilisée.
 
 Pour les chaînes de caractères, le travail avait déjà été effectué par \emph{Yappi} et se présente sous la forme des six macros suivantes, permettant respectivement de :
 \begin{itemize}
-\item Convertir une chaîne \Python en chaîne \C.
+\item Convertir une chaîne \Python en chaîne \emph{C}.
 \item Vérifier si un object \Python est une chaîne de caractères.
-\item Créer une chaîne \Python à partir d'une chaîne \C.
-\item Créer une chaîne \Python à partir d'un format (équivalent du \verb|sprintf| pour les chaînes \C).
+\item Créer une chaîne \Python à partir d'une chaîne \emph{C}.
+\item Créer une chaîne \Python à partir d'un format (équivalent du \verb|sprintf| pour les chaînes \emph{C}).
 \item Récupérer la taille d'une chaîne \Python (équivalent du \verb|strlen|).
 \end{itemize}
 
@@ -41,7 +42,7 @@ Pour les chaînes de caractères, le travail avait déjà été effectué par \e
 \end{ccode}
   \end{listing}
   
-Pour les entiers, ça se présente aussi sous la forme de macros permettant de vérifier si un type \Python représente un entier et de convertir un entier \Python en entier \C.
+Pour les entiers, ça se présente aussi sous la forme de macros permettant de vérifier si un type \Python représente un entier et de convertir un entier \Python en entier \emph{C}.
 
   \begin{listing}[H]
     \caption{Abstraction des entiers entre \Python 2 et \Python 3}
@@ -57,7 +58,7 @@ Pour les entiers, ça se présente aussi sous la forme de macros permettant de v
 \end{ccode}
   \end{listing} 
   
-Pour la gestion des classes, la principale différence concerne la disparition du type \verb|PyClass|\footnote{\verb?PyClass? étendant \verb?\PyType?, il est important de vérifier si l'objet est un \verb?PyClass? avant de vérifier si c'est un \verb?PyType?.} au profit du type \verb|PyType| qui, dans \Python 2, représentait déjà les classes définit en \C.
+Pour la gestion des classes, la principale différence concerne la disparition du type \verb|PyClass|\footnote{\verb?PyClass? étendant \verb?\PyType?, il est important de vérifier si l'objet est un \verb?PyClass? avant de vérifier si c'est un \verb?PyType?.} au profit du type \verb|PyType| qui, dans \Python 2, représentait déjà les classes définit en \emph{C}.
 
   \begin{listing}[H]
     \caption{Détection dune classe en \Python 2 et \Python 3}
@@ -117,6 +118,7 @@ if (PyType_Check(class)) {
 \chapter{Arguments de fonctions}
   \section[Instrumentation]{Instrumentation d'une liste de fonction}
   \label{app:do_instrument}
+  \label{app:do_instrumentation}
     \vspace{10px}
     \cfilelong{codes/do_instrument.c}
     \begin{listing}[H]
