@@ -1,16 +1,16 @@
 \chapter{Compatibilité Python 2 / Python 3}
   \label{app:compat-py3}
   \label{app:compat-23}
-Actuellement deux versions majeures de \Python sont maintenus : \Python 2, en version 2.7, et de \Python 3, en version 3.4. \Python 3 a apporté de grands changements au langage avec, par exemple, un support par défaut de l'UTF-8, mais a au passage cassé la rétro-compatibilité avec \Python 2 ; particulièrement au niveau de l'API C.
+Actuellement deux versions majeures de \Python sont maintenues : \Python 2, en version 2.7, et \Python 3, en version 3.4. \Python 3 a apporté de grands changements au langage avec, par exemple, un support par défaut de l'UTF-8, mais a au passage cassé la rétro-compatibilité avec \Python 2 ; particulièrement au niveau de l'API C.
 
 Parmi les changement importants qui ont impacté \Blackfire on peut noter :
 \begin{itemize}
-\item La gestion des chaînes de caractères a été complètement réécrit, celles-ci devenant toutes UTF-8
-\item La gestion des classes a été changé en profondeur afin de faire disparaître le type spécifique aux classes déclarée en \emph{Python}.
-\item Le type \verb|PyInt| a été supprimé au profit du type \verb|PyLong| déjà présent
+\item La gestion des chaînes de caractères qui a été complètement réécrite : celles-ci deviennent toutes UTF-8
+\item La gestion des classes qui a été changée en profondeur afin de faire disparaître le type spécifique aux classes déclarées en \emph{Python}.
+\item La suppression du type \verb|PyInt| au profit du type \verb|PyLong| déjà présent
 \end{itemize}
 
-Concrètement, au niveau de \emph{Blackfire}, un ensemble de macros a été définit afin de manipuler ces objets sans avoir besoins de se préoccuper de la version de \Python utilisée.
+Concrètement, au niveau de \emph{Blackfire}, un ensemble de macros a été défini afin de manipuler ces objets sans avoir besoin de se préoccuper de la version de \Python utilisée.
 
 Pour les chaînes de caractères, le travail avait déjà été effectué par \emph{Yappi} et se présente sous la forme des six macros suivantes, permettant respectivement de :
 \begin{itemize}
@@ -58,10 +58,10 @@ Pour les entiers, ça se présente aussi sous la forme de macros permettant de v
 \end{ccode}
   \end{listing} 
   
-Pour la gestion des classes, la principale différence concerne la disparition du type \verb|PyClass|\footnote{\verb?PyClass? étendant \verb?\PyType?, il est important de vérifier si l'objet est un \verb?PyClass? avant de vérifier si c'est un \verb?PyType?.} au profit du type \verb|PyType| qui, dans \Python 2, représentait déjà les classes définit en \emph{C}.
+Pour la gestion des classes, la principale différence concerne la disparition du type \verb|PyClass|\footnote{\verb?PyClass? étendant \verb?PyType?, il est important de vérifier si l'objet est un \verb?PyClass? avant de vérifier si c'est un \verb?PyType?.} au profit du type \verb|PyType| qui, dans \Python 2, représentait déjà les classes définies en \emph{C}.
 
   \begin{listing}[H]
-    \caption{Détection dune classe en \Python 2 et \Python 3}
+    \caption{Détection d'une classe en \Python 2 et \Python 3}
 \begin{ccode}
 #ifndef IS_PY3K
 if (PyClass_Check(class)) {
@@ -77,6 +77,10 @@ if (PyType_Check(class)) {
   \end{listing}
   
 \chapter{Gestion de projet}
+% TODO Un tableau avec 3 colonnes : début/fin/commentaire
+% dire ce qui a été fait pas à pas
+% + expliquer l'organisation de l'équipe
+
 
 \input{annexe/new-relic_decoration-methodes}
 

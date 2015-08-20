@@ -42,7 +42,9 @@
 \usepackage{hyperref}
  
 \usepackage{perpage} %the perpage package
-\MakePerPage{footnote} %the perpage package command
+%\MakePerPage{footnote} %the perpage package command
+\counterwithout{footnote}{chapter}
+\counterwithout{footnote}{part}
 
 \author{Tristan Darricau}
 \title{Rapport de projet de fin d'études}
@@ -234,12 +236,12 @@
   \appendix
   \phantomsection
   \addcontentsline{toc}{part}{Annexes}
-ak	  \part*{Annexes}
+	  \part*{Annexes}
   \thispagestyle{part}
   
   \numberwithin{listing}{part}
   \numberwithin{listing}{chapter}
-  \numberwithout{listing}{section}
+  %\numberwithout{listing}{section}
   
   \renewcommand\thefigure{\thechapter.\arabic{figure}}    
   \renewcommand\thelisting{\thechapter.\arabic{listing}}  
@@ -248,14 +250,18 @@ ak	  \part*{Annexes}
   \input{annexes}
   
 % -----------------------------------  
-  
   \backmatter
+  \phantomsection
+  \addcontentsline{toc}{part}{Tables}
+  \part*{Tables}
+  \thispagestyle{part}
+  
   \setcounter{tocdepth}{4}
   \tableofcontents
   \clearpage
   
-  \listoftables
-  \clearpage
+  %\listoftables
+  %\clearpage
   
   \listoffigures
   \clearpage

@@ -21,30 +21,33 @@
   
 La sonde est découpée en trois grandes parties : trois modules correspondant aux trois rôles principaux de la sonde, à savoir :
 \begin{itemize}
-\item \textbf{Instrumentation} \emph{automatique} : le module \mintinline{python}{blackfire} définit l'interface publique qui sera exposée à l'utilisateur, à savoir les différents points d'entrée permettant de lancer l'analyse du code.
-\item \textbf{Intégration} \emph{avec Blackfire} : le module \mintinline{python}{blackfire.probe} définit la classe \\\mintinline{python}{BlackfireProbe} qui implémente le protocole utilisé pour communiquer avec l'agent \emph{Blackfire}. Cette classe est instanciée par les différents points d'entrée en un objet qui représente ainsi la sonde actuellement utilisée. La classe \mintinline{python}{BlackfireProbe} définie aussi une interface qui permet au développeur, si l'objet est exposé, de contrôler plus finement les parties du code qui sont analysées.
+\item \textbf{Instrumentation} \emph{automatique} : le module \mintinline{python}{blackfire} définit l'interface publique qui sera exposée à l'utilisateur, à savoir les fonctions permettant de lancer l'analyse du code et d’interagir avec celle-ci.
+\item \textbf{Intégration} \emph{avec Blackfire} : le module \mintinline{python}{blackfire.probe} définit la classe \\\mintinline{python}{BlackfireProbe} qui implémente le protocole utilisé pour communiquer avec l'agent \emph{Blackfire}. Cette classe est instanciée, par le point d'entrée, en un objet qui représente ainsi la sonde actuellement utilisée. La classe \mintinline{python}{BlackfireProbe} définit aussi une interface qui permet au développeur, si l'objet est exposé, de contrôler plus finement les parties du code qui sont analysées.
 \item \textbf{Collecte} \emph{des données} : le module \mintinline{python}{blackfire.profiler} définit la classe \mintinline{python}{Profiler} qui est en charge de collecter les données qui formeront le profil (\glspl{metrique} et \gls{graphe d'appels}).
 \end{itemize}
 
+\begin{note}[Intégration avec \emph{Blackfire}]
+La sonde travaille en tandem avec l'agent : quand la première collecte les données, le second les traite et les envoie à l'API. Ceci implique qu'ils communiquent l'un avec l'autre, ce qu'ils font au travers d'un protocole dédié\footnote{Voir section \vref{sec:BlackfireProtocol}}.
+\end{note}
+
 \begin{note}[cPython]
-Il existe de nombreux interpréteur \Python différents (\emph{PyPy}\footnote{\url{http://pypy.org/}}, \emph{Jython}\footnote{\url{http://www.jython.org/}}, \emph{IronPython}\footnote{\url{http://ironpython.net/}}, \emph{PythonNet}\footnote{\url{http://pythonnet.github.io/}}...). Ils sont tous compatibles au niveau du code \Python exécuté, mais, en revanche, au niveau de l'API \C fournie (si il y en a une) ils ont tous leurs spécificités. Il a donc été nécessaire de cibler un interpréteur précis et notre choix s'est porté sur \emph{cPython}\footnote{\url{https://python.org}} qui est l'implémentation de référence et aussi l'implémentation la plus répandue de \Python.
+Il existe de nombreux interpréteurs \Python différents (\emph{PyPy}\footnote{\url{http://pypy.org/}}, \emph{Jython}\footnote{\url{http://www.jython.org/}}, \emph{IronPython}\footnote{\url{http://ironpython.net/}}, \emph{PythonNet}\footnote{\url{http://pythonnet.github.io/}}...). Ils sont tous compatibles au niveau du code \Python exécuté. En revanche, au niveau de l'API \C fournie (s'il y en a une) ils ont tous leurs spécificités. Il a donc été nécessaire de cibler un interpréteur précis, et notre choix s'est porté sur \emph{cPython}\footnote{\url{https://python.org}}, qui est l'implémentation de référence.
 \end{note}
 
 \begin{note}[Python 3]
-\Python 3 a apporté de grands changements au langage avec, par exemple, un support par défaut de l'UTF-8, mais a au passage cassé la rétro-compatibilité avec \Python 2. Cette cassure étant très importante\footnote{Voir annexe \vref{app:compat-py3} pour plus de détails}, le taux d'adoption de \Python 3 est assez faible mais en constante progression. Il est donc important pour \Blackfire de supporter les deux versions.
+\Python 3 a apporté de grands changements au langage avec, par exemple, un support par défaut de l'UTF-8, mais a au passage cassé la rétro-compatibilité avec \Python 2. Cette cassure étant très importante\footnote{Voir annexe \vref{app:compat-py3} pour plus de détails}, le taux d'adoption de \Python 3 est assez faible bien qu'en constante progression. Il est donc important pour \Blackfire de supporter les deux versions.
 \end{note}
 % TODO note sur cPython vs Pypy and others
 
   \chapter[Instrumentation]{Instrumentation automatique}
 \Blackfire est un outil destiné à être utilisé aussi bien lors du développement que sur des sites en production. Cela implique que, même si l'\gls{overhead} induit par la sonde est très faible, la sonde ne doit être activée que si un profil a été demandé afin d'éviter de générer des milliers (voir des millions) de profils inutilement.
 
-Cette partie a donc pour rôle de s'assurer qu'un profil a été demandé et ensuite de brancher dans le \gls{programme utilisateur} la partie qui s'occupe de l'intégration avec le reste de l'outil. Néanmoins cette tâche doit être exécutée de manière automatique ou alors avec le minimum de modification dans le programme utilisateur.
+L'instrumentation automatique a donc pour rôle de s'assurer qu'un profil a été demandé et ensuite de brancher, dans le \gls{programme utilisateur}, la partie qui s'occupe de l'intégration avec le reste de l'outil. Néanmoins cette tâche doit être exécutée de manière automatique ou alors avec le minimum de modifications dans le programme utilisateur.
 
-Pour cela trois principaux cas de figures sont à considérer :
+Pour cela deux principaux cas de figures sont à considérer :
 \begin{itemize}
 \item L'instrumentation automatique d'un programme en ligne de commande (\gls{CLI})
 \item L'instrumentation automatique d'une application \gls{WSGI} (application web)
-\item L'instrumentation manuelle par le développeur
 \end{itemize}
 
 \section[Programme CLI]{Instrumentation automatique d'un programme CLI}
@@ -60,7 +63,7 @@ Cela est possible grâce au comportement particulier du module \verb|site|. En e
 \end{bashcode}
 \end{listing}
 
-Le module \verb|sitecustomize| est très simple : il regarde si la variable d'environnement \verb|BLACKFIRE_QUERY| est présente\footnote{La variable d'environnement est définie lors de l'utilisation de la commande \verb?blackfire run?, son contenu sera précisé plus tard - voir section \vref{subsec:BlackfireQuery}} et, si c'est le cas, branche \Blackfire en passant la main à la sonde à proprement parler \footnote{Voir chapitre \vref{chap:integration}}.
+Le module \verb|sitecustomize| est très simple : il regarde si la variable d'environnement \verb|BLACKFIRE_QUERY| est présente\footnote{La variable d'environnement est définie lors de l'utilisation de la commande \verb?blackfire run?, son contenu sera précisé plus tard - voir section \vref{subsec:BlackfireQuery}} et, si c'est le cas, branche \Blackfire en passant la main à la sonde à proprement parler.
 
 \begin{listing}[H]
 \caption{Instrumentation automatique d'un programme en ligne de commande}
@@ -72,9 +75,9 @@ Le module \verb|sitecustomize| est très simple : il regarde si la variable d'en
 \end{note}
 
 \section[Application WSGI]{Instrumentation automatique d'une application WSGI}
-On considère ici une application web utilisant la spécification WSGI\footnote{\url{https://docs.python.org/2/library/wsgiref.html}}. Dans ce cas il est nécessaire de décorer le point d'entrée\footnote{Il s'agit de l'objet (function ou variable) qui a le nom \verb?application? dans le contexte du module renseigné auprès du serveur WSGI} de l'application par un middleware WSGI qui va se charger de vérifier la présence de l'en-tête \verb|X-Blackfire-Query|\footnote{Cet en-tête est défini lorsque le compagnon ou la commande \verb?blackfire curl? est utilisé - voir section \vref{subsec:BlackfireQuery})} et d'activer \Blackfire le cas échéant. Ce middleware a aussi la charge de récupérer le code HTTP de la réponse (requis par le protocole) et de définir la \emph{Response Line} qui est envoyée au compagnon.
+On considère ici une application web utilisant la spécification WSGI\footnote{\url{https://docs.python.org/2/library/wsgiref.html}}. Dans ce cas il est nécessaire de décorer le point d'entrée\footnote{Il s'agit de l'objet (fonction ou variable) qui a le nom \verb?application? dans le contexte du module renseigné auprès du serveur WSGI} de l'application par un \gls{middleware} WSGI qui va se charger de vérifier la présence de l'en-tête \verb|X-Blackfire-Query|\footnote{Cet en-tête est défini lorsque le compagnon ou la commande \verb?blackfire curl? est utilisé - voir section \vref{subsec:BlackfireQuery})} et d'activer \Blackfire le cas échéant. Ce middleware a aussi la charge de récupérer le code HTTP de la réponse (requis par le protocole) et de définir la \emph{Response Line} qui est envoyée au compagnon.
 
-Ce middleware a été implémenté dans la classe \verb|blackfire.WSGI_wrapper|, et le décorateur \verb|blackfire.wsgi_application| permet d'en simplifier l'utilisation lorsque que le point d'entrée est une fonction\footnote{Voir Annexe \vref{app:decorateurwsgi} pour le code du décorateur}.
+Ce middleware a été implémenté dans la classe \verb|blackfire.WSGI_wrapper|, et le décorateur \verb|blackfire.wsgi_application| permet d'en simplifier l'utilisation lorsque le point d'entrée est une fonction\footnote{Voir Annexe \vref{app:decorateurwsgi} pour le code du décorateur}.
 
 \begin{listing}[H]
 \caption{Exemple d'utilisation du décorateur WSGI}
@@ -90,10 +93,10 @@ Ce middleware a été implémenté dans la classe \verb|blackfire.WSGI_wrapper|,
 %\pythonfile[firstline=9]{codes/probe/blackfire/config.py}
 %\end{listing}
 
-  \chapter[Intégration]{Intégration avec Blackfire}
-  \label{chap:integration}
+ % \chapter[Intégration]{Intégration avec Blackfire}
+ % \label{chap:integration}
 % Schéma pour montrer où on se situe dans l'archi/workflow ?
-La sonde travaille en tandem avec l'agent : quand la première collecte les données, le second les traite et les envoie à l'API. Ceci implique qu'ils communiquer l'un avec l'autre, ce qu'ils font au travers d'un protocole dédié\footnote{Voir section \vref{sec:BlackfireProtocol}}.
+%La sonde travaille en tandem avec l'agent : quand la première collecte les données, le second les %traite et les envoie à l'API. Ceci implique qu'ils communiquent l'un avec l'autre, ce qu'ils font %au travers d'un protocole dédié\footnote{Voir section \vref{sec:BlackfireProtocol}}.
 
 
 %	\section{Protocole}
@@ -104,10 +107,10 @@ La sonde travaille en tandem avec l'agent : quand la première collecte les donn
   \chapter[Collecte]{Collecte des données}
 Le rôle principal de la sonde, avant de s'intégrer avec le reste de \emph{Blackfire}, est de collecter des données, des métriques sur le code.
 
-La sonde étant exécutée en même temps que le programme utilisateur ses performances sont cruciales. Il est donc important de minimiser son impact, aussi bien sur les performances (les temps) que sur la consommation mémoire. Pour cette raison il a été décidé de l'implémenter en \C\footnote{Une première version a été implémentée en \Python afin de servir de preuve de faisabilité, et l'impact était très important ; le temps d'exécution était souvent doublé, parfois même décuplé.}.
+La sonde étant exécutée en même temps que le programme utilisateur, ses performances sont cruciales. Il est donc important de minimiser son impact, aussi bien sur les performances (les temps) que sur la consommation mémoire. Pour cette raison, il a été décidé de l'implémenter en \C\footnote{Une première version a été implémentée en \Python afin de servir de preuve de faisabilité, mais l'impact était très important ; le temps d'exécution était souvent doublé, parfois même décuplé.}.
 
   \section{Fonctionnement général}
-La méthode utilisée pour instrumenter le code \Python est la même que celle utilisée par \emph{Yappi}\footnote{Voir section \vref{subsec:yappi}}, dont sont issus ou inspirés certains éléments de l'implémentation actuelle. À savoir l'utilisation de la méthode \verb|sys.setprofiler()| qui permet de définir une fonction de rappel appelée à chaque fois que l'interpréteur entre ou sort d'une fonction.
+La méthode utilisée pour instrumenter le code \Python est la même que celle utilisée par \emph{Yappi}\footnote{Voir section \vref{subsec:yappi}}, dont sont issus ou inspirés certains éléments de l'implémentation actuelle, à savoir l'utilisation de la méthode \verb|sys.setprofiler()| qui permet de définir une fonction de rappel appelée à chaque fois que l'interpréteur entre ou sort d'une fonction.
 
 Dans l'implémentation actuelle, la fonction \C \verb|_blackfire_callback| est enregistrée en tant que fonction de rappel et est donc appelée à chaque fois que l'un des événements\footnote{Les événements sont toujours déclenchés avant l'exécution du code par l'interpréteur} suivants intervient :
 \begin{itemize}
@@ -119,7 +122,7 @@ Dans l'implémentation actuelle, la fonction \C \verb|_blackfire_callback| est e
 \item \verb|PyTrace_C_EXCEPTION| : fin d'une fonction \C avec exception
 \end{itemize}
 
-Le rôle de cette fonction de rappel est double. D'un côté c'est elle qui va lancer l'analyse des différents événements, et c'est donc à partir d'elle que tout le travail de collecte de données va être effectué. De l'autre elle s'assure que les exceptions lancées par le programme utilisateur sont conservées et ne sont pas écrasées si des problèmes surviennent pendant le traitement de l'événement en question\footnote{L'action de \Blackfire doit impacter aussi peu que possible le programme utilisateur et cela concerne aussi la gestion des erreurs : la sonde doit être capable, autant que possible, de traiter ses propres erreurs}.
+Le rôle de cette fonction de rappel est double. D'un côté c'est elle qui va lancer l'analyse des différents événements, et c'est donc à partir d'elle que tout le travail de collecte de données va être effectué. De l'autre elle s'assure que les exceptions lancées par le programme utilisateur sont conservées et ne sont pas écrasées si des problèmes surviennent pendant le traitement d'un événement\footnote{L'action de \Blackfire doit impacter le moins possible le programme utilisateur ; cela concerne aussi la gestion des erreurs : la sonde doit être capable, autant que possible, de traiter ses propres erreurs}.
 
 Les appels \C et les appels \Python sont traités de manière identique. Néanmoins il y a quelques différences d'implémentation car certaines données ne sont pas collectées de la même manière. De même, aucune différence n'est faite entre les fins de fonction avec et sans exception. Ainsi les six événements précédents sont répartis en deux groupes : \emph{Début} et \emph{Fin} de fonction.
 
@@ -127,41 +130,38 @@ L'idée est donc d'utiliser ces événements pour maintenir la \gls{pile d'appel
 
   \section{Gestion du graphe d'appels}
   \label{sec:gestion-graph-appels}
-La \gls{pile d'appels} du programme est construite à l'aide de l'objet \verb|frame|\footnote{Cet objet représente le contexte d'exécution de la fonction et contient donc toutes les informations sur le code exécuté. Pour plus de détails : \url{https://docs.python.org/2/library/inspect.html}} envoyé à la fonction de rappel. À chaque événement de type \emph{entrée de fonction} on identifie l'appel de fonction et on l'ajoute dans la pile.
-  
-Cet appel est identifié\footnote{Voir annexe \vref{app:pile_struct} pour les structures de données} par ses arguments si ceux-ci sont collectés\footnote{Voir section \vref{sec:fnargs}} et par la méthode qui est appelée, elle-même identifiée par son module, sa classe et son nom. 
-
-À cet appel de fonction on associe ensuite une série de métriques qui reflètent l'état du système au moment où la fonction est appelée. Ainsi sont mesurés à ce moment la date en microsecondes, le temps système écoulé ou encore le nombre d'opcodes exécutés depuis le début du programme.
+La \gls{pile d'appels} du programme est construite à l'aide de l'objet \verb|frame|\footnote{Cet objet représente le contexte d'exécution de la fonction et contient donc toutes les informations sur le code exécuté. Pour plus de détails : \url{https://docs.python.org/2/library/inspect.html}} envoyé à la fonction de rappel. À chaque événement de type \emph{entrée de fonction} on identifie l'appel de fonction et on l'ajoute dans la pile. \\  
+Cet appel est identifié\footnote{Voir annexe \vref{app:pile_struct} pour les structures de données} par ses arguments si ceux-ci sont collectés\footnote{Voir section \vref{sec:fnargs}} et par la méthode qui est appelée, elle-même identifiée par son module, sa classe et son nom. À cet appel de fonction on associe ensuite une série de métriques qui reflètent l'état du système au moment où la fonction est appelée. Ainsi sont mesurés à ce moment la date en microsecondes, le temps système écoulé ou encore le nombre d'opcodes exécutés depuis le début du programme.
 
 \begin{note}[Importation de la pile courante]
-Lors de l'appel à \verb|start|, la pile d'exécution courante est importée afin de tout le temps avoir des couples appelant/appelé corrects et d'éviter de se retrouver avec des appels de fonctions orphelins (sans appelant). Pour cela on parcourt la pile courante en sens inverse (donc en partant du contexte le plus ancien) et on simule une entrée de fonction pour chaque contexte.
+Lors du démarrage de l'analyse, la pile d'exécution courante est importée afin de tout le temps avoir des couples appelant/appelé corrects et d'éviter de se retrouver avec des appels de fonctions orphelins (sans appelant). Pour cela, on parcourt la pile courante en sens inverse (donc en partant du contexte le plus ancien) et on simule une entrée de fonction pour chaque contexte.
 \end{note}
 
-\begin{note}[Gestion des appels récursifs]
-Afin d'éviter de générer des graphes cycliques\footnote{C'est à dire un graphe où les appels récursifs génèrent des cycles}, un appel de fonction est aussi identifié par son niveau de récursivité. Celui-ci correspond au nombre de fois où la fonction appelée est déjà présente dans la pile. S'il est différent de 1 il sera ajouté au nom de la fonction dans le graphe sous la forme \verb|@<niv. rec.>|.
+\begin{note}[Gestion des appels récursifs] 
+Afin d'éviter de générer des graphes cycliques\footnote{C'est-à-dire un graphe où les appels récursifs génèrent des cycles}, un appel de fonction est aussi identifié par son niveau de récursivité. Celui-ci correspond au nombre de fois où la fonction appelée est déjà présente dans la pile. S'il est différent de 1, il sera ajouté au nom de la fonction dans le graphe sous la forme \verb|@<niv. rec.>|.
 \end{note}
 
 \begin{note}[Performances]
-Il est important de contrôler l'utilisation de la mémoire\footnote{Voir section \vref{sec:performances} pour plus de détails sur la gestion des performances}, afin d'éviter que celle-ci augmente indéfiniment lors de l'analyse d'un gros programme. Pour cela les méthodes ne sont identifiées qu'une seule fois puis mises en cache dans une table de hachage afin d'être réutilisées, par la même occasion cela permet de ne pas répéter les même calculs.
+Il est important de contrôler l'utilisation de la mémoire\footnote{Voir section \vref{sec:performances} pour plus de détails sur la gestion des performances} afin d'éviter que celle-ci augmente indéfiniment lors de l'analyse d'un gros programme. Pour cela, les méthodes ne sont identifiées qu'une seule fois puis mises en cache dans une table de hachage afin d'être réutilisées ; cela permet également de ne pas répéter les même calculs.
 \end{note}
 
 \subsection{Identification de la méthode appelée - Appel Python}
 \label{ident-python}
 Lors d'un appel \Python (appel d'une fonction écrite en \emph{Python}) le \emph{\gls{contexte d'execution}} envoyé à la fonction de rappel correspond à celui de la fonction qui va être exécutée.
 
-\paragraph*{Le module} Lors d'un appel \emph{Python}, le nom du module n'est pas transmis. En revanche,  via la variable \verb|frame->f_code->co_filename|, on dispose du nom du fichier contenant le code exécuté à partir duquel on peut retrouver le nom du module. Par contre il s'agit d'une opération coûteuse car elle peut impliquer de nombreux calculs et appels au système de fichiers. Mais lors d'une définition en \Python il y a une relation forte entre le module et le fichier qui le définit\footnote{Un fichier correspond toujours à un seul et unique module qui est lui même entièrement défini dans le-dit fichier} et on peut donc s'en servir à la place du nom du module (quitte à résoudre son nom plus tard si nécessaire).
+\paragraph*{Le module} Lors d'un appel \emph{Python}, le nom du module n'est pas transmis. En revanche,  via la variable \verb|frame->f_code->co_filename|, on dispose du nom du fichier contenant le code exécuté à partir duquel on peut retrouver le nom du module. Par contre il s'agit d'une opération coûteuse car elle peut impliquer de nombreux calculs et appels au système de fichiers. Mais lors d'une définition en \Python il y a une relation forte entre le module et le fichier qui le définit\footnote{Un fichier correspond toujours à un seul et unique module qui est lui même entièrement défini dans le-dit fichier}, on peut donc s'en servir à la place du nom du module (quitte à résoudre son nom plus tard si nécessaire).
 
-\paragraph*{La classe} L'un des éléments qui différencient une fonction d'une méthode est que une méthode prend explicitement une instance de la classe en premier argument et que par convention elle s'appelle \verb|self|. Pour récupérer le nom de la classe on peut donc vérifier si le premier élément s'appelle \verb|self| et s'il est une instance d'une classe, auquel cas l'objet dispose d'un attribut \verb|__class__| contenant un objet décrivant la classe, lui même disposant d'un attribut \verb|__name__| indiquant son nom.
+\paragraph*{La classe} L'un des éléments qui différencient une fonction d'une méthode est qu'une méthode prend explicitement une instance de la classe en premier argument et que par convention elle s'appelle \verb|self|. Pour récupérer le nom de la classe on peut donc vérifier si le premier élément s'appelle \verb|self| et s'il est une instance d'une classe, auquel cas l'objet dispose d'un attribut \verb|__class__| contenant un objet décrivant la classe, lui même disposant d'un attribut \verb|__name__| indiquant son nom.
 
 \paragraph*{La méthode} Le nom de la méthode est indiqué via la variable \verb|frame->f_code->co_name|.
 
 \subsection{Identification de la méthode appelée - Appel C}
-À la différence des appels \emph{Python}, lors d'un appel \C (appel d'une fonction écrite en \C depuis un code \emph{Python}) le \emph{\gls{contexte d'execution}} envoyé à la fonction de rappel ne correspond pas à celui de la fonction qui va être exécuté mais à celui de la fonction qui vient d'être exécutée. En effet, s'agissant d'un appel \C la fonction n'est pas interprété par l'interpréteur et aucun contexte d'exécution n'est généré. En revanche un objet décrivant la fonction \C à exécuter\footnote{Il s'agit d'un \verb?PyCFunctionObject*?, voir annexe \vref{app:PyCFunctionObject}} est passé à la fonction de rappel en plus du contexte d'exécution de la fonction parente (l'objet \verb|frame|).
+À la différence d'un appel \emph{Python}, lors d'un appel \C (appel d'une fonction écrite en \C depuis un code \emph{Python}), le \emph{\gls{contexte d'execution}} envoyé à la fonction de rappel ne correspond pas à celui de la fonction qui va être exécutée mais à celui de la fonction qui vient de l'être. En effet, s'agissant d'un appel \C, la fonction n'est pas interprétée par l'interpréteur \Python et aucun contexte d'exécution n'est généré. En revanche, un objet décrivant la fonction \C à exécuter\footnote{Il s'agit d'un \verb?PyCFunctionObject*?, voir annexe \vref{app:PyCFunctionObject}} est passé à la fonction de rappel en plus du contexte d'exécution de la fonction parente (l'objet \verb|frame|).
 
-\paragraph*{Le module} Lors d'un appel C le nom du module auquel la fonction est rattaché est passé via la variable \verb|function->m_module| mais deux cas de figures sont à considérer : 
+\paragraph*{Le module} Lors d'un appel C, le nom du module auquel la fonction est rattachée est passé via la variable \verb|function->m_module|, mais deux cas de figures sont à considérer : 
 \begin{itemize}
-\item La fonction fait partie des \emph{builtins}\footnote{Certaines fonctions sont toujours disponibles et ne sont rattachées à aucun module : \url{https://docs.python.org/2/library/functions.html}} de \Python alors cette variable vaut \verb|null| et le module associé est définit manuellement à \verb|__builtin__|.
-\item La fonction a été définie dans un module et la variable \verb|function->m_module| contient son nom.
+\item La fonction fait partie des \emph{builtins}\footnote{Les builtins sont des fonctions toujours disponibles et rattachées à aucun module : \url{https://docs.python.org/2/library/functions.html}} de \emph{Python}, la variable \verb|function->m_module| vaut alors \verb|null| et le module associé est définit manuellement à \verb|__builtin__|.
+\item La fonction a été définie dans un module, la variable \verb|function->m_module| contient alors le nom de ce dernier.
 \end{itemize}
 
 \paragraph*{La classe} Si la fonction est en réalité une méthode d'une classe, alors la variable\\ \verb|function->m_self| contient l'objet sur lequel l'appel de fonction se porte, et on peut récupérer le nom de la classe comme lors d'un appel \emph{Python}.
@@ -170,22 +170,22 @@ Lors d'un appel \Python (appel d'une fonction écrite en \emph{Python}) le \emph
   
 \subsection{Création du graphe d'appels}
 \label{subsec:crea-graph-appel}
-Le \gls{graphe d'appels} du programme est lui aussi construit à partir de la fonction de rappel. Les événements de type \emph{sortie de fonction} sont utilisés pour détecter quand il faut retirer un élément de la pile et en rajouter un dans le graphe.
+Le \gls{graphe d'appels} du programme est, comme la pile, construit à partir de la fonction de rappel. Les événements de type \emph{sortie de fonction} sont utilisés pour détecter quand il faut retirer un élément de la pile et en rajouter un dans le graphe.
 
-Le graphe est construit à partir de ses arcs, chaque appel représente un arc partant de la fonction appelante et allant à la fonction appelée.
+Le graphe est construit à partir de ses arcs, chaque arc représentant un appel de fonction (de la fonction appelante vers la fonction appelée).
 
-Ainsi, ces différents arcs sont représentés\footnote{Voir annexe \vref{app:graph_struct} pour la structure de données représentant un élément du graph} par la fonction appelante et la fonction appelée telles que définies dans la pile. A ces arcs on associe ensuite les même métriques qu'associées précédemment à la pile ainsi qu'un compteur représentant le nombre de fois où l'arc est présent\footnote{C'est à dire le nombre de fois où ce couple appelant/appelé a été rencontré dans le programme}.
+Ainsi, ces différents arcs sont représentés\footnote{Voir annexe \vref{app:graph_struct} pour la structure de données représentant un élément du graph} par la fonction appelante et la fonction appelée telles que définies dans la pile. À ces arcs on associe ensuite les mêmes métriques qu'à la pile ainsi qu'un compteur représentant le nombre de fois où l'arc est présent\footnote{C'est-à-dire le nombre de fois où ce couple appelant/appelé a été rencontré dans le programme}.
 
 \begin{note}[Gestion de la mémoire]
-Afin de contrôler l'utilisation de la mémoire\footnote{Voir section \vref{sec:performances} pour plus de détails sur la gestion des performances}, et éviter que celle-ci n'augmente indéfiniment lors de l'analyse de l'analyse d'un gros programme, les différents éléments du graphe sont stockés dans une table de hachage et agrégés. Ainsi si le même appel de fonction survient plusieurs fois\footnote{Cela implique même appelant, même appelé et, si collectés, mêmes arguments pour les fonction en question} il n'y aura qu'une seule entrée dans la table de hachage, et donc aucune consommation mémoire supplémentaire.
+Afin de contrôler l'utilisation de la mémoire\footnote{Voir section \vref{sec:performances} pour plus de détails sur la gestion des performances} et éviter que celle-ci augmente indéfiniment lors de l'analyse d'un gros programme, les différents éléments du graphe sont stockés dans une table de hachage et agrégés. Ainsi, si le même appel de fonction survient plusieurs fois\footnote{Cela implique même appelant, même appelé et, si collectés, mêmes arguments pour les fonction en question}, il n'y aura qu'une seule entrée dans la table de hachage, et donc aucune consommation mémoire supplémentaire.
 \end{note}
 
   \section{Arguments de fonction}
   \label{sec:fnargs}
-L'une des fonctionnalités importante de \Blackfire est sa faculté à récupérer dynamiquement les arguments de certaines fonctions\footnote{Il s'agit de l'une des fonctionnalités de la version payante, permettant entre autre de récupérer les requêtes \emph{SQL} effectuées}, cette liste de fonctions étant définie dynamiquement et envoyée par l'agent lorsque le profil commence\footnote{Voir section \vref{subsec:comm-agent}}.
+L'une des fonctionnalités importantes de \Blackfire est sa faculté à récupérer dynamiquement les arguments de certaines fonctions\footnote{Il s'agit de l'une des fonctionnalités de la version payante, permettant entre autres de récupérer les requêtes \emph{SQL} effectuées}. La liste de ces fonctions est définie dynamiquement et envoyée par l'agent lorsque le profil commence\footnote{Voir section \vref{subsec:comm-agent}}.
 
 \subsection{Instrumenter les fonctions}
-Instrumenter les fonctions implique d'être capable d'identifier dynamiquement si les arguments de la fonction venant d'être appelée doivent être récupérés, et si oui de l'instrumenter. Pour cela, trois méthodes différentes ont été étudiées et testées avant qu'une soit retenue : 
+Instrumenter les fonctions implique d'être capable d'identifier dynamiquement si les arguments de la fonction venant d'être appelée doivent être récupérés, et, si oui, de l'instrumenter. Pour cela, trois méthodes différentes ont été étudiées et testées avant qu'une soit retenue : 
 \begin{itemize}
 \item Résoudre le nom de chaque fonction appelée et regarder si elle se trouve dans la liste envoyée par l'agent
 \item Remplacer, au démarrage de l'analyse, les fonctions à instrumenter par un décorateur
@@ -193,27 +193,25 @@ Instrumenter les fonctions implique d'être capable d'identifier dynamiquement s
 \end{itemize}
 
 \subsubsection*{Résoudre le nom de la fonction}
-Cette technique est la plus simple à mettre en œuvre mais aussi la plus coûteuse. En effet elle implique, dans tous les cas, de devoir résoudre complètement le nom de la fonction courante, puis d'effectuer une recherche dans une table de hachage indexée par des chaînes de caractères. Et autant cette dernière opération est peu coûteuse autant ce n'est pas le cas pour la résolution du nom\footnote{Résoudre complètement le nom de la fonction implique de devoir résoudre le nom du module, voir section \vref{ident-python}}. Par conséquent cette technique a été rejetée.
+Cette technique est la plus simple à mettre en œuvre mais aussi la plus coûteuse. En effet, elle implique, dans tous les cas, de devoir résoudre complètement le nom de la fonction courante, puis d'effectuer une recherche dans une table de hachage indexée par des chaînes de caractères. Et, autant cette dernière opération est peu coûteuse, autant ce n'est pas le cas pour la résolution du nom\footnote{Résoudre complètement le nom de la fonction implique de devoir résoudre le nom du module, voir section \vref{ident-python}}. Par conséquent cette technique a été rejetée.
 
 \subsubsection*{Utiliser un décorateur}
 L'objectif de cette technique est, lors de l'initialisation de \emph{Blackfire}, de charger les différentes fonctions instrumentées et de les remplacer par un décorateur, écrit en \C ou en \emph{Python}, qui se chargera d'en récupérer les arguments.
 
-Le principal avantage étant que c'est très efficace car, pour savoir si il est nécessaire de récupérer les arguments de la fonction, cela ne nécessite aucun calcul supplémentaire lors de l'analyse. En effet, même si cette technique a un coût non négligeable (il faut charger et instrumenter un nombre de modules possiblement grand) il est entièrement porté par l'initialisation et donc, à la différence de la technique précédente, ne transparaît pas dans le graphe généré.
+Le principal avantage est que c'est très efficace car, pour savoir s'il est nécessaire de récupérer les arguments de la fonction, cela ne nécessite aucun calcul supplémentaire lors de l'analyse. En effet, même si cette technique a un coût non négligeable (il faut charger et instrumenter un nombre de modules possiblement grand), il est entièrement porté par l'initialisation, et donc, à la différence de la technique précédente, ne transparaît pas dans le graphe généré.
 
-En revanche il y a quelques problèmes. \\
-Tout d'abord, il est nécessaire d'avoir un décorateur différent par fonction instrumentée. C'est parfaitement faisable mais ça implique que le nombre de fonctions qu'il est possible d'instrumenter est limité en dur dans le code source de la sonde\footnote{Cela peut aussi rapidement doubler la taille du binaire, mais celle-ci étant faible, de l'ordre de 50ko, c'est peu important}.
- 
-Mais le vrai problème c'est que les fonctions sont appelées après le traitement de l'événement par la fonction de rappel et, par conséquent, le décorateur aurait à modifier la pile pour y intégrer les arguments après coup et cela rend le code plus difficile à maintenir.
+% TODO : trop oral
+En revanche il y a quelques problèmes. Tout d'abord, il est nécessaire d'avoir un décorateur différent par fonction instrumentée. C'est parfaitement faisable mais ça implique que le nombre de fonctions qu'il est possible d'instrumenter est limité en dur dans le code source de la sonde\footnote{Cela peut aussi rapidement doubler la taille du binaire, mais celle-ci étant faible, de l'ordre de 50ko, c'est peu important}. Mais le vrai problème c'est que les fonctions sont appelées après le traitement de l'événement par la fonction de rappel et, par conséquent, le décorateur aurait à modifier la pile pour y intégrer les arguments après coup et cela rend le code plus difficile à maintenir.
 
 \subsubsection*{Rechercher un identifiant unique dans une table de hachage}
-Cette technique, à mis chemin entre les 2 précédentes, est celle qui a été retenue. ici, l'objectif est de récupérer les arguments des fonctions instrumentées lorsque la fonction de rappel traite l'événement associé, tout en minimisant les calculs nécessaires.
+Cette technique, à mi-chemin entre les deux précédentes, est celle qui a été retenue. Ici, l'objectif est de récupérer les arguments des fonctions instrumentées lorsque la fonction de rappel traite l'événement associé, tout en minimisant les calculs nécessaires.
 
-Pour cela la première étape consiste, comme dans la seconde technique, à charger toutes les fonctions lors de l’initialisation. Sauf que cette fois-ci, au lieu de remplacer la fonction en question par un décorateur, on se contente d'en récupérer un identifiant unique et facile à calculer\footnote{Pour une fonction \C se sera l'adresse de la structure décrivant la fonction \C à appelée, et pour un appel \Python l'adresse de la variable contenant le bytecode à exécuter}. Ensuite on utilise cet identifiant comme clef dans une table de hachage, la valeur associée à cette clef étant l'argument à récupérer\footnote{Voir annexe \vref{app:do_instrumentation} pour le code correspondant à l'instrumentation}.
+Pour cela la première étape consiste, comme dans la seconde technique, à charger toutes les fonctions lors de l’initialisation. Mais cette fois-ci, au lieu de remplacer la fonction en question par un décorateur, on se contente de récupérer un identifiant unique et facile à calculer\footnote{Pour une fonction \C ce sera l'adresse de la structure décrivant la fonction \C à appeler, et pour un appel \Python l'adresse de la variable contenant le bytecode à exécuter}. Ensuite on utilise cet identifiant comme clef dans une table de hachage, la valeur associée à cette clef étant le nombre d'arguments à récupérer\footnote{Voir annexe \vref{app:do_instrumentation} pour le code correspondant à l'instrumentation}.
 
-Ensuite, dans la fonction de rappel, il suffit de calculer l'identifiant correspondant à la fonction actuelle, de chercher si il est présent dans la table de hachage et si oui de récupérer les arguments de la fonction courante.
+Ensuite, dans la fonction de rappel, il suffit de calculer l'identifiant correspondant à la fonction actuelle, de chercher s'il est présent dans la table de hachage et, si oui, de récupérer les arguments de la fonction courante.
 
 \begin{note}
-Cette technique, tout comme la précédente, utilise le fait que \Python ne charge jamais 2 fois le même module et que par conséquent les adresses sont stables.
+Cette technique, tout comme la précédente, utilise le fait que \Python ne charge jamais deux fois le même module et que, par conséquent, les adresses sont stables.
 \end{note}
 
 \begin{note}[Compatibilité Python 2/Python 3]
@@ -221,41 +219,39 @@ L'un des problèmes rencontrés lors de la mise en place de cette technique a é
 \end{note}
 
 \subsection{Récupérer les arguments}
-Récupérer les arguments peut être une tâche compliquée voir coûteuse dans certains cas et, quoi qu'il arrive, diffère entre un appel \C et un appel \emph{Python}.
+Récupérer les arguments peut être une tâche compliquée voire coûteuse dans certains cas et, quoi qu'il arrive, diffère entre un appel \C et un appel \emph{Python}.
 
 \subsubsection*{Appel C}
-Dans le cadre d'un appel \emph{C}, on n'a pas accès au contexte de la fonction appelée\footnote{A vrai dire il n'est jamais créé} mais à celui de la fonction appelante. Par conséquent le seul moyen de récupérer les arguments est d'aller les lire directement dans la pile \Python\footnote{L'interpréteur \Python utilise une pile en interne pour gérer le contexte des fonctions - arguments, variables locales, valeur de retour etc... - tout comme le fait un programme \C compilé}.
+Dans le cadre d'un appel \emph{C}, on n'a pas accès au contexte de la fonction appelée\footnote{À vrai dire un tel contexte n'est jamais créé} mais à celui de la fonction appelante. Par conséquent, le seul moyen de récupérer les arguments est d'aller les lire directement dans la pile \Python\footnote{L'interpréteur \Python utilise une pile en interne pour gérer le contexte des fonctions - arguments, variables locales, valeur de retour, etc. - tout comme le fait un programme \C compilé}.
 
-Dans ce cas, le contexte d'exécution donne accès à sa pile via plusieurs variables et notamment \verb|frame->f_valuestack| qui pointe juste après la dernière variable locale. Ainsi pour accéder aux différents arguments de la fonction \C appelée on peut utiliser\\ \verb|frame->f_valuestack + 0| pour le premier argument, \verb|frame->f_valuestack + 1| pour le second etc...
+Dans ce cas, le contexte d'exécution donne accès à sa pile via plusieurs variables, notamment \verb|frame->f_valuestack| qui pointe juste après la dernière variable locale. Ainsi, pour accéder aux différents arguments de la fonction \C appelée, on peut utiliser\\ \verb|frame->f_valuestack + 0| pour le premier argument, \verb|frame->f_valuestack + 1| pour le second, etc.
 
 \begin{note}[Passage de paramètres]
-Lors d'un appel de fonction \Python empile les différents paramètres de la fonction dans l'ordre dans lequel ils sont demandé. Ainsi le premier argument se retrouve dans la première case après la dernière locale, le second dans la seconde case et ainsi de suite.
+Lors d'un appel de fonction, les différents paramètres de la fonction sont empilés dans l'ordre dans lequel ils sont demandés. Ainsi le premier argument se retrouve dans la première case après la dernière locale, le second dans la seconde case et ainsi de suite.
 \end{note}
 
 \subsubsection*{Appel Python}
-Dans le cadre d'un appel \emph{Python}, on a accès au contexte d'exécution de la fonction appelée et via celui-ci aux variables locales de la fonction. Hors, lors d'un appel \Python les arguments de la fonction sont stockés dans les premières variables locales. Ainsi on peut récupérer le premier argument dans la première variable locale via \verb|frame->f_localsplus[0]|, le second argument dans la seconde variable locale via \verb|frame->f_localsplus[1]| etc...
+Dans le cadre d'un appel \emph{Python}, on a accès au contexte d'exécution de la fonction appelée et, via celui-ci, aux variables locales de la fonction. Or, lors d'un appel \emph{Python}, les arguments de la fonction sont stockés dans les premières variables locales. Ainsi on peut récupérer le premier argument dans la première variable locale via \verb|frame->f_localsplus[0]|, le second argument dans la seconde variable locale via \verb|frame->f_localsplus[1]|, etc.
 
-Lors d'un appel Python il est aussi possible de récupérer un argument donné via son nom. Dans ce cas il est tout d'abord nécessaire de résoudre les variables locales en créant le dictionnaire qui associe les variables à leur nom, puis d'interroger ce dictionnaire pour récupérer l'argument voulu.
+Lors d'un appel \emph{Python}, il est aussi possible de récupérer un argument donné via son nom. Dans ce cas, il est tout d'abord nécessaire de résoudre les variables locales en créant le dictionnaire qui associe les variables à leur nom, puis d'interroger ce dictionnaire pour récupérer l'argument voulu.
 
 \begin{note}
-Par défaut le contexte d'exécution ne stocke pas le dictionnaire associant les variables locales à leur nom, mais uniquement les informations requises pour le reconstruire (à savoir, la liste des noms des variables dans l'ordre dans lequel elles se trouvent dans la pile).
+Par défaut, le contexte d'exécution ne stocke pas le dictionnaire associant les variables locales à leur nom, mais uniquement les informations requises pour le reconstruire (à savoir la liste des noms des variables dans l'ordre dans lequel elles se trouvent dans la pile).
 \end{note}
 
   \section{Détection des contours du programme}
       % problème du sitecustomize.py
 
-L'un des problèmes rencontré a été de détecter correctement les contours du \gls{programme utilisateur} afin de ne pas prendre en compte la phase d'initialisation de \emph{Blackfire}. En effet, lorsqu'on utilise la technique d'instrumentation à l'aide du fichier \verb|sitecustmize.py|\footnote{Voir section \vref{sec:instru-pythonpath}}, il y a une certaine quantité de code qui est exécutée avant même de compiler le programme utilisateur, afin de charger et d'initialiser \Blackfire mais aussi d'effectuer diverses autres actions d'initialisation.
+L'un des problèmes rencontrés a été de détecter correctement les contours du \gls{programme utilisateur} afin de ne pas prendre en compte la phase d'initialisation de \emph{Blackfire}. En effet, lorsqu'on utilise la technique d'instrumentation à l'aide du fichier \verb|sitecustmize.py|\footnote{Voir section \vref{sec:instru-pythonpath}}, il y a une certaine quantité de code qui est exécutée avant même de compiler le programme utilisateur. Ceci a pour but de charger et d'initialiser \Blackfire mais aussi d'effectuer diverses autres actions d'initialisation.
 
-Pour cela, lorsque que la fonction \verb|start()| est appelée et que la \gls{pile d'appels} existante est importée, on regarde chaque entrée pour savoir si le module \verb|site| est utilisé\footnote{Si c'est le cas alors au moins l'un des contextes concerne une fonction du module \verb?site? ou, si les noms des modules ne sont pas résolus, dont le fichier est \verb?site.py?}. Auquel cas la fonction de rappel entre dans un mode particulier où les arguments de fonction sont ignorés et aucune entrée n'est créée dans la table de hachage des profils.
-
-Dans ce mode, la sonde cherche à repérer l'appel de fonction correspondant au chargement du programme utilisateur. C'est à dire un appel dont la fonction appelée est \verb|<module>| et dont le nom du module, si résolu, est \verb|__main__| ou sinon dont le fichier correspond au fichier associé au module \verb|__main__|\footnote{Le fichier associé au module \verb?\_\_main\_\_? est renseigné au moment où ce dernier est chargé}.
+Pour cela, lorsque que l'analyse démarre et que la \gls{pile d'appels} existante est importée, on regarde chaque entrée pour savoir si le module \verb|site| est utilisé\footnote{Si c'est le cas, alors au moins l'un des contextes concerne une fonction du module \verb?site? ou, si les noms des modules ne sont pas résolus, une fonction du fichier \verb?site.py?}. S'il est utilisé la fonction de rappel entre dans un mode particulier où les arguments de fonction sont ignorés et aucune entrée n'est créée dans la table de hachage des profils. Dans ce mode, la sonde cherche à repérer l'appel de fonction correspondant au chargement du programme utilisateur, c'est à dire un appel dont la fonction appelée est \verb|<module>| et dont le nom du module, si résolu, est \verb|__main__| ou sinon dont le fichier correspond au fichier associé au module \verb|__main__|\footnote{Le fichier associé au module \verb?\_\_main\_\_? est renseigné au moment où ce dernier est chargé}.
 
 \begin{note}
-Il n'est pas possible de se contenter de surveiller la pile d'exécution, et de dire que le programme utilisateur commence dès que celle-ci est à nouveau vide, car elle peut se remplir et se vider plusieurs fois avant le début de l'exécution du programme utilisateur.
+Il n'est pas possible de se contenter de surveiller la pile d'exécution et de dire que le programme utilisateur commence dès que celle-ci est à nouveau vide, car elle peut se remplir et se vider plusieurs fois avant le début de l'exécution du programme utilisateur.
 \end{note}
 
 \begin{note}
-Détecter correctement les contours du programme est d'autant plus important étant donné la manière dont le module \verb|site| est chargé puis exécuté, car certains modules peuvent être déchargés entre l'exécution du module \verb|site| et l'exécution du programme utilisateur, ce qui invalide le cache des méthodes\footnote{Voir section \vref{sec:gestion-graph-appels}}.
+Détecter correctement les contours du programme est très important étant donné la manière dont le module \verb|site| est chargé puis exécuté, car certains modules peuvent être déchargés entre l'exécution du module \verb|site| et l'exécution du programme utilisateur, ce qui invalide le cache des méthodes\footnote{Voir section \vref{sec:gestion-graph-appels}}.
 \end{note}
 
   \section{Dimension opcode}
@@ -265,24 +261,24 @@ Détecter correctement les contours du programme est d'autant plus important ét
     % on ne peut pas utiliser le code donné par setprofile car il serait encore moins précis (boucle, conditions etc...)
     % => impact sur les performances à mesurer
     
-Outre les dimensions traditionnelles (temps, temps cpu, mémoire consommée), une dimension donnant des informations sur la complexité du \gls{bytecode} exécuté est à l'étude et a été implémenté dans la sonde \emph{Python}.
+Outre les dimensions traditionnelles (temps, temps cpu, mémoire consommée), une dimension donnant des informations sur la complexité du \gls{bytecode} exécuté est à l'étude et a été implémentée dans la sonde \emph{Python}.
 
-En \emph{Python}, le contexte d'exécution contient le \gls{bytecode} de la fonction à exécuter ou en cours d'exécution, ainsi que les informations nécessaires pour retrouver dans cette liste les \glspl{opcode} précis qui doivent être interprétés. Mais il n'est pas possible d'utiliser les événements \emph{entrée de fonction} pour cela. En effet, même si il est possible de compter tout le bytecode de la fonction, cela manquerait en précision car les boucles et les conditions seraient ignorées.
+En \emph{Python}, le contexte d'exécution contient le \gls{bytecode} de la fonction à exécuter ou en cours d'exécution, ainsi que les informations nécessaires pour retrouver dans cette liste les \glspl{opcode} précis qui doivent être interprétés. Mais il n'est pas possible d'utiliser les événements \emph{entrée de fonction} pour cela. En effet, même s'il est possible de compter tout le \gls{bytecode} de la fonction, cela manquerait en précision car les boucles et les conditions seraient ignorées.
 
-La technique retenue a été d'utiliser une autre fonction de rappel dédiée à cet usage. Cette fonction, étant enregistré via la méthode \verb|sys.settrace()|\footnote{\url{https://docs.python.org/2/library/sys.html#sys.settrace}}, est appelée à chaque fois que l'interpréteur exécute une ligne \emph{Python}. ce qui est beaucoup plus précis. En revanche il reste une certaine imprévision liée à l'utilisation de conditions en ligne ,et autres cas où plusieurs opérations sont effectuées sur la même ligne.
+La technique retenue a été d'utiliser une autre fonction de rappel dédiée à cet usage. Cette fonction, enregistrée via la méthode \verb|sys.settrace()|\footnote{\url{https://docs.python.org/2/library/sys.html#sys.settrace}}, est appelée à chaque fois que l'interpréteur exécute une ligne \emph{Python}, ce qui est beaucoup plus précis. En revanche, il reste une certaine imprécision liée à l'utilisation de conditions en ligne.
 
-Afin de récupérer le \gls{bytecode} de la ligne, la première étape consiste à décoder le champ du contexte d'exécution qui effectue l'association entre les lignes et le bytecode qui leur est associé\footnote{L'algorithme utilisé à été adapté à partir de celui implémenté dans le module dis, voir \url{https://github.com/python/cpython/blob/2.7/Lib/dis.py} pour la fonction d'origine et l'annexe \vref{app:count_bytecode} pour l'implémentation effectuée}. Ensuite il suffit d'itérer sur le tableau d'opcodes entre les index calculés précédemment.
+Afin de récupérer le \gls{bytecode} de la ligne, la première étape consiste à décoder le champ du contexte d'exécution qui effectue l'association entre les lignes et le \gls{bytecode} qui leur est associé\footnote{L'algorithme utilisé à été adapté à partir de celui implémenté dans le module \verb?dis?, voir \url{https://github.com/python/cpython/blob/2.7/Lib/dis.py} pour la fonction d'origine, et l'annexe \vref{app:count_bytecode} pour l'implémentation effectuée dans la sonde}. Ensuite il suffit d'itérer sur le tableau d'\glspl{opcode} entre les index calculés précédemment.
 
 \begin{note}[Performances]
 L'impact de cette dimension au niveau des performances est non négligeable. Le nombre d'opération effectué dans la fonction de rappel est limité, mais celle-ci est appelée un très grand nombre de fois.
 \end{note}
 
 \begin{note}[Évolutions]
-Actuellement la dimension indique le nombre d'\glspl{opcode} exécutés, mais étant donné qu'ils n'ont pas tous le même coût (certains opcodes effectuent des opérations très simples comme une addition entre deux entiers, mais d'autres effectuent des opérations beaucoup plus lourde comme un appel de fonction ou le chargement d'un module), il serait certainement plus intéressant de les pondérer en fonction de celui-ci.
+Actuellement la dimension indique le nombre d'\glspl{opcode} exécutés, mais étant donné qu'ils n'ont pas tous le même coût (certains \glspl{opcode} effectuent des opérations très simples comme une addition entre deux entiers, mais d'autres effectuent des opérations beaucoup plus lourdes comme un appel de fonction ou le chargement d'un module), il serait certainement plus intéressant de les pondérer en fonction de celui-ci.
 \end{note}
 
 \begin{note}
-Cette dimension n'est pas encore accessible à tout le monde et ne le sera peut être jamais. Il reste à étudier l'utilité des informations qu'elle apporte par rapport aux dimensions actuelles, ainsi que par rapport à son impact au niveau des performances.
+Cette dimension n'est pas encore accessible à tout le monde et ne le sera peut-être jamais. Il reste à étudier l'utilité des informations qu'elle apporte par rapport aux dimensions actuelles, ainsi que par rapport à son impact au niveau des performances.
 \end{note}
 
   \section{Performances}
@@ -295,36 +291,36 @@ Cette dimension n'est pas encore accessible à tout le monde et ne le sera peut 
       % => hashtab efficace
       % => aggrégation
       
-La sonde doit avoir un impact aussi faible que possible, son optimisation est donc l'un des points les plus importants et cela transparaît en de nombreux endroits.
+La sonde doit avoir un impact aussi faible que possible. Son optimisation est donc l'un des points les plus importants et cela transparaît en de nombreux endroits.
 
 \subsection{Structures de données}
-L'implémentation de la pile et des tables de hachages utilisées a été adaptée à partir de celle effectuée dans \emph{Yappi}, à la différence que dans \Blackfire deux types de tables de hachages sont utilisées :
+L'implémentation de la pile et des tables de hachage utilisées a été adaptée à partir de celle effectuée dans \emph{Yappi}, à la différence que dans \Blackfire deux types de tables de hachage sont utilisés :
 \begin{itemize}
-\item La première pour utiliser des entiers en clef, la fonction de hachage étant celle de \emph{Yappi}
-\item La seconde pour utiliser des chaînes de caractères en clef, la fonction de hachage étant \emph{MurmurHash3}\footnote{https://code.google.com/p/smhasher/wiki/MurmurHash}
+\item Le premier pour utiliser des entiers en clefs, la fonction de hachage étant celle de \emph{Yappi}
+\item Le second pour utiliser des chaînes de caractères en clefs, la fonction de hachage étant \emph{MurmurHash3}\footnote{\url{https://code.google.com/p/smhasher/wiki/MurmurHash}}
 \end{itemize}
 
-Les tables de hachages numériques sont utilisées pour mettre en cache les définitions des méthodes et les identifiants des fonctions dont les arguments doivent être récupérés. La table de hachage utilisant des chaînes de caractères sert à stocker le graphe.
+Les tables de hachage du premier type sont utilisées pour mettre en cache les définitions des méthodes et les identifiants des fonctions dont les arguments doivent être récupérés. La table de hachage du second type sert à stocker le graphe.
 
 \subsection{Gestion de la mémoire}
-Allouer et désallouer de la mémoire via \verb|malloc| et \verb|free| fait appel au système d'exploitation et est très coûteux. Pour cette raison, la sonde \Python a été pensé pour minimiser au maximum ces appels dans la fonction de rappel, préférant allouer la mémoire lors de l'initialisation.
+Allouer et désallouer de la mémoire via \verb|malloc| et \verb|free| fait appel au système d'exploitation et est très coûteux. Pour cette raison, la sonde \Python a été pensée pour minimiser au maximum ces appels dans la fonction de rappel, préférant allouer la mémoire lors de l'initialisation.
 
-Pour cela plusieurs techniques sont utilisées : 
+Pour cela, plusieurs techniques sont utilisées :
 \begin{itemize}
-\item Les tables de hachages sont pré-allouées avec des dimensions correspondant à celles d'un programme qu'on pourrait qualifié de taille moyenne : $2^{10}$ méthodes différentes, $2^{10}$ appels de fonction différents, $2^5$ méthodes dont les arguments de fonction sont récupérés.
-\item La pile est elle aussi pré-allouée avec 100 emplacements disponibles\footnote{Il s'agit de la limite de récursivité par défaut de l'interpréteur \Python}.
-\item Le concept de \emph{freelist} de \emph{Yappi} a été reprit et utilisé pour les méthodes, les entrées de la pile et les entrées du graphe.
+\item Les tables de hachage sont pré-allouées avec des dimensions correspondant à celles d'un programme qu'on pourrait qualifier de taille moyenne : $2^{10}$ méthodes différentes, $2^{10}$ appels de fonction différents, $2^5$ méthodes dont les arguments de fonction sont récupérés.
+\item La pile est, elle aussi, pré-allouée avec 100 emplacements disponibles\footnote{Il s'agit de la limite de récursivité par défaut de l'interpréteur \Python}.
+\item Le concept de \emph{freelist} de \emph{Yappi} a été repris et utilisé pour les méthodes, les entrées de la pile et les entrées du graphe.
 \end{itemize}
 
 \begin{note}[freelist]
-Afin d'éviter d'avoir à allouer de la mémoire trop souvent, \emph{Yappi} utilise ce qu'il appel des \emph{freelist}, à savoir des listes de structures pré-allouées et prêtes à être utilisées. Ainsi, par exemple, lorsque qu'une nouvelle méthode est rencontrée, au lieu d'allouer la mémoire correspondant à la structure \verb|_method|, on demande à la \emph{freelist} un élément disponible. Et lorsque l'élément n'est plus utilisé (par exemple avec les entrées de la pile), l'élément est retourné à sa liste. De cette manière il n'y a que rarement besoins d'allouer ou de désallouer de la mémoire\footnote{Si jamais la \emph{freelist} ne dispose d'aucun élément de disponible elle s'agrandit toute seule et double sa taille}.
+Afin d'éviter d'avoir à allouer de la mémoire trop souvent, \emph{Yappi} utilise ce qu'il appel des \emph{freelist}. Ce sont des listes de structures pré-allouées et prêtes à être utilisées. Ainsi, par exemple, lorsqu'une nouvelle méthode est rencontrée, au lieu d'allouer la mémoire correspondant à la structure \verb|_method|, on demande à la \emph{freelist} un élément disponible. Et lorsque l'élément n'est plus utilisé (par exemple avec les entrées de la pile), il est retourné à sa liste. De cette manière il n'y a que rarement besoins d'allouer ou de désallouer de la mémoire\footnote{Si jamais la \emph{freelist} ne dispose d'aucun élément de disponible, elle s'agrandit toute seule et double sa taille}.
 \end{note}
 
 \subsection{Résolution du nom des modules}
-Résoudre le nom des modules est une opération coûteuse impliquant entre autre des appels au système de fichier. Pour cette raison la fonction de rappel ne le résout pas mais préfère travailler avec le nom des fichiers. En revanche il n'est pas très commode d'avoir les noms des fichiers dans le graphe, et il est donc nécessaire de résoudre ces noms au dernier moment, juste avant d'envoyer les données à l'agent.
+Résoudre le nom des modules est une opération coûteuse impliquant, entre autres, des appels au système de fichiers. Pour cette raison la fonction de rappel ne le résout pas mais préfère travailler avec le nom des fichiers. En revanche, il n'est pas très commode d'avoir les noms des fichiers dans le graphe, et il est donc nécessaire de résoudre ces noms au dernier moment, juste avant d'envoyer les données à l'agent.
 
 \subsection{Agrégation du graphe}
-Comme évoqué précédemment dans la section \vref{subsec:crea-graph-appel}, afin de limiter la consommation mémoire de la sonde lors de l'analyse d'un programme effectuant de nombreux appels de fonction, les différents éléments du graphe sont agrégés. Ainsi un même arc n’apparaît pas deux fois dans la table de hachage et la taille de cette dernière se stabilise au bout d'un moment.
+Comme évoqué précédemment dans la section \vref{subsec:crea-graph-appel}, afin de limiter la consommation mémoire de la sonde lors de l'analyse d'un programme effectuant de nombreux appels de fonction, les différents éléments du graphe sont agrégés. Ainsi, un même arc n’apparaît pas deux fois dans la table de hachage, et la taille de cette dernière finit par se stabilise.
 
   \section{Évolutions}
   	% Multi threading (expliquer comment faire, en s'inspirant de yappi, et les problèmes restants: comment on représente ça dans notre graph? on ajoute le numéro du thread dans chaque noeud?)
@@ -335,8 +331,8 @@ Comme évoqué précédemment dans la section \vref{subsec:crea-graph-appel}, af
 La sonde \Python est actuellement en version alpha et est parfaitement fonctionnelle mais il reste toujours un certain nombre de points à étudier.
 
 \begin{itemize}
-\item \textbf{La distribution}\;~ Actuellement la sonde de \Blackfire est \emph{\gls{closed source}}, il est donc nécessaire de distribuer une version binaire. En \Python cela peut être réalisé facilement en utilisant la plateforme \emph{PyPI}\footnote{https://pypi.python.org/} et le format \emph{wheel}\footnote{https://pypi.python.org/pypi/wheel/0.24.0}. Reste à générer ces paquets pour les différentes versions de \Python et les différents systèmes supportés.
-\item \textbf{Multi threading}\;~ Le multi threading est très présent en \Python et il serait intéressant de le supporter. Il est possible de s'inspirer de \emph{Yappi} pour l'instrumentation automatique des threads, mais il reste à définir comment représenter ceux-ci dans le graphe. Une solution pouvant être d'ajouter, à toutes les fonctions, un argument fictif\footnote{On pourrait aussi imaginer de préfixer ou de suffixer le nom de la méthode comme pour les appels récursifs} représentant le thread. Une autre pouvant être de faire comme \emph{Yappi} et de ne pas les différencier.
+\item \textbf{La distribution}\;~ Actuellement la sonde de \Blackfire est \emph{closed source}, il est donc nécessaire de distribuer une version binaire. En \Python cela peut être réalisé facilement en utilisant la plateforme \emph{PyPI}\footnote{\url{https://pypi.python.org/}} et le format \emph{wheel}\footnote{\url{https://pypi.python.org/pypi/wheel/0.24.0}}. Il reste à générer ces paquets pour les différentes versions de \Python et les différents systèmes supportés.
+\item \textbf{Multi threading}\;~ Le multi threading est très présent en \Python et il serait intéressant de le supporter. Il est possible de s'inspirer de \emph{Yappi} pour l'instrumentation automatique des threads, mais il reste à définir comment les représenter dans le graphe. Une solution possible est d'ajouter à toutes les fonctions un argument fictif\footnote{On pourrait aussi imaginer de préfixer ou de suffixer le nom de la méthode comme pour les appels récursifs} représentant le thread. Une autre possibilité est de faire comme \emph{Yappi} et de ne pas les différencier.
 \item \textbf{Fichier de configuration}\;~ La sonde \PHP utilise un fichier de configuration en plus des variables d'environnement. Il pourrait être utile de faire la même chose avec la probe \emph{Python}. Par contre il faut déterminer où positionner ce fichier car, contrairement à \emph{PHP}, \Python n'en utilise aucun.
 \item \textbf{PYTHONPATH}\;~ Il est assez fastidieux de devoir renseigner le \verb|PYTHONPATH| à chaque fois que l'on veut analyser un programme depuis la ligne de commande. Il pourrait être intéressant que celui-ci soit automatiquement définit par la commande \verb|blackfire run| lorsqu'elle est utilisée.
 \end{itemize}
