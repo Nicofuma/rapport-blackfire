@@ -26,6 +26,11 @@ La sonde est découpée en trois grandes parties : trois modules correspondant a
 \item \textbf{Collecte} \emph{des données} : le module \mintinline{python}{blackfire.profiler} définit la classe \mintinline{python}{Profiler} qui est en charge de collecter les données qui formeront le profil (\gls{métriques} et \gls{graphe d'appels}).
 \end{itemize}
 
+\begin{note}[Python 3]
+\Python 3 a apporté de grands changements au langage avec, par exemple, un support par défaut de l'UTF-8, mais a au passage cassé la rétro-compatibilité avec \Python 2. Cette cassure étant très importante\footnote{Voir annexe \vref{app:compat-py3} pour plus de détails}, le taux d'adoption de \Python 3 est assez faible mais en constante progression. Il est donc important pour \Blackfire de supporter les deux versions.
+\end{note}
+% TODO note sur cPython vs Pypy and others
+
   \chapter[Instrumentation]{Instrumentation automatique}
 \Blackfire est un outil destiné à être utilisé aussi bien lors du développement que sur des sites en production. Cela implique que, même si l'\gls{overhead} induit par la sonde est très faible, la sonde ne doit être activée que si un profil a été demandé afin d'éviter de générer des milliers (voir des millions) de profils inutilement.
 

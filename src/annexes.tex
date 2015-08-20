@@ -1,6 +1,83 @@
-\input{annexe/new-relic_decoration-methodes}
-
 \chapter{Compatibilité Python 2 / Python 3}
+  \label{app:compat-py3}
+Actuellement deux versions majeures de \Python sont maintenus : \Python 2, en version 2.7, et de \Python 3, en version 3.4. \Python 3 a apporté de grands changements au langage avec, par exemple, un support par défaut de l'UTF-8, mais a au passage cassé la rétro-compatibilité avec \Python 2 ; particulièrement au niveau de l'API C.
+
+Parmi les changement importants qui ont impacté \Blackfire on peut noter :
+\begin{itemize}
+\item La gestion des chaînes de caractères a été complètement réécrit, celles-ci devenant toutes UTF-8
+\item La gestion des classes a été changé en profondeur afin de faire disparaître le type spécifique aux classes déclarée en \Python.
+\item Le type \verb|PyInt| a été supprimé au profit du type \verb|PyLong| déjà présent
+\end{itemize}
+
+Concrètement, au niveau de \Blackfire, un ensemble de macros a été définit afin de manipuler ces objets sans avoir besoins de se préoccuper de la version de \Python utilisée.
+
+Pour les chaînes de caractères, le travail avait déjà été effectué par \emph{Yappi} et se présente sous la forme des six macros suivantes, permettant respectivement de :
+\begin{itemize}
+\item Convertir une chaîne \Python en chaîne \C.
+\item Vérifier si un object \Python est une chaîne de caractères.
+\item Créer une chaîne \Python à partir d'une chaîne \C.
+\item Créer une chaîne \Python à partir d'un format (équivalent du \verb|sprintf| pour les chaînes \C).
+\item Récupérer la taille d'une chaîne \Python (équivalent du \verb|strlen|).
+\end{itemize}
+
+  \begin{listing}[H]
+    \caption{Abstraction des chaînes de caractères entre \Python 2 et \Python 3}
+\begin{ccode}
+#ifdef IS_PY3K
+#define PyStr_AS_CSTRING(s) PyBytes_AS_STRING(PyUnicode_AsUTF8String(s))
+#define PyStr_Check(s) PyUnicode_Check(s)
+#define PyStr_FromString(s) PyUnicode_FromString(s)
+#define PyStr_FromFormatV(fmt, vargs) PyUnicode_FromFormatV(fmt, vargs)
+#define PyStr_FromFormat(fmt, ...) PyUnicode_FromFormat(fmt, __VA_ARGS__)
+#define PyStr_GetSize(s) PyUnicode_GET_SIZE(s)
+#else // < Py3x
+#define PyStr_AS_CSTRING(s) PyString_AS_STRING(s)
+#define PyStr_Check(s) PyString_Check(s)
+#define PyStr_FromString(s) PyString_FromString(s)
+#define PyStr_FromFormatV(fmt, vargs) PyString_FromFormatV(fmt, vargs)
+#define PyStr_FromFormat(fmt, ...) PyString_FromFormat(fmt, __VA_ARGS__)
+#define PyStr_GetSize(s) PyString_GET_SIZE(s)
+#endif
+\end{ccode}
+  \end{listing}
+  
+Pour les entiers, ça se présente aussi sous la forme de macros permettant de vérifier si un type \Python représente un entier et de convertir un entier \Python en entier \C.
+
+  \begin{listing}[H]
+    \caption{Abstraction des entiers entre \Python 2 et \Python 3}
+\begin{ccode}
+#ifdef IS_PY3K
+#define PyNumeric_Check(op) PyLong_Check(op)
+#define PyNumeric_AsULong(op) (uint64_t)PyLong_AsUnsignedLong(op)
+#else // < Py3x
+#include <intobject.h>
+#define PyNumeric_Check(op) (PyInt_Check(op) || PyLong_Check(op))
+#define PyNumeric_AsULong(op) (PyInt_Check(op) ? (uint64_t)PyInt_AS_LONG(op) : (uint64_t)PyLong_AsUnsignedLong(op))
+#endif
+\end{ccode}
+  \end{listing} 
+  
+Pour la gestion des classes, la principale différence concerne la disparition du type \verb|PyClass|\footnote{\verb?PyClass? étendant \verb?\PyType?, il est important de vérifier si l'objet est un \verb?PyClass? avant de vérifier si c'est un \verb?PyType?.} au profit du type \verb|PyType| qui, dans \Python 2, représentait déjà les classes définit en \C.
+
+  \begin{listing}[H]
+    \caption{Détection dune classe en \Python 2 et \Python 3}
+\begin{ccode}
+#ifndef IS_PY3K
+if (PyClass_Check(class)) {
+	// Python Class
+	// <do something>
+} else
+#endif
+if (PyType_Check(class)) {
+	// "Class" defined in C or any class with Python3
+	// <do something>
+}
+\end{ccode}
+  \end{listing}
+  
+\chapter{Gestion de projet}
+
+\input{annexe/new-relic_decoration-methodes}
 
 \chapter{Décorateur WSGI}
   \label{app:decorateurwsgi}
