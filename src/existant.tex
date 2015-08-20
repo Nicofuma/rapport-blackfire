@@ -52,7 +52,7 @@ Pour cela la requête est composée de deux parties:
 			\subsection{Communication avec le Compagnon}
 			\label{subsec:comm-compagnon}
 				% Y a-t-il autre chose que le Blackfire-Response: continue ici ? Expliquer l'enjeu et l'importance de cet en-tête
-L'un des usages de \Blackfire est de profiler, à l'aide du compagnon, une page web servie par un serveur distant. Dans ce cas, tout se déroule sur le serveur distant et l'utilisateur n'a aucun moyen de consulter ce qui est produit durant l'analyse. Par conséquent il est important de fournir au compagnon un retour indiquant si le profile a été généré. Cette réponse, générée par l'agent, est ensuite retransmise par la sonde au compagnon en définissant l'en-tête \verb|X-Blackfire-Response| dans la réponse \emph{HTTP}.
+L'un des usages de \Blackfire est de profiler, à l'aide du compagnon, une page web servie par un serveur distant. Dans ce cas, tout se déroule sur le serveur distant et l'utilisateur n'a aucun moyen de consulter ce qui est produit durant l'analyse. Par conséquent il est important de fournir au compagnon un retour indiquant si le profil a été généré. Cette réponse, générée par l'agent, est ensuite retransmise par la sonde au compagnon en définissant l'en-tête \verb|X-Blackfire-Response| dans la réponse \emph{HTTP}.
 
 			\subsection{Communication avec l'agent}
 			\label{subsec:comm-agent}
@@ -117,7 +117,7 @@ La seconde section définit le graphe à proprement parler, chaque ligne corresp
 Il existe différents outils et API permettant d'analyser les performances ou le comportement d'un code \Python et on peut regrouper ces outils en deux catégories : ceux qui fonctionnent en mode \gls{SaaS} (comme \Blackfire) et ceux qui fonctionnent de manière indépendante ou sont directement intégrés dans \Python.
 
 		\section{Outils tiers existants}
-Il existe plusieurs outils tiers permettant de s'intéresser au fonctionnent d'une application \Python et parmi ceux-là deux vont nous occuper : \emph{New Relic\footnote{\url{https://www.newrelic.com}}}. %et \emph{Opbeat\footnote{\url{https://www.opbeat.com}}}.
+Il existe plusieurs outils tiers permettant de s'intéresser au fonctionnent d'une application \Python et parmi ceux-là l'un d'entre eux va nous occuper : \emph{New Relic\footnote{\url{https://www.newrelic.com}}}. %et \emph{Opbeat\footnote{\url{https://www.opbeat.com}}}.
 
 			\subsection{New Relic}
           		\input{existant/python-tiers-new_relic}

@@ -152,7 +152,7 @@ Lors d'un appel \Python (appel d'une fonction écrite en \Python) le \emph{\gls{
 \paragraph*{La méthode} Le nom de la méthode est indiqué via la variable \verb|frame->f_code->co_name|.
 
 \subsection{Identification de la méthode appelée - Appel C}
-À la différence des appels \Python, lors d'un appel \C (appel d'une fonction écrite en \C depuis un code \Python) le \emph{\gls{contexte d'exécution}} envoyé à la fonction de rappel ne correspond pas à celui de la fonction qui vas être exécuté mais à celui de la fonction qui vient d'être exécutée, car s'agissant d'un appel \C le travail n'est pas effectué par l'interpréteur et aucune \verb|frame| n'est générée. En revanche un object décrivant la fonction \C à exécuter\footnote{Il s'agit d'un \verb|PyCFunctionObject*|, voir annexe \vref{app:PyCFunctionObject}} est passé à la fonction de rappel en plus de l'objet \verb|frame|
+À la différence des appels \Python, lors d'un appel \C (appel d'une fonction écrite en \C depuis un code \Python) le \emph{\gls{contexte d'exécution}} envoyé à la fonction de rappel ne correspond pas à celui de la fonction qui va être exécuté mais à celui de la fonction qui vient d'être exécutée, car s'agissant d'un appel \C le travail n'est pas effectué par l'interpréteur et aucune \verb|frame| n'est générée. En revanche un object décrivant la fonction \C à exécuter\footnote{Il s'agit d'un \verb|PyCFunctionObject*|, voir annexe \vref{app:PyCFunctionObject}} est passé à la fonction de rappel en plus de l'objet \verb|frame|
 
 \paragraph*{Le module} Lors d'un appel C le nom du module auquel la fonction est rattaché est passé via la variable \verb|function->m_module| mais plusieurs deux cas de figures sont à considérer : 
 \begin{itemize}
@@ -242,7 +242,7 @@ Par défaut le contexte d'exécution ne stocke pas le dictionnaire associant les
 
 L'un des problèmes rencontré a été de détecter correctement les contours du programme utilisateur afin de ne pas prendre en compte la phase d'initialisation de \Blackfire. En effet lorsque l'on utilise la technique d'instrumentation à l'aide du fichier \verb|sitecustmize.py|\footnote{Voir section \vref{sec:instru-pythonpath}} il y a une certaine quantité de code qui est exécuté avant même de compiler le programme utilisateur afin de charger et d'initialiser \Blackfire mais aussi d'effectuer diverses autres actions d'initialisation.
 
-Pour cela lorsque que la fonction \verb|start()| et que la \gls{pile d'appels} existante est importée, on regarde chaque entrée pour savoir si le module \verb|site| est utilisé\footnote{Si c'est le cas alors au moins l'un des contextes concernent une fonction du module \verb|site| ou, si les noms des modules ne sont pas résolus, dont le fichier est \verb|site.py|}. Auquel cas la fonction de rappel entre dans un mode particulier où les arguments de fonction sont ignorés et aucune entrée n'est créée dans la table de hachage des profiles
+Pour cela lorsque que la fonction \verb|start()| et que la \gls{pile d'appels} existante est importée, on regarde chaque entrée pour savoir si le module \verb|site| est utilisé\footnote{Si c'est le cas alors au moins l'un des contextes concernent une fonction du module \verb|site| ou, si les noms des modules ne sont pas résolus, dont le fichier est \verb|site.py|}. Auquel cas la fonction de rappel entre dans un mode particulier où les arguments de fonction sont ignorés et aucune entrée n'est créée dans la table de hachage des profils.
 
 Dans ce mode la sonde cherche à repérer l'appel de fonction correspondant au chargement du programme utilisateur. C'est à dire un appel dont la fonction appelée est \verb|<module>| et dont le nom du module, si résolu, est \verb|__main__| ou sinon dont le fichier correspond au fichier associé au module \verb|__main__|\footnote{Le fichier associé au module \verb?\_\_main\_\_? est renseigné au moment où ce dernier est chargé}.
 
@@ -309,7 +309,7 @@ Pour cela plusieurs techniques sont utilisées :
 \begin{itemize}
 \item Les tables de hachages sont pré-alloué avec des dimensions correspondant à celles d'un programme qu'on pourrait qualifié de taille classique : $2^{10}$ méthodes différentes, $2^{10}$ appels de fonction différents, $2^5$ méthodes dont les arguments de fonction sont récupérés.
 \item La pile est elle aussi pré alloué avec 100 emplacements disponibles\footnote{Il s'agit de la limite de récursivité par défaut de l'interpréteur \Python}.
-\item Le concept de \emph{freelist} de \emph{Yappi} a été réutilisé et utilisé pour les méthodes, les entrées de la pile et les entrées du graph.
+\item Le concept de \emph{freelist} de \emph{Yappi} a été réutilisé et utilisé pour les méthodes, les entrées de la pile et les entrées du graphe.
 \end{itemize}
 
 \begin{note}[freelist]
