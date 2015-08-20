@@ -26,6 +26,10 @@ La sonde est découpée en trois grandes parties : trois modules correspondant a
 \item \textbf{Collecte} \emph{des données} : le module \mintinline{python}{blackfire.profiler} définit la classe \mintinline{python}{Profiler} qui est en charge de collecter les données qui formeront le profil (\glspl{metrique} et \gls{graphe d'appels}).
 \end{itemize}
 
+\begin{note}[cPython]
+Il existe de nombreux interpréteur \Python différents (\emph{PyPy}\footnote{\url{http://pypy.org/}}, \emph{Jython}\footnote{\url{http://www.jython.org/}}, \emph{IronPython}\footnote{\url{http://ironpython.net/}}, \emph{PythonNet}\footnote{\url{http://pythonnet.github.io/}}...). Ils sont tous compatibles au niveau du code \Python exécuté, mais, en revanche, au niveau de l'API \C fournie (si il y en a une) ils ont tous leurs spécificités. Il a donc été nécessaire de cibler un interpréteur précis et notre choix s'est porté sur \emph{cPython}\footnote{\url{https://python.org}} qui est l'implémentation de référence et aussi l'implémentation la plus répandue de \Python.
+\end{note}
+
 \begin{note}[Python 3]
 \Python 3 a apporté de grands changements au langage avec, par exemple, un support par défaut de l'UTF-8, mais a au passage cassé la rétro-compatibilité avec \Python 2. Cette cassure étant très importante\footnote{Voir annexe \vref{app:compat-py3} pour plus de détails}, le taux d'adoption de \Python 3 est assez faible mais en constante progression. Il est donc important pour \Blackfire de supporter les deux versions.
 \end{note}
