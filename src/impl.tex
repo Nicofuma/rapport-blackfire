@@ -47,7 +47,7 @@ Pour cela trois principaux cas de figures sont à considérer :
 \label{sec:instru-pythonpath}
 On considère ici un programme analysé via l'utilisation de l'outil en ligne de commande. Dans ce cas il est possible d'utiliser le module \verb|site|\footnote{\url{https://docs.python.org/2/library/site.html}} de \Python afin d'instrumenter le programme automatiquement, et ceci sans aucune modification.
 
-Cela est possible grâce au comportement particulier du module \verb|site|. En effet, il s'agit d'un module qui est importé (et donc exécuté) automatiquement lors du lancement d'un programme \Python, et l'un des rôles de ce module est de rechercher un module nommé \verb|sitecustomize| dans les différents dossiers référencés dans la variable d'environnement \verb|PYTHONPATH|\footnote{La variable d'environnement \verb?PYTHONPATH? est vide par défaut} et de l'exécuter.
+Cela est possible grâce au comportement particulier du module \verb|site|. En effet, il s'agit d'un module qui est importé (et donc exécuté) automatiquement lors du lancement d'un programme \Python. Ce module a pour rôle de rechercher un autre module nommé \verb|sitecustomize| dans les différents dossiers référencés par la variable d'environnement \verb|PYTHONPATH|\footnote{La variable d'environnement \verb?PYTHONPATH? est vide par défaut}, puis de le charger et de l'exécuter.
 
 \begin{listing}[H]
 \caption{Exemple d'analyse d'un programme en ligne de commande}
@@ -117,7 +117,7 @@ Dans l'implémentation actuelle, la fonction \C \verb|_blackfire_callback| est e
 
 Le rôle de cette fonction de rappel est double. D'un côté c'est elle qui va lancer l'analyse des différents événements, et c'est donc à partir d'elle que tout le travail de collecte de données va être effectué. De l'autre elle s'assure que les exceptions lancées par le code utilisateur sont conservées et ne sont pas écrasées si des problèmes surviennent pendant le traitement de l'événement en question\footnote{L'action de \Blackfire doit impacter aussi peu que possible le code utilisateur et cela concerne aussi la gestion des erreurs : la sonde doit être capable, autant que possible, de traiter ses propres erreurs}.
 
-Il y a quelques différences de traitement entre les appels \C et les appels \Python car certaines données ne sont pas collectées de la même manière mais sinon le fonctionnement général est identique. De même, aucune différence n'est faite entre les fins de fonction avec et sans exception. Ainsi les six événements précédents sont répartis en deux groupes : \emph{Début} et \emph{Fin} de fonction.
+Les appels \C et les appels \Python sont traités de manière identique. Néanmoins il y a quelques différences d'implémentation car certaines données ne sont pas collectées de la même manière. De même, aucune différence n'est faite entre les fins de fonction avec et sans exception. Ainsi les six événements précédents sont répartis en deux groupes : \emph{Début} et \emph{Fin} de fonction.
 
 L'idée est donc d'utiliser ces événements pour maintenir la \gls{pile d'appels} du programme et remplir le \gls{graphe d'appels} au fur et à mesure avec les métriques correspondantes.
 
@@ -138,7 +138,7 @@ Afin d'éviter de générer des graphes cycliques\footnote{C'est à dire un grap
 \end{note}
 
 \begin{note}[Performances]
-Afin de contrôler l'utilisation de la mémoire\footnote{Voir section \vref{sec:performances} pour plus de détails sur la gestion des performances}, éviter que celle-ci augmente indéfiniment lors de l'analyse d'un gros programme et épargner quelques calculs, les méthodes ne sont identifiées qu'une seule fois puis mises en cache dans une table de hachage afin d'être réutilisées.
+Il est important de contrôler l'utilisation de la mémoire\footnote{Voir section \vref{sec:performances} pour plus de détails sur la gestion des performances}, afin d'éviter que celle-ci augmente indéfiniment lors de l'analyse d'un gros programme. Pour cela les méthodes ne sont identifiées qu'une seule fois puis mises en cache dans une table de hachage afin d'être réutilisées, par la même occasion cela permet de ne pas répéter les même calculs.
 \end{note}
 
 \subsection{Identification de la méthode appelée - Appel Python}

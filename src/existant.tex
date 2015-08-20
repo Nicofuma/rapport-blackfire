@@ -41,7 +41,7 @@ Pour faire communiquer les différents composants entre eux, \Blackfire utilise 
 			\label{subsec:BlackfireQuery}
 				% émise par le companion ou l'outil CLI via run/curl
 				% pas de détail sur la signature ou le contenu précis de la requête. On se contente de ce que l'on va utiliser plus tard
-La requête, émise par le client (le compagnon ou l'outil en ligne de commande par exemple) permet à la fois d'authentifier une demande de profil et de fournir à la sonde un certain nombre d'options de configuration relatives au profil à générer.
+La requête, émise par le client\footnote{Via l'utilisation du compagnon par exemple} permet à la fois d'authentifier une demande de profil et de fournir à la sonde un certain nombre d'options de configuration relatives au profil à générer.
 
 Pour cela la requête est composée de deux parties:
 \begin{itemize}
@@ -73,8 +73,7 @@ Blackfire-Probe: python-20706f0
 \end{listing}
 Ici l'en-tête  \verb|Blackfire-Probe| indique que l'on analyse du python en version 34014960 (tel que défini par \mintinline{python}{hex(sys.hexversion)}).
 
-L'agent va répondre à cet en-tête par une ligne de statut. En cas d'erreur elle est de la forme \verb|Blackfire-Error: <code> <raison>| et est destinée à être journalisée par la sonde. Sinon elle est de la forme \verb|Blackfire-Response: <message>|
-et est destinée à être retransmise telle quelle au compagnon. En plus du statut, l'agent peu aussi renvoyer des informations identifiant des fonctions dont on veut récupérer les arguments. Ces informations se trouvent sous la forme d'une série de lignes ayant le format suivant: \verb|Blackfire-Fn-Args: <fonction> <argument>|,
+La seconde partie consiste en une réponse envoyé par l'agent et contenant une ligne de statut. En cas d'erreur celle-ci est de la forme \verb|Blackfire-Error: <code> <raison>| et est destinée à être journalisée par la sonde. Sinon elle est de la forme \verb|Blackfire-Response: <message>| et est destinée à être retransmise telle quelle au compagnon. En plus du statut, l'agent peu aussi renvoyer des informations identifiant des fonctions dont on désire récupérer les arguments. Ces informations se trouvent sous la forme d'une série de lignes ayant le format suivant: \verb|Blackfire-Fn-Args: <fonction> <argument>|,
 \verb|<nœud>| étant le nom de la fonction à instrumenter (tel qu'affichée dans le graphe) et \verb|<argument>| le nombre d'arguments à récupérer.
 
 Par exemple les lignes suivantes indiquent de récupérer le premier argument de la fonction \verb|logging.error| et les deux premiers arguments de la méthode \verb|log| de la classe \verb|logging.error|
@@ -86,7 +85,7 @@ Blackfire-Fn-Args: logging.Logger::log 2
 \end{textcode}
 \end{listing}
 
-				\subsubsection{Format des profils}
+				\subsection{Format des profils}
 					% cf: http://blog.blackfire.io/blackfire-file-format.html
 \Blackfire utilise un format textuel\footnote{Voir Annexe \vref{app:fullProfile} pour un exemple complet de profil} pour décrire les profils générés après l'analyse d'un programme.
 
@@ -98,7 +97,7 @@ Les profils sont composés de deux sections séparées par une ligne vide. La pr
 \item \verb|probed-os: <os>|, \verb|probed-language: <laguage>|, \verb|probed-version: <language version>| permet de définir l'environnement d'exécution du programme.
 \end{itemize}
 
-La seconde section définit le graphe à proprement parler, chaque ligne correspondant à un lien entre deux nœuds avec les différents coûts et éventuels arguments de fonction associés.
+La seconde section définit le graphe à proprement parler. Celui-ci est construit à partir de ses arcs, ne ligne correspondant à un arc.
 
 \begin{listing}[H]
 \caption{Ligne de profil simple (pas d'argument de fonction)}
