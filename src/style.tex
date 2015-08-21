@@ -120,13 +120,13 @@
 % ---- PHP ----
 \newcommand{\phpfile}[2][startinline]
 {
-  \inputminted[fontsize=\footnotesize, autogobble,bgcolor=codebg,frame=lines,linenos,funcnamehighlighting,startinline,breaklines,#1]{php}{#2}
+  \inputminted[tabsize=3,fontsize=\footnotesize, autogobble,bgcolor=codebg,frame=lines,linenos,funcnamehighlighting,startinline,breaklines,#1]{php}{#2}
 }
 \newcommand{\phpfilelong}[2][startinline]
 {
   \begin{mdframed}[linecolor=black, topline=true, bottomline=true,
   leftline=false, rightline=false, backgroundcolor=codebg,userdefinedwidth=\textwidth]
-  \inputminted[fontsize=\footnotesize,autogobble,linenos,funcnamehighlighting,startinline,breaklines,#1]{php}{#2}
+  \inputminted[tabsize=3,fontsize=\footnotesize,autogobble,linenos,funcnamehighlighting,startinline,breaklines,#1]{php}{#2}
   \end{mdframed}
 }
 \newminted{php}{linenos,frame=lines,autogobble,breaklines,funcnamehighlighting,bgcolor=codebg,startinline}
@@ -134,13 +134,13 @@
 % ---- Python ----
 \newcommand{\pythonfile}[2][startinline]
 {
-  \inputminted[fontsize=\footnotesize, autogobble,bgcolor=codebg,frame=lines,linenos,funcnamehighlighting,startinline,breaklines,#1]{python}{#2}
+  \inputminted[tabsize=3,fontsize=\footnotesize, autogobble,bgcolor=codebg,frame=lines,linenos,funcnamehighlighting,startinline,breaklines,#1]{python}{#2}
 }
 \newcommand{\pythonfilelong}[2][startinline]
 {
   \begin{mdframed}[linecolor=black, topline=true, bottomline=true,
   leftline=false, rightline=false, backgroundcolor=codebg,userdefinedwidth=\textwidth]
-  \inputminted[fontsize=\footnotesize,autogobble,linenos,funcnamehighlighting,startinline,breaklines,#1]{python}{#2}
+  \inputminted[tabsize=3,fontsize=\footnotesize,autogobble,linenos,funcnamehighlighting,startinline,breaklines,#1]{python}{#2}
   \end{mdframed}
 }
 \newminted{python}{linenos,frame=lines,autogobble,breaklines,funcnamehighlighting,bgcolor=codebg,startinline}
@@ -149,29 +149,29 @@
 % ---- C ----
 \newcommand{\cfile}[2][startinline]
 {
-  \inputminted[fontsize=\footnotesize, autogobble,bgcolor=codebg,frame=lines,linenos,funcnamehighlighting,startinline,breaklines,#1]{c}{#2}
+  \inputminted[tabsize=3,fontsize=\footnotesize, autogobble,bgcolor=codebg,frame=lines,linenos,funcnamehighlighting,startinline,breaklines,#1]{c}{#2}
 }
 \newcommand{\cfilelong}[2][startinline]
 {
   \begin{mdframed}[linecolor=black, topline=true, bottomline=true,
   leftline=false, rightline=false, backgroundcolor=codebg,userdefinedwidth=\textwidth]
-  \inputminted[fontsize=\footnotesize,autogobble,linenos,funcnamehighlighting,startinline,breaklines,#1]{c}{#2}
+  \inputminted[tabsize=3,fontsize=\footnotesize,autogobble,linenos,funcnamehighlighting,startinline,breaklines,#1]{c}{#2}
   \end{mdframed}
 }
 \newminted{c}{linenos,frame=lines,autogobble,breaklines,funcnamehighlighting,bgcolor=codebg,startinline}
 
-\newminted{bash}{frame=lines,autogobble,breaklines,funcnamehighlighting,bgcolor=codebg,startinline}
-\newminted{yaml}{frame=lines,autogobble,breaklines,funcnamehighlighting,bgcolor=codebg,startinline}
+\newminted{bash}{tabsize=3,frame=lines,autogobble,breaklines,funcnamehighlighting,bgcolor=codebg,startinline}
+\newminted{yaml}{tabsize=3,frame=lines,autogobble,breaklines,funcnamehighlighting,bgcolor=codebg,startinline}
 
 \newcommand{\textfile}[2][startinline]
 {
-  \inputminted[fontsize=\footnotesize,autogobble,bgcolor=codebg,frame=lines,linenos,funcnamehighlighting,startinline,breaklines,#1]{text}{#2}
+  \inputminted[tabsize=3,fontsize=\footnotesize,autogobble,bgcolor=codebg,frame=lines,linenos,funcnamehighlighting,startinline,breaklines,#1]{text}{#2}
 }
 \newcommand{\textfilelong}[2][startinline]
 {
   \begin{mdframed}[linecolor=black, topline=true, bottomline=true,
   leftline=false, rightline=false, backgroundcolor=codebg,userdefinedwidth=\textwidth]
-  \inputminted[fontsize=\footnotesize,autogobble,linenos,funcnamehighlighting,startinline,breaklines,#1]{text}{#2}
+  \inputminted[tabsize=3,fontsize=\footnotesize,autogobble,linenos,funcnamehighlighting,startinline,breaklines,#1]{text}{#2}
   \end{mdframed}
 }
 \newminted{text}{linenos,frame=lines,autogobble,breaklines,funcnamehighlighting,bgcolor=codebg,startinline}

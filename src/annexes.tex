@@ -122,7 +122,9 @@ Durant mon stage j'étais un membre à part entière de l'équipe produit de \em
  
 \chapter{Profil complet}
   \label{app:fullProfile}
+  \vspace{-20px}
   \textfilelong{codes/profile.dat}
+  \vspace{-20px}
   \begin{listing}[H]
     \caption{Exemple de profil généré par \Blackfire}
   \end{listing}
@@ -154,6 +156,7 @@ Durant mon stage j'étais un membre à part entière de l'équipe produit de \em
   \label{app:do_instrumentation}
     \vspace{10px}
     \cfilelong{codes/do_instrument.c}
+    \vspace{-20px}
     \begin{listing}[H]
       \caption{Instrumentation d'une liste de fonction définie dynamiquement}
     \end{listing}
@@ -167,14 +170,22 @@ Durant mon stage j'étais un membre à part entière de l'équipe produit de \em
   \section[Fonction Python]{Récupération des arguments d'une fonction Python}
   \label{app:get_arg_from_python}
     \vspace{10px}
-    \cfilelong{codes/get_arg_from_python.c}
+    \cfilelong{codes/get_arg_from_python_name.c}
+    \vspace{-20px}
     \begin{listing}[H]
-      \caption{Récupération des arguments d'une fonction définie en \Python}
+      \caption{Récupération, par nom, des arguments d'une fonction définie en \Python}
+    \end{listing}
+    \clearpage
+    \cfilelong{codes/get_arg_from_python_num.c}
+    \vspace{-20px}
+    \begin{listing}[H]
+      \caption{Récupération, par index, des arguments d'une fonction définie en \Python}
     \end{listing}
     
 \chapter{Dimension opcodes}
   \label{app:count_bytecode}
   \cfilelong{codes/count_bytecode.c}
+  \vspace{-20px}
   \begin{listing}[H]
     \caption{Calcul du nombre d'opcodes dans la ligne courante}
   \end{listing}
