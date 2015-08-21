@@ -187,11 +187,21 @@
 \renewcommand{\memchapinfo}[4]{%
   \addtocontents{lol}{\protect\addvspace{10pt}}}
 
-% ------------ Linstings wording and numbering
+% ------------ Linstings wording and numbering 
 \renewcommand\listoflistingscaption{Liste des codes}
 \renewcommand\listingscaption{\textsc{Code}}
 \counterwithin{listing}{section}
 \renewcommand*{\thelisting}{\thepart.\thesection-\arabic{listing}}
+
+\setsecnumdepth{subsection}
+%\renewcommand\thesubsection{\arabic{section}.\arabic{subsection}} 
+
+\makeatletter
+\def\p@chapter{\thepart.}
+\def\p@section{\thepart.}
+\def\p@subsection{\thepart.}
+\def\p@subsubsection{\thepart.}
+\makeatother
 
 % -------- Dans la liste des code la taille de la première colonne d'adapte à la taille du contenu
 \makeatletter

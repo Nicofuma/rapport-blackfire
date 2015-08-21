@@ -15,7 +15,6 @@
 \usepackage{calc}
 \usepackage{blindtext}
 \usepackage{eso-pic}
-\usepackage{lastpage}
 \usepackage{datetime}
 %\usepackage{caption}
 %\usepackage{subcaption}
@@ -40,6 +39,8 @@
 \usepackage{etoolbox}
 \usepackage{footnote}
 \usepackage{array}
+\usepackage{lastpage}
+
 \usepackage{hyperref}
  
 \newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
@@ -247,11 +248,14 @@
   \numberwithin{listing}{part}
   \numberwithin{listing}{chapter}
   \counterwithout{listing}{section}
-  %\numberwithout{listing}{section}
+  %\numberwithout{listing}{section} 
   
   \renewcommand\thefigure{\thechapter.\arabic{figure}}    
   \renewcommand\thelisting{\thechapter.\arabic{listing}}  
   \renewcommand\thetablr{\thechapter.\arabic{table}}    
+  \def\p@chapter{}
+  \def\p@section{}
+  \def\p@subsection{}
  
   \input{annexes}
   
@@ -266,7 +270,7 @@
   \tableofcontents
   \clearpage
   
-  %\listoftables
+  %\listoftables 
   %\clearpage
   
   \listoffigures
@@ -280,13 +284,14 @@
   %\glsaddall
   %\addcontentsline{toc}{chapter}{Glossaire}
   \printglossary[title=Glossaire,toctitle=Glossaire]
-  \clearpage
+  %\clearpage
   
   %\printindex
   %\clearpage
   
-  \bibliographystyle{plain-fr}
-  \bibliography{rapport.bib}
-  \clearpage
+  %\bibliographystyle{plain-fr}
+  %\nocite{*}
+  %\bibliography{rapport.bib}
+  %\clearpage
   
 \end{document}

@@ -57,7 +57,7 @@ Pour les entiers, ça se présente aussi sous la forme de macros permettant de v
 #endif
 \end{ccode}
   \end{listing} 
-  
+  \clearpage
 Pour la gestion des classes, la principale différence concerne la disparition du type \verb|PyClass|\footnote{\verb?PyClass? étendant \verb?PyType?, il est important de vérifier si l'objet est un \verb?PyClass? avant de vérifier si c'est un \verb?PyType?.} au profit du type \verb|PyType| qui, dans \Python 2, représentait déjà les classes définies en \emph{C}.
 
   \begin{listing}[H]
@@ -77,22 +77,19 @@ if (PyType_Check(class)) {
   \end{listing}
   
 \chapter{Gestion de projet}
-% TODO Un tableau avec 3 colonnes : début/fin/commentaire
-% dire ce qui a été fait pas à pas
-% + expliquer l'organisation de l'équipe
+ 
+Durant mon stage, j'étais un membre à part entière de l'équipe produit de \emph{SensioLabs} et, à ce titre, j'ai pris part au processus agile utilisé. L'équipe produit fonctionne avec un processus agile adapté de \emph{Scrum}. Les sprints ont une durée de deux semaines, et, l'équipe ayant des membres travaillant à distance (il y a notamment eu plusieurs personnes travaillant depuis les États-Unis entre Avril et Juin), le \emph{stand-up meeting} a lieu tous les jours à 16h afin que tout le monde puisse participer. Enfin, les membres de l'équipe prennent en charge le support client pendant une journée à tour de rôle.
 
-Durant mon stage j'étais un membre à part entière de l'équipe produit de \emph{SensioLabs} et à ce titre j'ai pris part au processus agile utilisé. L'équipe produit fonctionne avec un processus agile adapté de \emph{Scrum}, les sprints ont une durée de deux semaines, et, l'équipe ayant des membres travaillant à distance (il y a notamment eu plusieurs personnes travaillant depuis les États-Unis entre Avril et Juin), le \emph{stand-up meeting} a lieu tous les jours à 16h afin que tout le monde puisse participer. Enfin les membres de l'équipe prennent en charge le support client pendant une journée à tour de rôle.
-
-\noindent\begin{tabular}{|C{0.25\textwidth}|L{0.68\textwidth}|}
+\noindent\begin{tabular}{|C{0.25\textwidth}|L{0.695\textwidth}|}
    \hline
 \textbf{\textsc{Période}} & \multicolumn{1}{c|}{\textbf{\textsc{Travail effectué}}} \\
    \hline
 \multicolumn{2}{|c|}{\textbf{Prise en main de \Blackfire}} \\
-23 Février - 6 Mars & Prise en main de \emph{Blackfire}, écriture de tests fonctionnels pour la CLI \\
+23 Février - 6 Mars & Prise en main de \emph{Blackfire}, écriture de tests fonctionnels pour la \gls{CLI} \\
 9 Mars - 13 Mars & Intégration de \Blackfire à \emph{CloudControl}\footnote{ \url{https://www.cloudcontrol.com/} - \url{http://blog.blackfire.io/blackfire-on-cloudcontrol.html}} \\
 16 Mars - 24 Mars & Écriture de tests fonctionnels pour le SDK \\
 25 Mars - 1 Avril & Finalisation de l'intégration \emph{CloudControl} \\
-2 Avril - 29 Avril & Analyse de \emph{Magento} et \emph{Wordpress} \\
+2 Avril - 29 Avril & Analyse de performances sur \emph{Magento}\footnote{\url{http://magento.com/}} et \emph{Wordpress}\footnote{\url{https://wordpress.org/}} \\
    \hline
 \multicolumn{2}{|c|}{\textbf{Sonde \Python}} \\
 4 Mai - 5 Mai & Analyse du fonctionnement de \emph{New Relic}\footnote{Voir section \vref{sec:new-relic}} \\
@@ -101,10 +98,10 @@ Durant mon stage j'étais un membre à part entière de l'équipe produit de \em
 22 Mai - 4 Juin & Preuve de faisabilité écrite en \Python : Wrapper WSGI \\
 8 Juin - 10 Juin & Preuve de faisabilité écrite en \Python : \verb?sitecustomize.py?, compatibilité \emph{MacOS} et \Python 3 \\
 11 Juin - 12 Juin & Prise en main de la création de module \Python via l'api \C \\
-16 Juin - 22 Juin & Implémentation de la collecte de données en \C - gestion de la pile d'appel, gestion du graphe d'appel, intégration avec la partie \Python\\
-23 Juin - 24 Juin & Optimisation de performance de la partie \emph{C}, gestion de la mémoire \\
-25 Juin - 3 Juillet & Études des possibilités pour la distribution de la sonde \Python et pour la compiler sur les différents environnements supportés \\
-6 Juillet - 7 Juillet & Intégration d'une dimension opcodes \\
+16 Juin - 22 Juin & Implémentation de la collecte de données en \C - gestion de la \gls{pile d'appels}, gestion du \gls{graphe d'appels}, intégration avec la partie \Python\\
+23 Juin - 24 Juin & Optimisation de performances de la partie \emph{C}, gestion de la mémoire \\
+25 Juin - 3 Juillet & Étude des possibilités pour la distribution de la sonde \Python et pour la compilation sur les différents environnements supportés \\
+6 Juillet - 7 Juillet & Intégration d'une dimension \glspl{opcode} \\
 8 Juillet - 21 Juillet & Arguments de fonction en \Python 2 \\
 22 Juillet - 23 Juillet & Arguments de fonction en \Python 3 \\
 24 Juillet - 6 Août & Support des arguments de fonction sous \emph{MacOS} (recherche et correction d'un buffer overflow) \\
@@ -112,14 +109,7 @@ Durant mon stage j'étais un membre à part entière de l'équipe produit de \em
 \end{tabular}
 
 \input{annexe/new-relic_decoration-methodes}
-
-\chapter{Décorateur WSGI}
-  \label{app:decorateurwsgi}
-  \pythonfilelong{codes/probe/blackfire/wsgi_wrapper.py}
-  \begin{listing}[H]
-    \caption{Décorateur wsgi - blackfire/wsgi\_wrapper.py}
-  \end{listing}
- 
+  
 \chapter{Profil complet}
   \label{app:fullProfile}
   \vspace{-20px}
@@ -127,6 +117,13 @@ Durant mon stage j'étais un membre à part entière de l'équipe produit de \em
   \vspace{-20px}
   \begin{listing}[H]
     \caption{Exemple de profil généré par \Blackfire}
+  \end{listing}
+
+\chapter{Décorateur WSGI}
+  \label{app:decorateurwsgi}
+  \pythonfilelong{codes/probe/blackfire/wsgi_wrapper.py}
+  \begin{listing}[H]
+    \caption{Décorateur wsgi - blackfire/wsgi\_wrapper.py}
   \end{listing}
  
 \chapter{Structures de données}

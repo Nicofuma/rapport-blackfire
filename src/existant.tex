@@ -37,6 +37,7 @@ Pour faire communiquer les différents composants entre eux, \Blackfire utilise 
 \item Fournir un retour à l'utilisateur
 \end{itemize}
 
+\clearpage
 			\subsection{La Requête}
 			\label{subsec:BlackfireQuery}
 				% émise par le companion ou l'outil CLI via run/curl
@@ -82,7 +83,7 @@ Blackfire-Fn-Args: logging.error 1
 Blackfire-Fn-Args: logging.Logger::log 2
 \end{textcode}
 \end{listing}
-
+\clearpage
 				\subsection{Format des profils}
 					% cf: http://blog.blackfire.io/blackfire-file-format.html
 \Blackfire utilise un format textuel\footnote{Voir Annexe \vref{app:fullProfile} pour un exemple complet de profil} pour décrire les profils générés après l'analyse d'un programme.
@@ -92,7 +93,7 @@ Un profil est composé de deux sections séparées par une ligne vide. La premi�
 \item \verb|file-format: BlackfireProbe| qui définit le format utilisé, celui-ci ayant évolué au cours du temps\footnote{La sonde \PHP actuelle ainsi que la sonde \Python utilisent le format \emph{BlackfireProbe}}
 \item \verb|graph-root-id: <nom>| qui définit le nom du point d'entrée du programme analysé
 \item \verb|cost-dimensions: <liste>| qui définit la liste des dimensions envoyées par la sonde (temps wall-time, cpu, consommation mémoire...). Les dimensions sont séparées par des espaces
-\item \verb|probed-os: <os>|, \verb|probed-language: <langage>|, \verb|probed-version: <langage version>| qui permettent de définir l'environnement d'exécution du programme.
+\item \verb|probed-os: <os>|, \verb|probed-language: <langage>|, \\\verb|probed-version: <langage version>| qui permettent de définir l'environnement d'exécution du programme.
 \end{itemize}
 
 La seconde section définit le \gls{graphe d'appels} du programme. Celui-ci est construit à partir de ses arcs, une ligne correspondant à un arc.
